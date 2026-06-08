@@ -1,5 +1,3 @@
-# Static site — no build step. Netlify serves these files as-is.
-# Empty command overrides any "npm run build" inherited from the old React setup.
 [build]
   command = ""
   publish = "."
