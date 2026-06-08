@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LLM &amp; Agents Lab — AI Atlas</title>
+<link rel="stylesheet" href="../styles/atlas.css" />
+<link rel="stylesheet" href="../styles/app.css" />
+<style>
+  /* page-local fresh accents */
+  .stepper { display:flex; gap:8px; overflow-x:auto; padding-bottom:6px; scrollbar-width:none; }
+  .stepper::-webkit-scrollbar{ display:none; }
+  .step { flex:1 0 auto; min-width:104px; padding:14px; border-radius:14px; border:1px solid var(--stroke); background:var(--glass); cursor:pointer; transition:.22s; position:relative; }
+  .step:hover{ border-color:var(--stroke-acc); transform:translateY(-2px); }
+  .step.active{ border-color:var(--indigo-lt); background:linear-gradient(180deg,rgba(99,102,241,.16),rgba(99,102,241,.03)); box-shadow:0 16px 40px -22px var(--indigo-glow); }
+  .step .n{ font-family:var(--mono); font-size:11px; color:var(--ink-mute); }
+  .step .t{ font-size:13.5px; font-weight:600; margin-top:6px; }
+  .step .ic{ width:30px;height:30px;border-radius:9px;display:grid;place-items:center;margin-bottom:8px;font-size:14px; }
+
+  .gpu-bar{ position:relative; height:34px; border-radius:10px; background:#12121d; border:1px solid var(--stroke); overflow:hidden; }
+  .gpu-bar .cap{ position:absolute; inset:0; }
+  .gpu-bar .use{ position:absolute; top:0; bottom:0; left:0; border-radius:9px 0 0 9px; transition:width .5s cubic-bezier(.2,.7,.3,1); }
+  .gpu-bar .label{ position:absolute; inset:0; display:flex; align-items:center; justify-content:space-between; padding:0 12px; font-family:var(--mono); font-size:12px; }
+
+  .loop-wrap{ position:relative; aspect-ratio:1/1; max-width:340px; margin:0 auto; }
+  .loop-node{ position:absolute; width:96px; padding:12px 8px; border-radius:13px; border:1px solid var(--stroke); background:var(--glass-2); text-align:center; transform:translate(-50%,-50%); transition:.3s; }
+  .loop-node.lit{ border-color:var(--indigo-lt); background:linear-gradient(180deg,rgba(99,102,241,.2),rgba(99,102,241,.04)); box-shadow:0 0 30px -8px var(--indigo-glow); }
+  .loop-node .lt{ font-size:12.5px; font-weight:600; }
+  .loop-node .ls{ font-size:10px; color:var(--ink-mute); font-family:var(--mono); margin-top:2px; }
+  .transcript{ font-family:var(--mono); font-size:12.5px; line-height:1.7; }
+  .transcript .row{ opacity:0; transform:translateY(6px); transition:.4s; padding:7px 0; border-bottom:1px solid var(--stroke); }
+  .transcript .row.show{ opacity:1; transform:none; }
+  .transcript .tag{ display:inline-block; width:74px; color:var(--ink-mute); }
+  .transcript .thought{ color:var(--indigo-lt); } .transcript .action{ color:var(--cyan); } .transcript .obs{ color:var(--emerald); } .transcript .final{ color:var(--amber); }
+  .tool-chip{ display:inline-flex; align-items:center; gap:7px; padding:8px 12px; border-radius:10px; border:1px solid var(--stroke); background:var(--glass-2); font-size:13px; }
+</style>
+</head>
+<body data-page="llm-agents">
+<div class="atlas-bg"></div>
+<div class="atlas-grid"></div>
+<div class="scrim" id="scrim"></div>
+
+<div class="app">
+  <div id="shell-side"></div>
+  <main class="main">
+    <div class="topbar">
+      <button class="menu-btn" onclick="toggleSide()" aria-label="Menu"><svg width="18" height="18" viewBox="0 0 18 18"><path d="M2 4h14M2 9h14M2 14h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+      <div class="crumb">Atlas <span>/</span> <b>LLM &amp; Agents Lab</b></div>
+      <div class="actions"><span class="pill"><span class="dot violet"></span>build · run · orchestrate</span></div>
+    </div>
+
+    <div class="page" style="max-width:1240px">
+      <div class="page-head">
+        <span class="eyebrow">LLM &amp; Agents Lab</span>
+        <h1>Build an LLM, run it on your PC, give it agency</h1>
+        <p>The full large-language-model lifecycle — from raw tokens to an RLHF-aligned model — then size it to your own GPU's VRAM and wire it into a tool-using agent loop.</p>
+      </div>
+
+      <div class="tabs" id="tabs">
+        <div class="tab active" data-tab="build">Build an LLM</div>
+        <div class="tab" data-tab="local">Run on Your PC</div>
+        <div class="tab" data-tab="agent">Agent Builder</div>
+        <div class="tab" data-tab="tune">Fine-tune &amp; LoRA</div>
+      </div>
+
+      <!-- ===== BUILD ===== -->
+      <div id="panel-build">
+        <div class="stepper" id="stepper"></div>
+        <div class="pg" style="grid-template-columns:1fr 360px;margin-top:22px">
+          <div class="glass" style="padding:28px;border-radius:var(--r-lg);min-height:300px">
+            <div id="step-detail"></div>
+          </div>
+          <div class="pg-panel">
+            <div class="ctrl"><h4>Pretraining run</h4>
+              <canvas id="losscv" style="width:100%;height:120px;display:block"></canvas>
+              <div class="metrics" style="margin-top:14px">
+                <div class="metric"><div class="l">STEP</div><div class="v mono" id="pt-step">0</div></div>
+                <div class="metric"><div class="l">LOSS</div><div class="v mono" id="pt-loss" style="color:var(--rose)">10.4</div></div>
+                <div class="metric"><div class="l">TOKENS</div><div class="v mono" id="pt-tok" style="font-size:16px">0</div></div>
+                <div class="metric"><div class="l">PERPLEXITY</div><div class="v mono" id="pt-ppl" style="color:var(--amber)">—</div></div>
+              </div>
+              <button class="btn btn-primary btn-sm" id="pt-run" style="width:100%;justify-content:center;margin-top:14px">▶ Run pretraining</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== LOCAL ===== -->
+      <div id="panel-local" style="display:none">
+        <div class="pg" style="grid-template-columns:1fr 360px">
+          <div class="glass" style="padding:28px;border-radius:var(--r-lg)">
+            <div class="row between center" style="margin-bottom:6px"><h3 style="font-size:17px">Will it run on your machine?</h3><span class="pill" id="fit-pill"><span class="dot emerald"></span>fits</span></div>
+            <p class="note" style="margin-bottom:22px">Estimated memory to load and run the model. Quantization shrinks each weight from 16 bits down to 4, trading a little quality for a lot of VRAM.</p>
+
+            <div style="margin-bottom:22px">
+              <div class="row between" style="font-size:12.5px;font-family:var(--mono);color:var(--ink-mute);margin-bottom:8px"><span id="gpu-name">RTX 4090 · 24 GB</span><span id="gpu-need">— GB needed</span></div>
+              <div class="gpu-bar"><div class="use" id="gpu-use"></div><div class="label"><span id="use-txt" style="color:#fff">0 GB</span><span id="cap-txt" style="color:var(--ink-mute)">24 GB</span></div></div>
+            </div>
+
+            <div class="metrics" style="grid-template-columns:repeat(3,1fr)">
+              <div class="metric"><div class="l">VRAM NEEDED</div><div class="v mono" id="m-vram">—</div></div>
+              <div class="metric"><div class="l">~TOKENS/SEC</div><div class="v mono" id="m-tps" style="color:var(--cyan)">—</div></div>
+              <div class="metric"><div class="l">DISK SIZE</div><div class="v mono" id="m-disk">—</div></div>
+            </div>
+
+            <div class="eqn" style="margin-top:22px">VRAM ≈ <span class="n">params</span> × <span class="k">bytes/weight</span> × <span class="g">1.15</span> <span class="c">(overhead + KV cache)</span></div>
+          </div>
+
+          <div class="pg-panel">
+            <div class="ctrl"><h4>Model size</h4>
+              <div class="seg" id="size" style="flex-wrap:wrap"><button data-v="1.3">1.3B</button><button data-v="3">3B</button><button class="active" data-v="7">7B</button><button data-v="13">13B</button><button data-v="34">34B</button><button data-v="70">70B</button></div>
+            </div>
+            <div class="ctrl"><h4>Quantization</h4>
+              <div class="seg" id="quant"><button data-v="2">fp16</button><button data-v="1">int8</button><button class="active" data-v="0.5">int4</button></div>
+              <p class="note" style="margin-top:12px" id="quant-note">int4 (Q4) — ~4× smaller than fp16, the sweet spot for local inference.</p>
+            </div>
+            <div class="ctrl"><h4>Your hardware</h4>
+              <div class="seg" id="gpu" style="flex-wrap:wrap"><button data-v="12|RTX 3060">3060 · 12GB</button><button class="active" data-v="24|RTX 4090">4090 · 24GB</button><button data-v="36|Mac M3 Max">M3 · 36GB</button><button data-v="80|A100">A100 · 80GB</button></div>
+            </div>
+            <div class="ctrl"><h4>Mode</h4>
+              <div class="seg" id="mode"><button class="active" data-v="inf">Inference</button><button data-v="lora">QLoRA tune</button><button data-v="full">Full tune</button></div>
+            </div>
+          </div>
+        </div>
+        <div class="glass" style="padding:22px;border-radius:var(--r-lg);margin-top:22px">
+          <h3 style="font-size:16px;margin-bottom:14px">Local stack</h3>
+          <div class="row gap-s" style="flex-wrap:wrap">
+            <span class="tool-chip">🦙 llama.cpp / GGUF</span><span class="tool-chip">Ollama</span><span class="tool-chip">vLLM</span><span class="tool-chip">LM Studio</span><span class="tool-chip">text-generation-webui</span><span class="tool-chip">ExLlamaV2</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== AGENT ===== -->
+      <div id="panel-agent" style="display:none">
+        <div class="pg" style="grid-template-columns:340px 1fr">
+          <div class="glass" style="padding:24px;border-radius:var(--r-lg)">
+            <h3 style="font-size:16px;margin-bottom:18px;text-align:center">ReAct loop</h3>
+            <div class="loop-wrap" id="loop">
+              <div class="loop-node" id="ln-thought" style="left:50%;top:12%"><div class="lt" style="color:var(--indigo-lt)">Thought</div><div class="ls">reason</div></div>
+              <div class="loop-node" id="ln-action" style="left:88%;top:62%"><div class="lt" style="color:var(--cyan)">Action</div><div class="ls">call tool</div></div>
+              <div class="loop-node" id="ln-obs" style="left:12%;top:62%"><div class="lt" style="color:var(--emerald)">Observation</div><div class="ls">read result</div></div>
+              <svg viewBox="0 0 100 100" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none"><circle cx="50" cy="50" r="34" fill="none" stroke="rgba(139,140,246,.25)" stroke-width="1" stroke-dasharray="3 3"/><path d="M50 50 m0 -34 a34 34 0 0 1 29 51" fill="none" stroke="rgba(139,140,246,.4)" stroke-width="1" marker-end="url(#aw)"/><defs><marker id="aw" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0 0L5 3L0 6Z" fill="#8B8CF6"/></marker></defs></svg>
+              <div class="loop-node lit" style="left:50%;top:50%;width:70px"><div class="lt">LLM</div><div class="ls">brain</div></div>
+            </div>
+            <div style="margin-top:20px"><h4 style="font-size:12px;font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:12px">Tools available</h4>
+              <div style="display:flex;flex-direction:column;gap:9px">
+                <div class="tool-chip">🔎 web_search</div><div class="tool-chip">🧮 calculator</div><div class="tool-chip">🌦️ get_weather</div><div class="tool-chip">📄 read_file</div>
+              </div>
+            </div>
+          </div>
+          <div class="glass" style="padding:24px;border-radius:var(--r-lg)">
+            <div class="row between center" style="margin-bottom:8px"><h3 style="font-size:16px">Agent trace</h3>
+              <button class="btn btn-primary btn-sm" id="agent-run">▶ Run agent</button>
+            </div>
+            <p class="note mono" style="font-size:12.5px;margin-bottom:16px">task: "What's the weather in Tokyo, and what is 20°C in Fahrenheit?"</p>
+            <div class="transcript" id="trace"></div>
+          </div>
+        </div>
+        <div class="glass" style="padding:24px;border-radius:var(--r-lg);margin-top:22px">
+          <h3 style="font-size:16px;margin-bottom:14px">Agent architectures</h3>
+          <div class="grid" style="grid-template-columns:repeat(4,1fr);gap:16px">
+            <div class="card" style="padding:18px"><h4 style="font-size:14.5px;margin-bottom:6px">ReAct</h4><p class="note" style="font-size:12.5px;margin:0">Interleave reasoning with tool calls in a loop.</p></div>
+            <div class="card" style="padding:18px"><h4 style="font-size:14.5px;margin-bottom:6px">Plan-and-Execute</h4><p class="note" style="font-size:12.5px;margin:0">Draft a full plan, then run each step.</p></div>
+            <div class="card" style="padding:18px"><h4 style="font-size:14.5px;margin-bottom:6px">Memory + RAG</h4><p class="note" style="font-size:12.5px;margin:0">Long-term memory in a vector store.</p></div>
+            <div class="card" style="padding:18px"><h4 style="font-size:14.5px;margin-bottom:6px">Multi-agent</h4><p class="note" style="font-size:12.5px;margin:0">Specialists coordinated by an orchestrator.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== TUNE ===== -->
+      <div id="panel-tune" style="display:none">
+        <div class="pg" style="grid-template-columns:1fr 340px">
+          <div class="glass" style="padding:28px;border-radius:var(--r-lg)">
+            <h3 style="font-size:17px;margin-bottom:6px">Full fine-tune vs. LoRA</h3>
+            <p class="note" style="margin-bottom:24px">LoRA freezes the base model and trains tiny low-rank adapter matrices — a fraction of the parameters, so it fits on consumer GPUs.</p>
+            <div id="tune-bars"></div>
+            <div class="eqn" style="margin-top:22px">W' = W + <span class="k">B·A</span> &nbsp;<span class="c">// A:[r×d], B:[d×r], r ≪ d</span></div>
+          </div>
+          <div class="pg-panel">
+            <div class="ctrl"><h4>Base model</h4><div class="seg" id="t-size"><button data-v="7">7B</button><button class="active" data-v="13">13B</button><button data-v="70">70B</button></div></div>
+            <div class="ctrl"><h4>LoRA rank (r) <span class="val mono" id="rank-v" style="float:right">16</span></h4><input type="range" id="rank" min="4" max="128" step="4" value="16"></div>
+            <div class="metrics">
+              <div class="metric"><div class="l">TRAINABLE %</div><div class="v mono" id="t-pct" style="color:var(--emerald)">—</div></div>
+              <div class="metric"><div class="l">ADAPTER SIZE</div><div class="v mono" id="t-size-mb">—</div></div>
+            </div>
+            <p class="note">Alignment stack: <b style="color:var(--ink)">SFT → DPO/RLHF → eval</b>. Adapters are a few MB — ship dozens per base model.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script src="../js/app-shell.js"></script>
+<script src="../js/assistant.js"></script>
+<script>
+(function(){
+  /* ===== BUILD pipeline ===== */
+  const STEPS=[
+    {ic:'📚',c:'#22D3EE',n:'01',t:'Data',title:'Corpus & cleaning',body:'Trillions of tokens of web text, code and books — deduplicated, filtered for quality and toxicity, and sharded. Garbage in, garbage out: the dataset matters more than the architecture.'},
+    {ic:'🔤',c:'#8B8CF6',n:'02',t:'Tokenizer',title:'Byte-Pair Encoding',body:'Train a BPE/SentencePiece vocabulary (~32k–128k tokens) that splits text into subword pieces. Common words become one token; rare words fragment into reusable parts.'},
+    {ic:'🧱',c:'#A855F7',n:'03',t:'Architecture',title:'Decoder-only Transformer',body:'Stacked blocks of masked multi-head self-attention + MLP, with RMSNorm, RoPE positions and residual connections. Scale depth × width × heads to your parameter budget.'},
+    {ic:'🔥',c:'#FB7185',n:'04',t:'Pretrain',title:'Next-token prediction',body:'Train on next-token prediction with AdamW across thousands of GPUs for weeks. The loss curve on the right is this stage — perplexity falls as the model learns language.'},
+    {ic:'🎯',c:'#F59E0B',n:'05',t:'SFT',title:'Instruction tuning',body:'Supervised fine-tuning on high-quality instruction→response pairs teaches the base model to follow instructions and chat, instead of just completing text.'},
+    {ic:'⚖️',c:'#34D399',n:'06',t:'RLHF',title:'Align to humans',body:'Train a reward model on human preference rankings, then optimize the policy with PPO or DPO so outputs are helpful, honest and harmless.'},
+    {ic:'🗜️',c:'#22D3EE',n:'07',t:'Quantize',title:'Shrink for serving',body:'Compress weights from fp16 to int8/int4 (GPTQ, AWQ, GGUF) so the model fits in less VRAM with minimal quality loss — the key to running locally.'},
+    {ic:'🚀',c:'#8B8CF6',n:'08',t:'Deploy',title:'Serve & monitor',body:'Serve with vLLM / llama.cpp using KV-cache, continuous batching and speculative decoding. Monitor latency, cost and drift in production.'},
+  ];
+  const stepper=document.getElementById('stepper');
+  stepper.innerHTML=STEPS.map((s,i)=>`<div class="step${i===0?' active':''}" data-i="${i}"><div class="ic" style="background:${s.c}1f;color:${s.c}">${s.ic}</div><div class="n">${s.n}</div><div class="t">${s.t}</div></div>`).join('');
+  function showStep(i){ const s=STEPS[i]; document.getElementById('step-detail').innerHTML=`<div class="row gap center" style="margin-bottom:14px"><div class="ic" style="width:46px;height:46px;border-radius:13px;background:${s.c}1f;color:${s.c};font-size:22px;display:grid;place-items:center">${s.ic}</div><div><div class="mono" style="font-size:12px;color:var(--ink-mute)">STAGE ${s.n}</div><h3 style="font-size:21px">${s.title}</h3></div></div><p class="lead" style="font-size:16px">${s.body}</p>`; [...stepper.children].forEach(c=>c.classList.toggle('active',+c.dataset.i===i)); }
+  stepper.onclick=e=>{const st=e.target.closest('.step');if(st)showStep(+st.dataset.i);};
+  showStep(0);
+
+  // pretraining loss
+  const lcv=document.getElementById('losscv'), lx=lcv.getContext('2d'); let hist=[], ptStep=0, ptRun=false, ptRaf;
+  function drawLoss(){ const DPR=Math.min(devicePixelRatio||1,2); const r=lcv.getBoundingClientRect(); lcv.width=r.width*DPR; lcv.height=r.height*DPR; lx.setTransform(DPR,0,0,DPR,0,0); lx.clearRect(0,0,r.width,r.height); if(hist.length<2)return; const max=10.5,min=1.8; lx.beginPath(); hist.forEach((v,i)=>{const x=i/Math.max(1,hist.length-1)*r.width; const y=r.height-(v-min)/(max-min)*r.height*0.9-5; i?lx.lineTo(x,y):lx.moveTo(x,y);}); lx.strokeStyle='#FB7185'; lx.lineWidth=2; lx.stroke(); lx.lineTo(r.width,r.height); lx.lineTo(0,r.height); lx.closePath(); lx.fillStyle='rgba(251,113,133,0.08)'; lx.fill(); }
+  function ptTick(){ if(!ptRun)return; ptStep++; const loss=1.9+8.5*Math.exp(-ptStep/55)+Math.random()*0.12; hist.push(loss); if(hist.length>120)hist.shift(); document.getElementById('pt-step').textContent=ptStep; document.getElementById('pt-loss').textContent=loss.toFixed(2); document.getElementById('pt-tok').textContent=(ptStep*4.2).toFixed(0)+'B'; document.getElementById('pt-ppl').textContent=Math.exp(loss).toFixed(0); drawLoss(); if(ptStep>=160){ptRun=false; document.getElementById('pt-run').textContent='✓ converged · run again';} else ptRaf=setTimeout(()=>requestAnimationFrame(ptTick),60); }
+  document.getElementById('pt-run').onclick=()=>{ ptRun=!ptRun; if(ptRun){ if(ptStep>=160){ptStep=0;hist=[];} document.getElementById('pt-run').textContent='⏸ pause'; requestAnimationFrame(ptTick);} else {clearTimeout(ptRaf); document.getElementById('pt-run').textContent='▶ resume';} };
+  drawLoss();
+
+  /* ===== LOCAL VRAM calc ===== */
+  let L={size:7, quant:0.5, gpuCap:24, gpuName:'RTX 4090', mode:'inf'};
+  function calc(){
+    const bytes=L.quant; let vram, tps;
+    if(L.mode==='inf'){ vram=L.size*bytes*1.15+0.6; tps=Math.max(4, 1400/(L.size*bytes)) ; }
+    else if(L.mode==='lora'){ vram=L.size*0.5*1.2 + L.size*0.18 + 1.5; tps=null; } // QLoRA: 4-bit base + adapters
+    else { vram=L.size*18*0.9 + 2; tps=null; } // full fp16 + AdamW states
+    const disk=L.size*L.quant;
+    document.getElementById('m-vram').textContent=vram.toFixed(1)+' GB';
+    document.getElementById('m-tps').textContent=tps?Math.round(tps)+'/s':'—';
+    document.getElementById('m-disk').textContent=disk.toFixed(1)+' GB';
+    document.getElementById('gpu-name').textContent=L.gpuName+' · '+L.gpuCap+' GB';
+    document.getElementById('gpu-need').textContent=vram.toFixed(1)+' GB needed';
+    document.getElementById('cap-txt').textContent=L.gpuCap+' GB';
+    document.getElementById('use-txt').textContent=vram.toFixed(1)+' GB';
+    const pct=Math.min(100, vram/L.gpuCap*100); const fits=vram<=L.gpuCap;
+    const use=document.getElementById('gpu-use'); use.style.width=pct+'%';
+    use.style.background=fits?(pct>85?'linear-gradient(90deg,#F59E0B,#FB7185)':'linear-gradient(90deg,var(--indigo),var(--cyan))'):'linear-gradient(90deg,#FB7185,#e11d48)';
+    const pill=document.getElementById('fit-pill');
+    pill.innerHTML=fits?`<span class="dot ${pct>85?'amber':'emerald'}"></span>${pct>85?'tight fit':'fits comfortably'}`:`<span class="dot" style="background:var(--rose);box-shadow:0 0 10px var(--rose)"></span>won't fit — offload to RAM`;
+  }
+  function seg(id,cb){const el=document.getElementById(id);el.onclick=e=>{const b=e.target.closest('button');if(!b)return;[...el.children].forEach(c=>c.classList.remove('active'));b.classList.add('active');cb(b.dataset.v);};}
+  seg('size',v=>{L.size=+v;calc();});
+  seg('quant',v=>{L.quant=+v;const n={2:'fp16 — full precision, best quality, largest.',1:'int8 (Q8) — ~2× smaller, near-lossless.',0.5:'int4 (Q4) — ~4× smaller than fp16, the sweet spot for local inference.'};document.getElementById('quant-note').textContent=n[v];calc();});
+  seg('gpu',v=>{const[c,n]=v.split('|');L.gpuCap=+c;L.gpuName=n;calc();});
+  seg('mode',v=>{L.mode=v;calc();});
+  calc();
+
+  /* ===== AGENT trace ===== */
+  const TRACE=[
+    {k:'thought',tag:'Thought',txt:'I need the weather in Tokyo and a temperature conversion. Start with weather.'},
+    {k:'action',tag:'Action',txt:'get_weather(city="Tokyo")'},
+    {k:'obs',tag:'Observation',txt:'18°C, light rain, humidity 78%'},
+    {k:'thought',tag:'Thought',txt:'Got the weather. Now convert 20°C to Fahrenheit: ×9/5 + 32.'},
+    {k:'action',tag:'Action',txt:'calculator("20 * 9/5 + 32")'},
+    {k:'obs',tag:'Observation',txt:'68'},
+    {k:'final',tag:'Answer',txt:'Tokyo is 18°C with light rain, and 20°C = 68°F.'},
+  ];
+  const nodeFor={thought:'ln-thought',action:'ln-action',obs:'ln-obs'};
+  const trace=document.getElementById('trace');
+  let agentRun=false;
+  document.getElementById('agent-run').onclick=async()=>{
+    if(agentRun)return; agentRun=true; trace.innerHTML=''; document.getElementById('agent-run').textContent='running…';
+    for(const step of TRACE){
+      const row=document.createElement('div'); row.className='row'; row.innerHTML=`<span class="tag ${step.k}">${step.tag}</span><span class="${step.k}">${step.txt}</span>`; trace.appendChild(row);
+      Object.values(nodeFor).forEach(id=>document.getElementById(id).classList.remove('lit'));
+      if(nodeFor[step.k])document.getElementById(nodeFor[step.k]).classList.add('lit');
+      await new Promise(r=>setTimeout(r,80)); row.classList.add('show');
+      await new Promise(r=>setTimeout(r,820));
+    }
+    Object.values(nodeFor).forEach(id=>document.getElementById(id).classList.remove('lit'));
+    document.getElementById('agent-run').textContent='▶ Run again'; agentRun=false;
+  };
+
+  /* ===== TUNE ===== */
+  let T={size:13, rank:16};
+  function tune(){
+    const d=4096; const layers=T.size*4|0; // rough
+    const totalParams=T.size*1e9;
+    const loraParams=2*d*T.rank*layers*8; // rough adapter param count
+    const pct=loraParams/totalParams*100;
+    document.getElementById('t-pct').textContent=pct.toFixed(2)+'%';
+    document.getElementById('t-size-mb').textContent=(loraParams*2/1e6).toFixed(0)+' MB';
+    const bars=document.getElementById('tune-bars');
+    bars.innerHTML=`
+      <div style="margin-bottom:18px"><div class="row between" style="font-size:13px;margin-bottom:6px"><span>Full fine-tune</span><span class="mono" style="color:var(--rose)">100% · ${(T.size).toFixed(0)}B params</span></div><div style="height:16px;border-radius:6px;background:#14141f;overflow:hidden"><div style="height:100%;width:100%;background:linear-gradient(90deg,var(--rose),#fb718588)"></div></div></div>
+      <div><div class="row between" style="font-size:13px;margin-bottom:6px"><span>LoRA (r=${T.rank})</span><span class="mono" style="color:var(--emerald)">${pct.toFixed(2)}% trainable</span></div><div style="height:16px;border-radius:6px;background:#14141f;overflow:hidden"><div style="height:100%;width:${Math.max(1.2,pct*8)}%;background:linear-gradient(90deg,#34d39988,var(--emerald))"></div></div></div>`;
+  }
+  seg('t-size',v=>{T.size=+v;tune();});
+  document.getElementById('rank').oninput=e=>{T.rank=+e.target.value;document.getElementById('rank-v').textContent=T.rank;tune();};
+  tune();
+
+  /* tabs */
+  const tabs=document.getElementById('tabs');
+  tabs.onclick=e=>{const t=e.target.closest('.tab');if(!t)return;[...tabs.children].forEach(c=>c.classList.remove('active'));t.classList.add('active');['build','local','agent','tune'].forEach(id=>document.getElementById('panel-'+id).style.display=id===t.dataset.tab?'':'none'); if(t.dataset.tab==='build')drawLoss();};
+})();
+</script>
+</body>
+</html>

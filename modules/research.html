@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI Research Lab — AI Atlas</title>
+<link rel="stylesheet" href="../styles/atlas.css" />
+<link rel="stylesheet" href="../styles/app.css" />
+</head>
+<body data-page="research">
+<div class="atlas-bg"></div>
+<div class="atlas-grid"></div>
+<div class="scrim" id="scrim"></div>
+
+<div class="app">
+  <div id="shell-side"></div>
+  <main class="main">
+    <div class="topbar">
+      <button class="menu-btn" onclick="toggleSide()" aria-label="Menu"><svg width="18" height="18" viewBox="0 0 18 18"><path d="M2 4h14M2 9h14M2 14h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+      <div class="crumb">Atlas <span>/</span> <b>Research Lab</b></div>
+      <div class="actions"><span class="pill"><span class="dot violet"></span>bias–variance</span></div>
+    </div>
+
+    <div class="page" style="max-width:1240px">
+      <div class="page-head">
+        <span class="eyebrow">AI Research Lab</span>
+        <h1>Think like a researcher</h1>
+        <p>The bias–variance tradeoff in one slider. Increase model complexity and watch bias fall while variance rises — total error is a U-shape, and the sweet spot is its floor.</p>
+      </div>
+
+      <div class="pg" style="grid-template-columns:1fr 340px">
+        <div class="pg-stage" style="aspect-ratio:16/10;min-height:0">
+          <div class="stage-bar"><span class="pill" style="background:rgba(12,12,20,.7)">model complexity → error</span><div class="spacer"></div><span class="pill" id="fit-pill" style="background:rgba(12,12,20,.7)"><span class="dot emerald"></span>balanced</span></div>
+          <canvas id="bv"></canvas>
+        </div>
+        <div class="pg-panel">
+          <div class="ctrl"><h4>Model complexity <span class="val mono" id="cx-v" style="float:right">5</span></h4>
+            <input type="range" id="cx" min="1" max="10" step="1" value="5">
+            <p class="note" style="margin-top:12px" id="cx-note">A balanced model: low enough bias to capture the pattern, low enough variance to generalize.</p>
+          </div>
+          <div class="metrics">
+            <div class="metric"><div class="l">BIAS²</div><div class="v mono" id="m-bias" style="color:var(--cyan)">—</div></div>
+            <div class="metric"><div class="l">VARIANCE</div><div class="v mono" id="m-var" style="color:var(--rose)">—</div></div>
+            <div class="metric"><div class="l">TOTAL ERROR</div><div class="v mono" id="m-tot" style="color:var(--indigo-lt)">—</div></div>
+            <div class="metric"><div class="l">REGIME</div><div class="v mono" id="m-reg" style="font-size:14px">fit</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass" style="padding:24px;border-radius:var(--r-lg);margin-top:24px">
+        <h3 style="font-size:18px;margin-bottom:16px">More tools in the Research Lab</h3>
+        <div class="grid" style="grid-template-columns:repeat(4,1fr);gap:16px">
+          <div class="card" style="padding:18px"><h4 style="font-size:15px;margin-bottom:6px">Cross-validation</h4><p class="note" style="font-size:12.5px;margin:0">K-fold splits to estimate generalization honestly.</p></div>
+          <div class="card" style="padding:18px"><h4 style="font-size:15px;margin-bottom:6px">Bootstrap</h4><p class="note" style="font-size:12.5px;margin:0">Resample with replacement for confidence intervals.</p></div>
+          <div class="card" style="padding:18px"><h4 style="font-size:15px;margin-bottom:6px">Uncertainty</h4><p class="note" style="font-size:12.5px;margin:0">Calibrated confidence and predictive intervals.</p></div>
+          <div class="card" style="padding:18px"><h4 style="font-size:15px;margin-bottom:6px">A/B testing</h4><p class="note" style="font-size:12.5px;margin:0">Hypothesis tests, power, and significance.</p></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="../js/app-shell.js"></script>
+<script src="../js/assistant.js"></script>
+<script>
+(function(){
+  const canvas=document.getElementById('bv'), ctx=canvas.getContext('2d');
+  let cx=5;
+  const bias=c=>1.05*Math.exp(-c/2.6)+0.04;        // decreasing
+  const varc=c=>0.03*Math.exp(c/3.0);              // increasing
+  const total=c=>bias(c)+varc(c)+0.05;
+  function draw(){
+    const DPR=Math.min(devicePixelRatio||1,2); const r=canvas.getBoundingClientRect(); canvas.width=r.width*DPR; canvas.height=r.height*DPR; ctx.setTransform(DPR,0,0,DPR,0,0);
+    const W=r.width,H=r.height; ctx.clearRect(0,0,W,H);
+    const ox=46, oy=H-40, gw=W-ox-24, gh=H-72;
+    // axes
+    ctx.strokeStyle='rgba(255,255,255,0.14)'; ctx.lineWidth=1.4; ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(ox+gw,oy); ctx.moveTo(ox,oy); ctx.lineTo(ox,oy-gh); ctx.stroke();
+    ctx.fillStyle='var(--ink-mute)'; ctx.font='10px JetBrains Mono'; ctx.textAlign='center'; ctx.fillText('complexity →', ox+gw/2, H-12);
+    ctx.save(); ctx.translate(14,oy-gh/2); ctx.rotate(-Math.PI/2); ctx.fillText('error', 0,0); ctx.restore();
+    const maxE=total(10);
+    const X=c=>ox+((c-1)/9)*gw, Y=v=>oy-(v/maxE)*gh;
+    function plot(fn,color,fill){ ctx.beginPath(); for(let i=0;i<=100;i++){ const c=1+i/100*9; const x=X(c),y=Y(fn(c)); i?ctx.lineTo(x,y):ctx.moveTo(x,y);} ctx.strokeStyle=color; ctx.lineWidth=2.4; ctx.stroke(); }
+    plot(bias,'#22D3EE'); plot(varc,'#FB7185'); plot(total,'#8B8CF6');
+    // optimum (min of total)
+    let best=1,bv=Infinity; for(let c=1;c<=10;c+=0.05){ if(total(c)<bv){bv=total(c);best=c;} }
+    ctx.setLineDash([4,3]); ctx.strokeStyle='rgba(52,211,153,0.5)'; ctx.beginPath(); ctx.moveTo(X(best),oy); ctx.lineTo(X(best),Y(total(best))); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle='#34D399'; ctx.beginPath(); ctx.arc(X(best),Y(total(best)),4,0,6.28); ctx.fill();
+    // current marker
+    ctx.setLineDash([3,3]); ctx.strokeStyle='rgba(255,255,255,0.3)'; ctx.beginPath(); ctx.moveTo(X(cx),oy); ctx.lineTo(X(cx),oy-gh); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(X(cx),Y(total(cx)),5,0,6.28); ctx.fill();
+    // labels
+    ctx.font='11px JetBrains Mono'; ctx.textAlign='left';
+    ctx.fillStyle='#22D3EE'; ctx.fillText('bias²', X(9)+2, Y(bias(9))-2);
+    ctx.fillStyle='#FB7185'; ctx.fillText('variance', X(8)-10, Y(varc(8))-6);
+    ctx.fillStyle='#8B8CF6'; ctx.fillText('total', X(2)-4, Y(total(2))-8);
+    // metrics
+    document.getElementById('m-bias').textContent=bias(cx).toFixed(2);
+    document.getElementById('m-var').textContent=varc(cx).toFixed(2);
+    document.getElementById('m-tot').textContent=total(cx).toFixed(2);
+    let reg, note, healthy;
+    if(cx<=3){ reg='underfit'; note='Too simple — high bias. The model misses the real pattern (underfitting).'; healthy=false; }
+    else if(cx>=8){ reg='overfit'; note='Too complex — high variance. The model memorizes noise and fails to generalize (overfitting).'; healthy=false; }
+    else { reg='good fit'; note='A balanced model: low enough bias to capture the pattern, low enough variance to generalize.'; healthy=true; }
+    document.getElementById('m-reg').textContent=reg;
+    document.getElementById('m-reg').style.color=healthy?'var(--emerald)':'var(--amber)';
+    document.getElementById('cx-note').textContent=note;
+    const pill=document.getElementById('fit-pill');
+    pill.innerHTML=`<span class="dot ${healthy?'emerald':''}" style="${healthy?'':'background:var(--amber);box-shadow:0 0 10px var(--amber)'}"></span>${reg}`;
+  }
+  document.getElementById('cx').oninput=e=>{ cx=+e.target.value; document.getElementById('cx-v').textContent=cx; draw(); };
+  window.addEventListener('resize',draw); draw();
+})();
+</script>
+</body>
+</html>

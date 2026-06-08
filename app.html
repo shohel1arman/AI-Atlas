@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI Atlas — All Modules</title>
+<link rel="stylesheet" href="styles/atlas.css" />
+<link rel="stylesheet" href="styles/app.css" />
+</head>
+<body data-page="hub">
+<div class="atlas-bg"></div>
+<div class="atlas-grid"></div>
+<div class="scrim" id="scrim"></div>
+
+<div class="app">
+  <div id="shell-side"></div>
+
+  <main class="main">
+    <div class="topbar">
+      <button class="menu-btn" onclick="toggleSide()" aria-label="Menu"><svg width="18" height="18" viewBox="0 0 18 18"><path d="M2 4h14M2 9h14M2 14h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+      <div class="crumb">Atlas <span>/</span> <b>Home</b></div>
+      <div class="actions">
+        <a class="btn btn-ghost btn-sm" href="index.html">↗ Landing</a>
+        <a class="btn btn-primary btn-sm" href="modules/deep-learning.html">Continue learning ›</a>
+      </div>
+    </div>
+
+    <div class="page">
+      <!-- continue learning hero -->
+      <div class="glass" style="padding:32px;border-radius:var(--r-lg);position:relative;overflow:hidden;margin-bottom:34px">
+        <div class="glow" style="position:absolute;width:340px;height:340px;background:var(--indigo);filter:blur(110px);opacity:.16;top:-160px;right:-60px"></div>
+        <span class="eyebrow">Pick up where you left off</span>
+        <div class="row between center" style="margin-top:16px;gap:24px;flex-wrap:wrap">
+          <div style="max-width:540px">
+            <h1 style="font-size:clamp(26px,3vw,36px);margin-bottom:10px">Backpropagation, step by step</h1>
+            <p class="muted" style="font-size:15px">You're 3 of 7 lessons into the Deep Learning Lab. Next: watch gradients flow backward through a 3-layer network.</p>
+            <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap">
+              <a class="btn btn-primary" href="modules/deep-learning.html">Resume lesson ›</a>
+              <a class="btn btn-ghost" href="modules/mathematics.html">Review the math first</a>
+            </div>
+          </div>
+          <div style="width:260px;flex:0 0 auto">
+            <div class="prog-l" style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--ink-mute);margin-bottom:8px"><span>Deep Learning Lab</span><span>43%</span></div>
+            <div class="bar" style="height:7px;border-radius:999px;background:#1a1a28;overflow:hidden"><i style="display:block;height:100%;width:43%;background:linear-gradient(90deg,var(--indigo),var(--cyan))"></i></div>
+            <div style="margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div class="metric"><div class="l">STREAK</div><div class="v">6 days</div></div>
+              <div class="metric"><div class="l">XP</div><div class="v">2,480</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- learning paths -->
+      <div class="row between center" style="margin-bottom:18px">
+        <h2 style="font-size:24px">Guided learning paths</h2>
+        <span class="muted" style="font-size:13.5px">curated routes through the Atlas</span>
+      </div>
+      <div class="grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:48px">
+        <div class="card" style="padding:22px"><span class="pill"><span class="dot cyan"></span>4 modules · beginner</span><h3 style="font-size:19px;margin:14px 0 8px">From Zero to Neural Net</h3><p style="color:var(--ink-mute);font-size:13.5px;margin:0">Vectors → gradients → perceptron → backprop. The shortest line to understanding deep learning.</p></div>
+        <div class="card" style="padding:22px"><span class="pill"><span class="dot violet"></span>3 modules · intermediate</span><h3 style="font-size:19px;margin:14px 0 8px">Understanding LLMs</h3><p style="color:var(--ink-mute);font-size:13.5px;margin:0">Tokenization → embeddings → attention → the full transformer, end to end.</p></div>
+        <div class="card" style="padding:22px"><span class="pill"><span class="dot emerald"></span>3 modules · applied</span><h3 style="font-size:19px;margin:14px 0 8px">Ship a Model</h3><p style="color:var(--ink-mute);font-size:13.5px;margin:0">ETL pipelines → training → MLOps deployment and drift monitoring.</p></div>
+      </div>
+
+      <!-- all modules -->
+      <div class="row between center" style="margin-bottom:18px">
+        <h2 style="font-size:24px">All modules</h2>
+        <span class="muted" style="font-size:13.5px">10 disciplines · 30+ playgrounds</span>
+      </div>
+      <div class="hub-grid" id="mods"></div>
+    </div>
+  </main>
+</div>
+
+<script>
+  const MODS = [
+    { id:'mathematics', t:'Mathematics', d:'Vectors, matrices, gradients, probability — the intuition behind every equation.', c:'#34D399', p:62, n:'4 playgrounds', href:'modules/mathematics.html' },
+    { id:'data-analysis', t:'Data Analysis', d:'Real SQL query runner, a cross-filtering BI dashboard and live data visualization.', c:'#2EC4DE', p:0, n:'SQL · dashboard', href:'modules/data-analysis.html' },
+    { id:'machine-learning', t:'Machine Learning', d:'Regression, clustering, classification and ensembles as live sandboxes.', c:'#22D3EE', p:38, n:'4 playgrounds', href:'modules/machine-learning.html' },
+    { id:'deep-learning', t:'Deep Learning Lab', d:'Build networks by hand. Forward pass, backprop, CNNs, RNNs, GANs, diffusion.', c:'#6366F1', p:43, n:'4 labs', href:'modules/deep-learning.html' },
+    { id:'transformers', t:'Transformers & LLMs', d:'Tokenization, embeddings, attention, BERT, GPT, RAG, fine-tuning, RLHF.', c:'#A855F7', p:12, n:'4 labs', href:'modules/transformers.html' },
+    { id:'llm-agents', t:'LLM & Agents Lab', d:'Build an LLM end-to-end, size it to your GPU VRAM, run locally, and orchestrate tool-using agents.', c:'#818CF8', p:0, n:'4 labs · new', href:'modules/llm-agents.html' },
+    { id:'generative', t:'Generative AI', d:'Diffusion denoising scrubber, latent space, guidance and prompts.', c:'#FB7185', p:0, n:'1 lab', href:'modules/generative.html' },
+    { id:'xai', t:'Explainable AI', d:'SHAP, LIME, GradCAM, saliency maps — open the black box.', c:'#F59E0B', p:0, n:'3 methods', href:'modules/xai.html' },
+    { id:'etl', t:'ETL & Data Eng.', d:'Drag-and-drop DAG builder, Kafka streams, warehouse modeling.', c:'#22D3EE', p:0, n:'1 builder', href:'modules/etl.html' },
+    { id:'programming', t:'Code & Stack', d:'Run Python, R & Go, explore NumPy→PyTorch, and compare SQL vs NoSQL.', c:'#F59E0B', p:0, n:'3 areas · new', href:'modules/programming.html' },
+    { id:'mlops', t:'MLOps', d:'Deployment pipelines, monitoring, drift detection, model registry, CI/CD.', c:'#34D399', p:0, n:'1 monitor', href:'modules/mlops.html' },
+    { id:'research', t:'AI Research Lab', d:'Bias–variance, cross-validation, bootstrap, uncertainty, statistical testing.', c:'#8B8CF6', p:0, n:'5 tools', href:'modules/research.html' },
+  ];
+  const wrap = document.getElementById('mods');
+  wrap.innerHTML = MODS.map(m => `
+    <a class="mod-card" href="${m.href}">
+      <div class="glow" style="position:absolute;width:200px;height:200px;border-radius:50%;filter:blur(60px);opacity:.18;top:-70px;right:-50px;background:${m.c}"></div>
+      <div class="micon" style="color:${m.c};background:${m.c}1a;border-color:${m.c}40">
+        <svg viewBox="0 0 20 20" width="22" height="22"><circle cx="10" cy="10" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="10" cy="10" r="2" fill="currentColor"/></svg>
+      </div>
+      <h3>${m.t}</h3>
+      <p>${m.d}</p>
+      <div class="prog">
+        <div class="prog-l"><span>${m.n}</span><span>${m.p}%</span></div>
+        <div class="bar"><i style="width:${m.p}%"></i></div>
+      </div>
+    </a>`).join('');
+</script>
+<script src="js/app-shell.js"></script>
+<script src="js/assistant.js"></script>
+</body>
+</html>

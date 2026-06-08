@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mathematics Playground — AI Atlas</title>
+<link rel="stylesheet" href="../styles/atlas.css" />
+<link rel="stylesheet" href="../styles/app.css" />
+</head>
+<body data-page="mathematics">
+<div class="atlas-bg"></div>
+<div class="atlas-grid"></div>
+<div class="scrim" id="scrim"></div>
+
+<div class="app">
+  <div id="shell-side"></div>
+
+  <main class="main">
+    <div class="topbar">
+      <button class="menu-btn" onclick="toggleSide()" aria-label="Menu"><svg width="18" height="18" viewBox="0 0 18 18"><path d="M2 4h14M2 9h14M2 14h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+      <div class="crumb">Atlas <span>/</span> <b>Mathematics</b></div>
+      <div class="actions"><span class="pill"><span class="dot emerald"></span>drag anything</span></div>
+    </div>
+
+    <div class="page" style="max-width:1240px">
+      <div class="page-head">
+        <span class="eyebrow">Mathematics Playground</span>
+        <h1>The intuition behind every equation</h1>
+        <p>Linear algebra and calculus you can grab. Drag the vectors to feel the dot product change sign; release a ball on a loss surface and watch gradient descent find the valley.</p>
+      </div>
+
+      <div class="tabs" id="tabs">
+        <div class="tab active" data-tab="vec">Vectors</div>
+        <div class="tab" data-tab="grad">Gradient Descent</div>
+        <div class="tab" data-tab="mat">Matrix Transform</div>
+        <div class="tab" data-tab="prob">Statistics</div>
+      </div>
+
+      <!-- ===== Vectors ===== -->
+      <div id="panel-vec">
+        <div class="pg">
+          <div class="pg-stage" style="aspect-ratio:1/1;min-height:0">
+            <div class="stage-bar"><span class="pill" style="background:rgba(12,12,20,.7)"><span class="dot"></span>vector u</span><span class="pill" style="background:rgba(12,12,20,.7)"><span class="dot cyan"></span>vector v</span><div class="spacer"></div><span class="pill" style="background:rgba(12,12,20,.7)"><span class="dot violet"></span>u + v</span></div>
+            <canvas id="vec"></canvas>
+          </div>
+          <div class="pg-panel">
+            <div class="ctrl">
+              <h4>Live values</h4>
+              <div class="eqn" id="vec-eqn"></div>
+            </div>
+            <div class="ctrl">
+              <h4>Operations</h4>
+              <div class="field" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><label style="margin:0">Show u + v</label><label class="switch"><input type="checkbox" id="show-sum" checked /></label></div>
+              <p class="note">Drag the <b style="color:var(--indigo-lt)">indigo</b> and <b style="color:var(--cyan)">cyan</b> handles. Values snap to half-units. When the <b style="color:var(--ink)">dot product</b> turns negative, the angle between the vectors exceeds 90°.</p>
+            </div>
+            <div class="metrics">
+              <div class="metric"><div class="l">DOT u·v</div><div class="v mono" id="m-dot">—</div></div>
+              <div class="metric"><div class="l">ANGLE θ</div><div class="v mono" id="m-ang">—</div></div>
+              <div class="metric"><div class="l">‖u‖</div><div class="v mono" id="m-mu">—</div></div>
+              <div class="metric"><div class="l">‖v‖</div><div class="v mono" id="m-mv">—</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== Gradient Descent ===== -->
+      <div id="panel-grad" style="display:none">
+        <div class="pg">
+          <div class="pg-stage" style="aspect-ratio:1/1;min-height:0">
+            <div class="stage-bar">
+              <button class="iconbtn primary" id="g-play"><svg id="g-icon" width="16" height="16" viewBox="0 0 16 16"><path d="M4 3l9 5-9 5z" fill="#fff"/></svg></button>
+              <button class="iconbtn" id="g-reset"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M8 3a5 5 0 1 1-4.6 3" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M3 2.5V6h3.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <div class="spacer"></div>
+              <span class="pill" style="background:rgba(12,12,20,.7)">click to drop the ball</span>
+            </div>
+            <canvas id="grad"></canvas>
+          </div>
+          <div class="pg-panel">
+            <div class="ctrl">
+              <h4>Loss surface</h4>
+              <div class="seg" id="surf"><button class="active" data-v="bowl">Bowl</button><button data-v="ravine">Ravine</button><button data-v="saddle">Saddle</button><button data-v="bumpy">Bumpy</button></div>
+            </div>
+            <div class="ctrl">
+              <h4>Optimizer</h4>
+              <div class="field"><label>Learning rate <span class="val" id="glr-v">0.08</span></label><input type="range" id="glr" min="0.01" max="0.4" step="0.01" value="0.08" /></div>
+              <div class="field" style="margin-bottom:0"><label>Momentum <span class="val" id="gmom-v">0.0</span></label><input type="range" id="gmom" min="0" max="0.95" step="0.05" value="0" /></div>
+            </div>
+            <div class="metrics">
+              <div class="metric"><div class="l">STEP</div><div class="v mono" id="g-step">0</div></div>
+              <div class="metric"><div class="l">LOSS f(x,y)</div><div class="v mono" id="g-loss" style="color:var(--rose)">—</div></div>
+            </div>
+            <p class="note">Crank <b style="color:var(--ink)">momentum</b> on the <b style="color:var(--ink)">Ravine</b> to escape the back-and-forth bounce. On <b style="color:var(--ink)">Bumpy</b>, a small learning rate gets stuck in a local minimum.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== Matrix Transform (visual) ===== -->
+      <div id="panel-mat" style="display:none">
+        <div class="pg">
+          <div class="pg-stage" style="aspect-ratio:16/10;min-height:0;display:grid;place-items:center"><canvas id="mat" style="width:100%;height:100%"></canvas></div>
+          <div class="pg-panel">
+            <div class="ctrl"><h4>Transformation matrix</h4>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                <div class="field" style="margin:0"><label>a <span class="val" id="ma-v">1.0</span></label><input type="range" id="ma" min="-2" max="2" step="0.1" value="1"></div>
+                <div class="field" style="margin:0"><label>b <span class="val" id="mb-v">0.0</span></label><input type="range" id="mb" min="-2" max="2" step="0.1" value="0"></div>
+                <div class="field" style="margin:0"><label>c <span class="val" id="mc-v">0.0</span></label><input type="range" id="mc" min="-2" max="2" step="0.1" value="0"></div>
+                <div class="field" style="margin:0"><label>d <span class="val" id="md-v">1.0</span></label><input type="range" id="md" min="-2" max="2" step="0.1" value="1"></div>
+              </div>
+            </div>
+            <div class="ctrl"><h4>Properties</h4><div class="metrics"><div class="metric"><div class="l">DETERMINANT</div><div class="v mono" id="m-det">1.00</div></div><div class="metric"><div class="l">AREA SCALE</div><div class="v mono" id="m-area">1.0×</div></div></div>
+              <p class="note" style="margin-top:14px">The matrix bends the grid and the unit square. The <b style="color:var(--ink)">determinant</b> is how much it scales area — negative means space flips inside-out.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== Probability (visual) ===== -->
+      <div id="panel-prob" style="display:none">
+        <div class="pg" style="grid-template-columns:1fr 340px">
+          <div class="pg-stage" style="aspect-ratio:16/10;min-height:0"><div class="stage-bar"><span class="pill" style="background:rgba(12,12,20,.7)">normal distribution · 68–95–99.7</span></div><canvas id="bell"></canvas></div>
+          <div class="pg-panel">
+            <div class="ctrl"><h4>Parameters</h4>
+              <div class="field"><label>Mean μ <span class="val" id="mu-v">0.0</span></label><input type="range" id="mu" min="-3" max="3" step="0.1" value="0"></div>
+              <div class="field" style="margin-bottom:0"><label>Std dev σ <span class="val" id="sd-v">1.0</span></label><input type="range" id="sd" min="0.4" max="2.5" step="0.1" value="1"></div>
+            </div>
+            <div class="metrics">
+              <div class="metric"><div class="l">±1σ</div><div class="v mono" style="font-size:18px;color:var(--indigo-lt)">68%</div></div>
+              <div class="metric"><div class="l">±2σ</div><div class="v mono" style="font-size:18px;color:var(--cyan)">95%</div></div>
+              <div class="metric"><div class="l">±3σ</div><div class="v mono" style="font-size:18px;color:var(--emerald)">99.7%</div></div>
+              <div class="metric"><div class="l">VARIANCE</div><div class="v mono" style="font-size:18px" id="var-v">1.00</div></div>
+            </div>
+            <p class="note">The <b style="color:var(--ink)">empirical rule</b>: in a normal distribution ~68% of values fall within one standard deviation of the mean, ~95% within two, ~99.7% within three. The backbone of statistics, confidence intervals and hypothesis testing.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script src="../js/app-shell.js"></script>
+<script src="../js/assistant.js"></script>
+<script src="../js/playgrounds/math.js"></script>
+<script>
+(function () {
+  // ---- Vectors ----
+  const vl = VectorLab(document.getElementById('vec'), (s) => {
+    const f = n => (n>=0?' ':'') + n.toFixed(1);
+    document.getElementById('vec-eqn').innerHTML =
+      `<span class="c">u</span> = (<span class="n">${f(s.u.x)}</span>, <span class="n">${f(s.u.y)}</span>)<br/>`+
+      `<span class="c">v</span> = (<span class="n">${f(s.v.x)}</span>, <span class="n">${f(s.v.y)}</span>)<br/>`+
+      `<span class="c">u+v</span> = (<span class="g">${f(s.sum.x)}</span>, <span class="g">${f(s.sum.y)}</span>)`;
+    document.getElementById('m-dot').textContent = s.dot.toFixed(2);
+    document.getElementById('m-dot').style.color = s.dot<0?'var(--rose)':'var(--emerald)';
+    document.getElementById('m-ang').textContent = s.ang.toFixed(0)+'°';
+    document.getElementById('m-mu').textContent = s.mu.toFixed(2);
+    document.getElementById('m-mv').textContent = s.mv.toFixed(2);
+  });
+  vl.draw();
+  document.getElementById('show-sum').onchange = e => vl.toggleSum(e.target.checked);
+
+  // ---- Gradient ----
+  const gl = GradientLab(document.getElementById('grad'), (s) => {
+    document.getElementById('g-step').textContent = s.steps;
+    document.getElementById('g-loss').textContent = s.loss.toFixed(3);
+  });
+  gl.draw();
+  const gIcon = document.getElementById('g-icon');
+  document.getElementById('g-play').onclick = () => { const r = gl.toggle(); gIcon.innerHTML = r ? '<rect x="4" y="3" width="3" height="10" fill="#fff"/><rect x="9" y="3" width="3" height="10" fill="#fff"/>' : '<path d="M4 3l9 5-9 5z" fill="#fff"/>'; };
+  document.getElementById('g-reset').onclick = () => { gl.reset(); gIcon.innerHTML='<path d="M4 3l9 5-9 5z" fill="#fff"/>'; };
+  function seg(id,cb){const el=document.getElementById(id);el.onclick=e=>{const b=e.target.closest('button');if(!b)return;[...el.children].forEach(c=>c.classList.remove('active'));b.classList.add('active');cb(b.dataset.v);};}
+  seg('surf', v => { gl.setSurf(v); gIcon.innerHTML='<path d="M4 3l9 5-9 5z" fill="#fff"/>'; });
+  document.getElementById('glr').oninput = e => { document.getElementById('glr-v').textContent=(+e.target.value).toFixed(2); gl.setLr(+e.target.value); };
+  document.getElementById('gmom').oninput = e => { document.getElementById('gmom-v').textContent=(+e.target.value).toFixed(2); gl.setMom(+e.target.value); };
+
+  // ---- Matrix transform ----
+  const mc = document.getElementById('mat'), mx = mc.getContext('2d');
+  let M = { a:1,b:0,c:0,d:1 };
+  function drawMat() {
+    const DPR=Math.min(devicePixelRatio||1,2); const r=mc.getBoundingClientRect(); mc.width=r.width*DPR; mc.height=r.height*DPR; mx.setTransform(DPR,0,0,DPR,0,0);
+    const W=r.width,H=r.height,cx=W/2,cy=H/2,sc=Math.min(W,H)/8;
+    mx.clearRect(0,0,W,H);
+    const tp=(x,y)=>({x:cx+(M.a*x+M.b*y)*sc, y:cy-(M.c*x+M.d*y)*sc});
+    // transformed grid
+    mx.strokeStyle='rgba(139,140,246,0.18)'; mx.lineWidth=1;
+    for(let i=-4;i<=4;i++){ let p0=tp(i,-4),p1=tp(i,4); mx.beginPath();mx.moveTo(p0.x,p0.y);mx.lineTo(p1.x,p1.y);mx.stroke(); p0=tp(-4,i);p1=tp(4,i); mx.beginPath();mx.moveTo(p0.x,p0.y);mx.lineTo(p1.x,p1.y);mx.stroke(); }
+    // unit square
+    const sq=[[0,0],[1,0],[1,1],[0,1]].map(([x,y])=>tp(x,y));
+    mx.beginPath(); sq.forEach((p,i)=>i?mx.lineTo(p.x,p.y):mx.moveTo(p.x,p.y)); mx.closePath();
+    mx.fillStyle='rgba(168,85,247,0.22)'; mx.fill(); mx.strokeStyle='#A855F7'; mx.lineWidth=2; mx.stroke();
+    // basis vectors
+    function arr(to,col){const a=tp(0,0),b=to;mx.beginPath();mx.moveTo(a.x,a.y);mx.lineTo(b.x,b.y);mx.strokeStyle=col;mx.lineWidth=3;mx.stroke();const an=Math.atan2(b.y-a.y,b.x-a.x);mx.beginPath();mx.moveTo(b.x,b.y);mx.lineTo(b.x-10*Math.cos(an-0.4),b.y-10*Math.sin(an-0.4));mx.lineTo(b.x-10*Math.cos(an+0.4),b.y-10*Math.sin(an+0.4));mx.closePath();mx.fillStyle=col;mx.fill();}
+    arr(tp(1,0),'#8B8CF6'); arr(tp(0,1),'#22D3EE');
+    const det=M.a*M.d-M.b*M.c;
+    document.getElementById('m-det').textContent=det.toFixed(2);
+    document.getElementById('m-det').style.color=det<0?'var(--rose)':'var(--ink)';
+    document.getElementById('m-area').textContent=Math.abs(det).toFixed(2)+'×';
+  }
+  ['a','b','c','d'].forEach(k=>{ const el=document.getElementById('m'+k); el.oninput=()=>{ M[k]=+el.value; document.getElementById('m'+k+'-v').textContent=(+el.value).toFixed(1); drawMat(); }; });
+  window.addEventListener('resize', drawMat);
+
+  // ---- Statistics: normal distribution ----
+  let mu=0,sd=1;
+  function drawBell(){ const cv=document.getElementById('bell'); if(!cv)return; const ctx=cv.getContext('2d'); const DPR=Math.min(devicePixelRatio||1,2); const r=cv.getBoundingClientRect(); cv.width=r.width*DPR; cv.height=r.height*DPR; ctx.setTransform(DPR,0,0,DPR,0,0); const W=r.width,H=r.height; ctx.clearRect(0,0,W,H); const pad=20, oy=H-34, span=W-pad*2; const X=x=>pad+((x+5)/10)*span; const peak=1/(sd*Math.sqrt(2*Math.PI)); const Y=y=>oy-(y/peak)*(H-70); const g=(x)=>1/(sd*Math.sqrt(2*Math.PI))*Math.exp(-0.5*((x-mu)/sd)**2);
+    [[3,'rgba(52,211,153,0.10)'],[2,'rgba(34,211,238,0.12)'],[1,'rgba(139,140,246,0.18)']].forEach(([k,col])=>{ ctx.beginPath(); ctx.moveTo(X(mu-k*sd),oy); for(let x=mu-k*sd;x<=mu+k*sd;x+=0.04){ ctx.lineTo(X(x),Y(g(x))); } ctx.lineTo(X(mu+k*sd),oy); ctx.closePath(); ctx.fillStyle=col; ctx.fill(); });
+    ctx.beginPath(); for(let x=-5;x<=5;x+=0.03){ const px=X(x),py=Y(g(x)); x===-5?ctx.moveTo(px,py):ctx.lineTo(px,py);} ctx.strokeStyle='#8B8CF6'; ctx.lineWidth=2.5; ctx.stroke();
+    ctx.strokeStyle='rgba(255,255,255,.12)'; ctx.beginPath(); ctx.moveTo(pad,oy); ctx.lineTo(W-pad,oy); ctx.stroke();
+    ctx.setLineDash([4,3]); ctx.strokeStyle='rgba(255,255,255,.35)'; ctx.beginPath(); ctx.moveTo(X(mu),oy); ctx.lineTo(X(mu),Y(peak)); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle='#9a9aae'; ctx.font='11px JetBrains Mono'; ctx.textAlign='center'; ctx.fillText('μ',X(mu),oy+18);
+    const vv=document.getElementById('var-v'); if(vv)vv.textContent=(sd*sd).toFixed(2); }
+  document.getElementById('mu').oninput=e=>{mu=+e.target.value;document.getElementById('mu-v').textContent=mu.toFixed(1);drawBell();};
+  document.getElementById('sd').oninput=e=>{sd=+e.target.value;document.getElementById('sd-v').textContent=sd.toFixed(1);drawBell();};
+  window.addEventListener('resize',()=>{ if(document.getElementById('panel-prob').style.display!=='none')drawBell(); });
+
+  // tabs
+  const tabs=document.getElementById('tabs');
+  tabs.onclick=e=>{const t=e.target.closest('.tab');if(!t)return;[...tabs.children].forEach(c=>c.classList.remove('active'));t.classList.add('active');['vec','grad','mat','prob'].forEach(id=>document.getElementById('panel-'+id).style.display=id===t.dataset.tab?'':'none'); if(t.dataset.tab==='vec')vl.draw(); if(t.dataset.tab==='grad')gl.draw(); if(t.dataset.tab==='mat')drawMat(); if(t.dataset.tab==='prob')drawBell();};
+})();
+</script>
+</body>
+</html>

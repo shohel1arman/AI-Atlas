@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Explainable AI — AI Atlas</title>
+<link rel="stylesheet" href="../styles/atlas.css" />
+<link rel="stylesheet" href="../styles/app.css" />
+</head>
+<body data-page="xai">
+<div class="atlas-bg"></div>
+<div class="atlas-grid"></div>
+<div class="scrim" id="scrim"></div>
+
+<div class="app">
+  <div id="shell-side"></div>
+  <main class="main">
+    <div class="topbar">
+      <button class="menu-btn" onclick="toggleSide()" aria-label="Menu"><svg width="18" height="18" viewBox="0 0 18 18"><path d="M2 4h14M2 9h14M2 14h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+      <div class="crumb">Atlas <span>/</span> <b>Explainable AI</b></div>
+      <div class="actions"><span class="pill"><span class="dot amber"></span>SHAP, interactive</span></div>
+    </div>
+
+    <div class="page" style="max-width:1240px">
+      <div class="page-head">
+        <span class="eyebrow">Explainable AI (XAI)</span>
+        <h1>Open the black box</h1>
+        <p>A loan model predicts approval. Toggle each applicant feature on or off and watch its SHAP attribution push the prediction up or down from the baseline — that's how SHAP explains a single decision.</p>
+      </div>
+
+      <div class="pg" style="grid-template-columns:1fr 360px">
+        <div class="glass" style="padding:28px;border-radius:var(--r-lg)">
+          <div class="row between center" style="margin-bottom:8px"><h3 style="font-size:17px">Feature attributions</h3><span class="pill" id="pred-pill"><span class="dot emerald"></span>approved</span></div>
+          <p class="note" style="margin-bottom:24px">Baseline (average prediction) <span class="mono" style="color:var(--ink-soft)">0.50</span> → final <span class="mono" id="final-num" style="color:var(--emerald)">0.50</span></p>
+          <div id="feat-bars"></div>
+          <!-- gauge -->
+          <div style="margin-top:28px">
+            <div class="row between" style="font-size:12px;font-family:var(--mono);color:var(--ink-mute);margin-bottom:6px"><span>denied</span><span>decision boundary 0.5</span><span>approved</span></div>
+            <div style="position:relative;height:14px;border-radius:999px;background:linear-gradient(90deg,var(--rose),#2a2a3a 50%,var(--emerald));overflow:visible">
+              <div style="position:absolute;top:-4px;bottom:-4px;left:50%;width:2px;background:var(--ink-mute)"></div>
+              <div id="gauge-marker" style="position:absolute;top:-7px;width:8px;height:28px;border-radius:4px;background:#fff;box-shadow:0 0 12px rgba(255,255,255,.6);transition:left .4s cubic-bezier(.2,.7,.3,1);left:50%"></div>
+            </div>
+          </div>
+        </div>
+        <div class="pg-panel">
+          <div class="ctrl"><h4>Method</h4><div class="seg" id="method"><button class="active" data-v="shap">SHAP</button><button data-v="lime">LIME</button></div>
+            <p class="note" style="margin-top:14px" id="method-note">SHAP distributes the prediction fairly across features using game-theory Shapley values — every contribution sums exactly to the output.</p>
+          </div>
+          <div class="ctrl"><h4>Applicant features</h4><div id="feat-toggles" style="display:flex;flex-direction:column;gap:12px"></div></div>
+        </div>
+      </div>
+
+      <div class="glass" style="padding:24px;border-radius:var(--r-lg);margin-top:24px">
+        <div class="grid" style="grid-template-columns:repeat(3,1fr);gap:20px">
+          <div><div class="ic" style="color:var(--amber);margin-bottom:12px"><svg width="20" height="20" viewBox="0 0 20 20"><rect x="3" y="11" width="3" height="6" fill="currentColor"/><rect x="8.5" y="6" width="3" height="11" fill="currentColor"/><rect x="14" y="3" width="3" height="14" fill="currentColor"/></svg></div><h4 style="font-size:15px;margin-bottom:6px">SHAP</h4><p class="note" style="font-size:13px;margin:0">Global + local feature importance with strong theoretical guarantees.</p></div>
+          <div><div class="ic" style="color:var(--cyan);margin-bottom:12px"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="10" cy="10" r="2" fill="currentColor"/></svg></div><h4 style="font-size:15px;margin-bottom:6px">LIME</h4><p class="note" style="font-size:13px;margin:0">Fits a simple model locally around one prediction to explain it.</p></div>
+          <div><div class="ic" style="color:var(--violet);margin-bottom:12px"><svg width="20" height="20" viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="7" cy="7" r="1.5" fill="currentColor"/></svg></div><h4 style="font-size:15px;margin-bottom:6px">GradCAM</h4><p class="note" style="font-size:13px;margin:0">Heatmaps over images showing which pixels drove a CNN's class.</p></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="../js/app-shell.js"></script>
+<script src="../js/assistant.js"></script>
+<script>
+(function(){
+  const FEATURES=[
+    {k:'income', label:'High income', shap:0.30, on:true},
+    {k:'tenure', label:'Long employment', shap:0.16, on:true},
+    {k:'debt', label:'Low debt ratio', shap:0.12, on:true},
+    {k:'history', label:'Clean credit history', shap:0.10, on:true},
+    {k:'age', label:'Younger applicant', shap:-0.08, on:true},
+    {k:'region', label:'High-risk region', shap:-0.18, on:true},
+    {k:'recent', label:'Recent missed payment', shap:-0.14, on:false},
+  ];
+  let method='shap';
+  function compute(){ return FEATURES.reduce((s,f)=>s+(f.on?f.shap*(method==='lime'?0.85:1):0),0); }
+  function render(){
+    const bars=document.getElementById('feat-bars');
+    const active=FEATURES.filter(f=>f.on).sort((a,b)=>Math.abs(b.shap)-Math.abs(a.shap));
+    bars.innerHTML=active.map(f=>{
+      const pos=f.shap>=0; const w=Math.min(48,Math.abs(f.shap)*150);
+      return `<div style="display:flex;align-items:center;gap:12px;margin-bottom:13px">
+        <span class="mono" style="font-size:12.5px;width:150px;color:var(--ink-soft);text-align:right">${f.label}</span>
+        <div style="flex:1;display:flex;align-items:center"><div style="width:50%;display:flex;justify-content:flex-end">${!pos?`<div style="height:18px;width:${w}%;background:linear-gradient(90deg,var(--rose),#fb718588);border-radius:5px 0 0 5px"></div>`:''}</div><div style="width:1px;height:24px;background:var(--ink-mute)"></div><div style="width:50%">${pos?`<div style="height:18px;width:${w}%;background:linear-gradient(90deg,#34d39988,var(--emerald));border-radius:0 5px 5px 0"></div>`:''}</div></div>
+        <span class="mono" style="font-size:12px;width:48px;color:${pos?'var(--emerald)':'var(--rose)'}">${pos?'+':''}${f.shap.toFixed(2)}</span>
+      </div>`;
+    }).join('');
+    const final=0.5+compute();
+    const clamped=Math.max(0.02,Math.min(0.98,final));
+    document.getElementById('final-num').textContent=clamped.toFixed(2);
+    document.getElementById('gauge-marker').style.left=`calc(${(clamped*100).toFixed(0)}% - 4px)`;
+    const approved=clamped>=0.5;
+    document.getElementById('final-num').style.color=approved?'var(--emerald)':'var(--rose)';
+    const pill=document.getElementById('pred-pill');
+    pill.innerHTML=`<span class="dot ${approved?'emerald':''}" style="${approved?'':'background:var(--rose);box-shadow:0 0 10px var(--rose)'}"></span>${approved?'approved':'denied'}`;
+  }
+  const tog=document.getElementById('feat-toggles');
+  tog.innerHTML=FEATURES.map((f,i)=>`<label style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-size:13.5px;color:var(--ink-soft)"><span>${f.label}</span><input type="checkbox" data-i="${i}" ${f.on?'checked':''} style="width:18px;height:18px;accent-color:var(--indigo)"></label>`).join('');
+  tog.onchange=e=>{ const i=+e.target.dataset.i; FEATURES[i].on=e.target.checked; render(); };
+  const ms=document.getElementById('method'); ms.onclick=e=>{const b=e.target.closest('button');if(!b)return;[...ms.children].forEach(c=>c.classList.remove('active'));b.classList.add('active');method=b.dataset.v;document.getElementById('method-note').textContent=method==='shap'?'SHAP distributes the prediction fairly across features using game-theory Shapley values — every contribution sums exactly to the output.':'LIME fits a simple, interpretable model in the local neighborhood of this one prediction to approximate the complex model nearby.';render();};
+  render();
+})();
+</script>
+</body>
+</html>

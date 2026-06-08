@@ -1,10 +1,5 @@
-# Netlify deployment config for a Vite single-page app.
+# Static site — no build step. Netlify serves these files as-is.
+# Empty command overrides any "npm run build" inherited from the old React setup.
 [build]
-  command = "npm run build"
-  publish = "dist"
-
-# SPA fallback: every route serves index.html so React Router handles it.
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+  command = ""
+  publish = "."
