@@ -64,7 +64,7 @@
       <!-- all modules -->
       <div class="row between center" style="margin-bottom:18px">
         <h2 style="font-size:24px">All modules</h2>
-        <span class="muted" style="font-size:13.5px">10 disciplines · 30+ playgrounds</span>
+        <span class="muted" style="font-size:13.5px">14 disciplines · 40+ playgrounds</span>
       </div>
       <div class="hub-grid" id="mods"></div>
     </div>
@@ -73,10 +73,12 @@
 
 <script>
   const MODS = [
+    { id:'foundations', t:'Foundations', d:'What AI is, the workflow pipeline, responsible-AI, and the history of the field — start here.', c:'#8B8CF6', p:0, n:'2 labs · start', href:'modules/foundations.html' },
     { id:'mathematics', t:'Mathematics', d:'Vectors, matrices, gradients, probability — the intuition behind every equation.', c:'#34D399', p:62, n:'4 playgrounds', href:'modules/mathematics.html' },
     { id:'data-analysis', t:'Data Analysis', d:'Real SQL query runner, a cross-filtering BI dashboard and live data visualization.', c:'#2EC4DE', p:0, n:'SQL · dashboard', href:'modules/data-analysis.html' },
     { id:'machine-learning', t:'Machine Learning', d:'Regression, clustering, classification and ensembles as live sandboxes.', c:'#22D3EE', p:38, n:'4 playgrounds', href:'modules/machine-learning.html' },
     { id:'deep-learning', t:'Deep Learning Lab', d:'Build networks by hand. Forward pass, backprop, CNNs, RNNs, GANs, diffusion.', c:'#6366F1', p:43, n:'4 labs', href:'modules/deep-learning.html' },
+    { id:'nlp', t:'Language & Generation', d:'Tokenizer, TF-IDF, temperature sampling, embeddings, NLP tasks and RAG.', c:'#A855F7', p:0, n:'3 labs · new', href:'modules/nlp.html' },
     { id:'transformers', t:'Transformers & LLMs', d:'Tokenization, embeddings, attention, BERT, GPT, RAG, fine-tuning, RLHF.', c:'#A855F7', p:12, n:'4 labs', href:'modules/transformers.html' },
     { id:'llm-agents', t:'LLM & Agents Lab', d:'Build an LLM end-to-end, size it to your GPU VRAM, run locally, and orchestrate tool-using agents.', c:'#818CF8', p:0, n:'4 labs · new', href:'modules/llm-agents.html' },
     { id:'generative', t:'Generative AI', d:'Diffusion denoising scrubber, latent space, guidance and prompts.', c:'#FB7185', p:0, n:'1 lab', href:'modules/generative.html' },

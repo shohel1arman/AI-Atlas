@@ -25,6 +25,8 @@
     llm: '<rect x="3" y="4" width="14" height="9" rx="2" stroke="currentColor" stroke-width="1.4" fill="none"/><path d="M7 16l3-3 3 3" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linejoin="round"/><circle cx="7" cy="8.5" r="1.1" fill="currentColor"/><circle cx="10" cy="8.5" r="1.1" fill="currentColor"/><circle cx="13" cy="8.5" r="1.1" fill="currentColor"/>',
     data: '<path d="M3 5v10c0 1.1 3.1 2 7 2s7-.9 7-2V5" stroke="currentColor" stroke-width="1.4" fill="none"/><ellipse cx="10" cy="5" rx="7" ry="2" stroke="currentColor" stroke-width="1.4" fill="none"/><path d="M3 10c0 1.1 3.1 2 7 2s7-.9 7-2" stroke="currentColor" stroke-width="1.2" fill="none" opacity=".6"/>',
     code: '<path d="M7 6l-4 4 4 4M13 6l4 4-4 4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>',
+    found: '<path d="M10 2l7 4v8l-7 4-7-4V6z" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linejoin="round"/><path d="M10 6v8M6.5 8v4M13.5 8v4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>',
+    nlp: '<path d="M4 5h12v7H9l-3 3v-3H4z" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linejoin="round"/><path d="M7 8.5h6M7 10.5h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>',
   };
 
   const NAV = [
@@ -32,12 +34,14 @@
       { id: 'hub', label: 'Atlas Home', icon: I.home, href: R + 'app.html' },
     ]},
     { group: 'Foundations', items: [
+      { id: 'foundations', label: 'Foundations', icon: I.found, href: M + 'foundations.html', badge: 'start' },
       { id: 'mathematics', label: 'Mathematics', icon: I.math, href: M + 'mathematics.html', badge: '4' },
       { id: 'data-analysis', label: 'Data Analysis', icon: I.data, href: M + 'data-analysis.html', badge: 'SQL' },
       { id: 'machine-learning', label: 'Machine Learning', icon: I.ml, href: M + 'machine-learning.html', badge: '4' },
       { id: 'deep-learning', label: 'Deep Learning Lab', icon: I.dl, href: M + 'deep-learning.html', badge: '4' },
     ]},
     { group: 'Language & Generation', items: [
+      { id: 'nlp', label: 'Language & Generation', icon: I.nlp, href: M + 'nlp.html', badge: 'new' },
       { id: 'transformers', label: 'Transformers & LLMs', icon: I.tf, href: M + 'transformers.html' },
       { id: 'llm-agents', label: 'LLM & Agents Lab', icon: I.llm, href: M + 'llm-agents.html', badge: 'new' },
       { id: 'generative', label: 'Generative AI', icon: I.gen, href: M + 'generative.html' },
