@@ -30,8 +30,13 @@ window.ATLAS_SUPABASE = {
 By default Supabase emails a confirmation link on signup. To let accounts sign in immediately:
 **Authentication → Providers → Email → disable "Confirm email"**. Leave it on for production.
 
-Also make sure your site URL is allowed: **Authentication → URL Configuration → Site URL**
-(e.g. your Netlify URL, and `http://localhost:8000` for local testing).
+### 4. Allow the site URLs
+**Authentication → URL Configuration:**
+
+- **Site URL:** `https://aiat1as.netlify.app`
+- **Redirect URLs** (add each): `https://aiat1as.netlify.app/**` and `http://localhost:8000/**`
+
+The `/**` wildcards let auth redirect back to any page.
 
 ## How it works
 
