@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Prompt Engineering — AI Atlas</title>
+<link rel="stylesheet" href="../styles/atlas.css" />
+<link rel="stylesheet" href="../styles/app.css" />
+<style>
+  .pe-in{ width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--stroke); background:rgba(12,12,20,.6); color:var(--ink); font:inherit; font-size:13.5px; outline:none; resize:vertical; }
+  .pe-in:focus{ border-color:var(--indigo); }
+  .pe-lab{ display:block; font-size:11.5px; font-family:var(--mono); letter-spacing:.05em; text-transform:uppercase; color:var(--ink-mute); margin:0 0 6px; }
+  .pe-fld{ margin-bottom:14px; }
+  .pe-pre{ font-family:var(--mono); font-size:12.5px; line-height:1.65; color:var(--ink-soft); background:#0c0c16; border:1px solid var(--stroke); border-radius:12px; padding:16px; white-space:pre-wrap; word-break:break-word; min-height:120px; }
+  .pe-pre b{ color:var(--indigo-lt); font-weight:600; }
+  .pe-check{ display:flex; flex-direction:column; gap:7px; }
+  .pe-ck{ display:flex; align-items:center; gap:9px; font-size:13px; color:var(--ink-mute); }
+  .pe-ck .bx{ width:16px; height:16px; border-radius:5px; border:1.5px solid var(--stroke); display:grid; place-items:center; color:transparent; font-size:11px; }
+  .pe-ck.on{ color:var(--ink); } .pe-ck.on .bx{ background:var(--emerald); border-color:var(--emerald); color:#06120c; }
+  .pe-seg{ display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px; }
+  .pe-seg .btn.active{ background:linear-gradient(180deg,var(--indigo-lt),var(--indigo-dk)); border-color:transparent; color:#fff; }
+  .pe-cards{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-top:18px; }
+  .pe-card{ padding:18px; border-radius:var(--r); border:1px solid var(--stroke); background:var(--glass); }
+  .pe-card h4{ font-size:14px; margin-bottom:8px; } .pe-card p{ font-size:13px; color:var(--ink-soft); line-height:1.6; }
+</style>
+</head>
+<body data-page="prompting">
+<div class="atlas-bg"></div>
+<div class="atlas-grid"></div>
+<div class="scrim" id="scrim"></div>
+
+<div class="app">
+  <div id="shell-side"></div>
+
+  <main class="main">
+    <div class="topbar">
+      <button class="menu-btn" onclick="toggleSide()" aria-label="Menu"><svg width="18" height="18" viewBox="0 0 18 18"><path d="M2 4h14M2 9h14M2 14h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+      <div class="crumb">Atlas <span>/</span> <b>Prompt Engineering</b></div>
+      <div class="actions"><span class="pill"><span class="dot violet"></span>prompting</span></div>
+    </div>
+
+    <div class="page" style="max-width:1240px">
+      <div class="page-head">
+        <span class="eyebrow">Prompt Engineering</span>
+        <h1>The interface is language</h1>
+        <p>A model's behaviour is steered by the words you give it. Assemble a prompt from its parts and watch a quality score climb, switch a task between zero-shot, few-shot and chain-of-thought, then coax a model into clean structured output you can actually parse.</p>
+      </div>
+
+      <div class="tabs" id="tabs">
+        <div class="tab active" data-tab="anatomy">Prompt Anatomy</div>
+        <div class="tab" data-tab="shots">Few-shot &amp; CoT</div>
+        <div class="tab" data-tab="structured">Structured Output</div>
+      </div>
+
+      <!-- ===================== ANATOMY ===================== -->
+      <div id="panel-anatomy">
+        <p class="note" style="margin-bottom:16px;max-width:840px">A strong prompt usually has the same skeleton: a <b style="color:var(--ink)">role</b>, some <b style="color:var(--ink)">context</b>, a clear <b style="color:var(--ink)">instruction</b>, explicit <b style="color:var(--ink)">constraints</b>, optional <b style="color:var(--ink)">examples</b>, and a specified <b style="color:var(--ink)">output format</b>. Fill the parts and watch the composed prompt — and its quality checklist — update.</p>
+        <div class="pg">
+          <div class="glass" style="padding:22px;border-radius:var(--r-lg)">
+            <div class="pe-fld"><span class="pe-lab">Role / persona</span><input class="pe-in" id="p-role" placeholder="You are a senior data analyst…"></div>
+            <div class="pe-fld"><span class="pe-lab">Context</span><textarea class="pe-in" id="p-ctx" rows="2" placeholder="The user runs a small e-commerce store and shares last quarter's sales…"></textarea></div>
+            <div class="pe-fld"><span class="pe-lab">Instruction / task</span><textarea class="pe-in" id="p-task" rows="2" placeholder="Summarise the three biggest revenue drivers…"></textarea></div>
+            <div class="pe-fld"><span class="pe-lab">Constraints</span><input class="pe-in" id="p-con" placeholder="Under 120 words. No jargon. If unsure, say so."></div>
+            <div class="pe-fld"><span class="pe-lab">Example(s)</span><input class="pe-in" id="p-ex" placeholder="Input: … → Output: …"></div>
+            <div class="pe-fld" style="margin-bottom:0"><span class="pe-lab">Output format</span><input class="pe-in" id="p-fmt" placeholder="Return a bulleted list, then one-line takeaway."></div>
+          </div>
+          <div class="pg-panel">
+            <div class="ctrl"><h4>Composed prompt</h4><div class="pe-pre" id="p-out"></div></div>
+            <div class="ctrl"><h4>Quality — <span id="p-score" style="color:var(--emerald)">0 / 6</span></h4>
+              <div class="pe-check" id="p-checks"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== SHOTS ===================== -->
+      <div id="panel-shots" style="display:none">
+        <p class="note" style="margin-bottom:16px;max-width:840px">Same task, three strategies. <b style="color:var(--ink)">Zero-shot</b> just asks. <b style="color:var(--ink)">Few-shot</b> shows worked examples so the model imitates the pattern. <b style="color:var(--ink)">Chain-of-thought</b> asks it to reason step by step before answering — which sharply improves multi-step problems. Toggle and compare.</p>
+        <div class="pe-seg" id="shot-seg">
+          <button class="btn btn-ghost btn-sm active" data-shot="zero">Zero-shot</button>
+          <button class="btn btn-ghost btn-sm" data-shot="few">Few-shot</button>
+          <button class="btn btn-ghost btn-sm" data-shot="cot">Chain-of-thought</button>
+        </div>
+        <div class="pg">
+          <div class="glass" style="padding:22px;border-radius:var(--r-lg)">
+            <h4 style="font-size:13px;color:var(--ink-mute);font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Prompt sent</h4>
+            <div class="pe-pre" id="shot-prompt"></div>
+          </div>
+          <div class="pg-panel">
+            <div class="ctrl"><h4>Illustrative model output</h4><div class="pe-pre" id="shot-out" style="min-height:150px"></div></div>
+            <div class="metrics">
+              <div class="metric"><div class="l">TASK</div><div class="v mono" style="font-size:14px">word problem</div></div>
+              <div class="metric"><div class="l">RELIABILITY</div><div class="v mono" id="shot-rel">low</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== STRUCTURED ===================== -->
+      <div id="panel-structured" style="display:none">
+        <p class="note" style="margin-bottom:16px;max-width:840px">When another program consumes the output, free text won't do. Ask for a <b style="color:var(--ink)">schema</b> and give the model an exact shape to fill. Pick a format to see the prompt wording that requests it and a well-formed example — the JSON is validated live with <code>JSON.parse</code>.</p>
+        <div class="pe-seg" id="fmt-seg">
+          <button class="btn btn-ghost btn-sm active" data-fmt="json">JSON</button>
+          <button class="btn btn-ghost btn-sm" data-fmt="kv">Key–value</button>
+          <button class="btn btn-ghost btn-sm" data-fmt="table">Table</button>
+          <button class="btn btn-ghost btn-sm" data-fmt="xml">XML tags</button>
+        </div>
+        <div class="pg">
+          <div class="glass" style="padding:22px;border-radius:var(--r-lg)">
+            <h4 style="font-size:13px;color:var(--ink-mute);font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Prompt instruction</h4>
+            <div class="pe-pre" id="fmt-prompt" style="min-height:70px"></div>
+            <h4 style="font-size:13px;color:var(--ink-mute);font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;margin:16px 0 10px">Example output</h4>
+            <div class="pe-pre" id="fmt-out"></div>
+          </div>
+          <div class="pg-panel">
+            <div class="ctrl"><h4>Validation</h4><div class="pe-pre" id="fmt-valid" style="min-height:50px"></div>
+              <p class="note" style="margin-top:12px">Only JSON is machine-validated here. Tool/function-calling APIs enforce a schema for you server-side.</p>
+            </div>
+          </div>
+        </div>
+        <div class="pe-cards">
+          <div class="pe-card"><h4>JSON mode &amp; tools</h4><p>Modern APIs offer a JSON/response-format mode and function-calling so the model returns arguments matching a schema you define.</p></div>
+          <div class="pe-card"><h4>Delimiters</h4><p>Wrap inputs in triple backticks or tags so the model can't confuse instructions with data — a key defence against prompt injection.</p></div>
+          <div class="pe-card"><h4>Ground &amp; cite</h4><p>For RAG, tell the model to answer only from provided context and cite sources; instruct it to say "I don't know" when the context is silent.</p></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="../js/app-shell.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase-config.js"></script>
+<script src="../js/modules-manifest.js"></script>
+<script src="../js/atlas-app.js"></script>
+<script src="../js/curriculum.js"></script>
+<script src="../js/reference.js"></script>
+<script src="../js/assistant.js"></script>
+<script>
+(function(){
+  /* ===== anatomy builder ===== */
+  const F={role:'p-role',ctx:'p-ctx',task:'p-task',con:'p-con',ex:'p-ex',fmt:'p-fmt'};
+  const LABELS={role:'Role',ctx:'Context',task:'Task',con:'Constraints',ex:'Examples',fmt:'Output format'};
+  function val(id){ return (document.getElementById(id).value||'').trim(); }
+  function buildAnatomy(){
+    const parts=[]; const has={};
+    Object.entries(F).forEach(([k,id])=>{ const t=val(id); has[k]=!!t;
+      if(t){ const head=k==='task'?'Task':LABELS[k]; parts.push('<b>'+head+':</b> '+esc(t)); } });
+    document.getElementById('p-out').innerHTML = parts.length?parts.join('\n\n'):'<span style="color:var(--ink-mute)">Start filling the fields on the left…</span>';
+    const checks=[
+      ['Role / persona set', has.role],
+      ['Task is stated', has.task],
+      ['Context provided', has.ctx],
+      ['Constraints given', has.con],
+      ['Example(s) shown', has.ex],
+      ['Output format specified', has.fmt],
+    ];
+    const score=checks.filter(c=>c[1]).length;
+    document.getElementById('p-score').textContent=score+' / 6';
+    document.getElementById('p-checks').innerHTML=checks.map(c=>
+      `<div class="pe-ck ${c[1]?'on':''}"><span class="bx">✓</span>${c[0]}</div>`).join('');
+  }
+  function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  Object.values(F).forEach(id=>document.getElementById(id).addEventListener('input',buildAnatomy));
+  buildAnatomy();
+
+  /* ===== shots ===== */
+  const SHOTS={
+    zero:{ prompt:'Q: A shop sells pens at 3 for $2. How much do 12 pens cost?\nA:',
+      out:'$8', rel:'low', note:'One shot in the dark — often right on easy tasks, brittle on multi-step ones.' },
+    few:{ prompt:'Q: 2 apples cost $6. How much do 5 apples cost?\nA: $15\n\nQ: 4 pens cost $8. How much do 10 pens cost?\nA: $20\n\nQ: A shop sells pens at 3 for $2. How much do 12 pens cost?\nA:',
+      out:'$8', rel:'medium', note:'Examples pin down the format and method — more consistent.' },
+    cot:{ prompt:'Q: A shop sells pens at 3 for $2. How much do 12 pens cost?\nLet\'s think step by step.',
+      out:'Step 1: price per pen = $2 ÷ 3 = $0.667.\nStep 2: 12 pens = 12 × $0.667 = $8.00.\nAnswer: $8.', rel:'high',
+      note:'Reasoning out loud before answering — best on arithmetic, logic, multi-hop questions.' },
+  };
+  let shot='zero';
+  function drawShot(){
+    const s=SHOTS[shot];
+    document.getElementById('shot-prompt').textContent=s.prompt;
+    document.getElementById('shot-out').textContent=s.out+'\n\n— '+s.note;
+    document.getElementById('shot-rel').textContent=s.rel;
+  }
+  document.getElementById('shot-seg').onclick=e=>{ const b=e.target.closest('[data-shot]'); if(!b)return;
+    shot=b.dataset.shot; [...e.currentTarget.children].forEach(c=>c.classList.toggle('active',c===b)); drawShot(); };
+  drawShot();
+
+  /* ===== structured ===== */
+  const FMT={
+    json:{ prompt:'Extract the person\'s details. Respond ONLY with valid JSON matching:\n{ "name": string, "role": string, "years": number }',
+      out:'{\n  "name": "Ada Lovelace",\n  "role": "mathematician",\n  "years": 12\n}' },
+    kv:{ prompt:'Return the fields as key: value pairs, one per line. No prose.',
+      out:'name: Ada Lovelace\nrole: mathematician\nyears: 12' },
+    table:{ prompt:'Return a Markdown table with columns name | role | years.',
+      out:'| name | role | years |\n|------|------|-------|\n| Ada Lovelace | mathematician | 12 |' },
+    xml:{ prompt:'Wrap each field in XML tags so it can be parsed reliably.',
+      out:'<person>\n  <name>Ada Lovelace</name>\n  <role>mathematician</role>\n  <years>12</years>\n</person>' },
+  };
+  let fmt='json';
+  function drawFmt(){
+    const f=FMT[fmt];
+    document.getElementById('fmt-prompt').textContent=f.prompt;
+    document.getElementById('fmt-out').textContent=f.out;
+    const vEl=document.getElementById('fmt-valid');
+    if(fmt==='json'){ try{ const o=JSON.parse(f.out); vEl.innerHTML='<span style="color:var(--emerald)">✓ Valid JSON</span> — parsed '+Object.keys(o).length+' keys: '+esc(Object.keys(o).join(', ')); }
+      catch(err){ vEl.innerHTML='<span style="color:var(--rose)">✗ Invalid JSON</span> — '+esc(err.message); } }
+    else vEl.innerHTML='<span style="color:var(--ink-mute)">Not JSON — parse with the matching reader ('+fmt+').</span>';
+  }
+  document.getElementById('fmt-seg').onclick=e=>{ const b=e.target.closest('[data-fmt]'); if(!b)return;
+    fmt=b.dataset.fmt; [...e.currentTarget.children].forEach(c=>c.classList.toggle('active',c===b)); drawFmt(); };
+  drawFmt();
+
+  /* ===== tabs ===== */
+  const tabs=document.getElementById('tabs'); const PANELS=['anatomy','shots','structured'];
+  tabs.onclick=e=>{ const t=e.target.closest('.tab'); if(!t)return;
+    [...tabs.children].forEach(c=>c.classList.remove('active')); t.classList.add('active');
+    PANELS.forEach(p=>document.getElementById('panel-'+p).style.display=(t.dataset.tab===p?'':'none'));
+  };
+})();
+</script>
+</body>
+</html>

@@ -27,6 +27,11 @@
     code: '<path d="M7 6l-4 4 4 4M13 6l4 4-4 4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>',
     found: '<path d="M10 2l7 4v8l-7 4-7-4V6z" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linejoin="round"/><path d="M10 6v8M6.5 8v4M13.5 8v4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>',
     nlp: '<path d="M4 5h12v7H9l-3 3v-3H4z" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linejoin="round"/><path d="M7 8.5h6M7 10.5h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>',
+    cv: '<path d="M2 10s3-5 8-5 8 5 8 5-3 5-8 5-8-5-8-5z" stroke="currentColor" stroke-width="1.4" fill="none"/><circle cx="10" cy="10" r="2.4" stroke="currentColor" stroke-width="1.4" fill="none"/>',
+    rl: '<circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.3" fill="none"/><circle cx="10" cy="10" r="3.5" stroke="currentColor" stroke-width="1.3" fill="none"/><circle cx="10" cy="10" r="1" fill="currentColor"/>',
+    ts: '<path d="M3 3v14h14" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/><path d="M4 14l4-5 3 3 5-7" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>',
+    prompt: '<path d="M4 4h12v9H9l-4 3v-3H4z" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linejoin="round"/><path d="M6.5 8l1.5 1.5L6.5 11M10.5 11h3" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>',
+    ethics: '<path d="M10 2l6 3v5c0 4-2.6 6.4-6 8-3.4-1.6-6-4-6-8V5z" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linejoin="round"/><path d="M7.5 10l1.8 1.8L13 8" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>',
   };
 
   const NAV = [
@@ -44,8 +49,15 @@
       { id: 'nlp', label: 'Language & Generation', icon: I.nlp, href: M + 'nlp.html', badge: 'new' },
       { id: 'transformers', label: 'Transformers & LLMs', icon: I.tf, href: M + 'transformers.html' },
       { id: 'llm-agents', label: 'LLM & Agents Lab', icon: I.llm, href: M + 'llm-agents.html', badge: 'new' },
+      { id: 'prompting', label: 'Prompt Engineering', icon: I.prompt, href: M + 'prompt-engineering.html', badge: 'new' },
       { id: 'generative', label: 'Generative AI', icon: I.gen, href: M + 'generative.html' },
       { id: 'xai', label: 'Explainable AI', icon: I.xai, href: M + 'xai.html' },
+    ]},
+    { group: 'Applied & Frontier', items: [
+      { id: 'cv', label: 'Computer Vision', icon: I.cv, href: M + 'computer-vision.html', badge: 'new' },
+      { id: 'rl', label: 'Reinforcement Learning', icon: I.rl, href: M + 'reinforcement-learning.html', badge: 'new' },
+      { id: 'timeseries', label: 'Time Series', icon: I.ts, href: M + 'time-series.html', badge: 'new' },
+      { id: 'ethics', label: 'AI Ethics & Safety', icon: I.ethics, href: M + 'ai-ethics.html', badge: 'new' },
     ]},
     { group: 'Systems & Research', items: [
       { id: 'programming', label: 'Code & Stack', icon: I.code, href: M + 'programming.html', badge: 'new' },

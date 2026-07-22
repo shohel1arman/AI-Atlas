@@ -287,6 +287,116 @@
         ['Safety & alignment', 'red-teaming, interpretability, governance.'],
       ]},
     },
+
+    /* 16 ── Computer Vision ── */
+    'cv': { color: '#22D3EE', mode: 'tabs', panels: {
+      conv: { tag: 'convolutions', title: 'Sliding a kernel over pixels', lead: 'A convolution multiplies a small weight matrix across every neighbourhood of an image to build a feature map. Pick a kernel below and watch edges, blur or sharpening appear.', pts: [
+        ['Kernels & feature maps', 'learned filters that detect structure.'],
+        ['Stride, padding, pooling', 'how the filter moves and downsamples.'],
+        ['CNN architectures', 'LeNet, AlexNet, VGG, ResNet, EfficientNet.'],
+        ['Transfer learning', 'reuse a pretrained backbone.'],
+      ]},
+      detect: { tag: 'object detection', title: 'Localise and classify', lead: 'Detection draws a box around each object and labels it. Drag the prediction box below until its IoU with ground truth snaps high.', pts: [
+        ['One- vs two-stage', 'YOLO/SSD speed vs R-CNN accuracy.'],
+        ['Anchors & NMS', 'prior boxes; suppress duplicates.'],
+        ['IoU', 'intersection over union.'],
+        ['mAP', 'the COCO benchmark metric.'],
+      ]},
+      segment: { tag: 'segmentation', title: 'Label every pixel', lead: 'Segmentation classifies each pixel, not just a box. Threshold the image below into masks, then read how ViTs treat patches as tokens.', pts: [
+        ['Semantic / instance / panoptic', 'class map, per-object, both.'],
+        ['U-Net, Mask R-CNN, DeepLab', 'the segmenters.'],
+        ['Vision Transformers', 'patches → tokens → attention.'],
+        ['DETR & SAM', 'transformer detection; promptable masks.'],
+      ]},
+    }},
+
+    /* 17 ── Reinforcement Learning ── */
+    'rl': { color: '#FB7185', mode: 'tabs', panels: {
+      mdp: { tag: 'mdp · value iteration', title: 'Learning from reward', lead: 'An agent acts in a world of states and rewards. Run value iteration below and watch a policy of arrows fall out of the Bellman equation.', pts: [
+        ['MDP', 'states, actions, rewards, transitions, γ.'],
+        ['Policy, V and Q', 'strategy and expected returns.'],
+        ['Bellman equation', 'value = best action + discounted future.'],
+        ['Model-based vs free', 'know the world vs learn it.'],
+      ]},
+      bandit: { tag: 'explore vs exploit', title: 'The multi-armed bandit', lead: 'The simplest RL problem: which arm to pull? Auto-play the ε-greedy policy below and watch estimates converge on the true win rates.', pts: [
+        ['Explore vs exploit', 'try new vs use the best.'],
+        ['ε-greedy', 'random with probability ε.'],
+        ['UCB & Thompson', 'smarter exploration.'],
+        ['Regret', 'the cost of not being optimal.'],
+      ]},
+      qlearn: { tag: 'model-free', title: 'Q-learning from scratch', lead: 'No map — just trial and error. Train the agent below over episodes and watch Q-values and a good path emerge.', pts: [
+        ['TD learning', 'bootstrap from the next guess.'],
+        ['Q-learning vs SARSA', 'off- vs on-policy.'],
+        ['DQN', 'neural Q + replay + target net.'],
+        ['Policy gradients', 'REINFORCE, A2C, PPO, RLHF.'],
+      ]},
+    }},
+
+    /* 18 ── Time Series ── */
+    'timeseries': { color: '#34D399', mode: 'tabs', panels: {
+      decomp: { tag: 'decomposition', title: 'Pull a series apart', lead: 'Observed = trend + seasonality + residual. Move the sliders below and watch a series split into its three components.', pts: [
+        ['Trend & seasonality', 'drift and repetition.'],
+        ['Additive vs multiplicative', 'sum vs product of parts.'],
+        ['Stationarity', 'stable mean and variance.'],
+        ['ACF / PACF', 'autocorrelation at lags.'],
+      ]},
+      smooth: { tag: 'smoothing', title: 'Taming the noise', lead: 'Trade responsiveness for stability. Compare a moving average and an exponential smoother below as you tune the window and α.', pts: [
+        ['Moving average', 'equal-weight window.'],
+        ['Exponential smoothing', 'decay-weighted (Holt-Winters).'],
+        ['Differencing', 'remove trend for stationarity.'],
+        ['Rolling statistics', 'windowed mean and variance.'],
+      ]},
+      forecast: { tag: 'forecasting', title: 'Projecting forward', lead: 'Extend the series into the future with a confidence band that honestly widens with the horizon. Tune H below.', pts: [
+        ['Baselines', 'naive, seasonal-naive, drift, mean.'],
+        ['ARIMA / ETS', 'classical statistical models.'],
+        ['Prophet & ML', 'lag features, LSTM, TFT.'],
+        ['Backtesting', 'rolling-origin; MAE/RMSE/MAPE.'],
+      ]},
+    }},
+
+    /* 19 ── Prompt Engineering ── */
+    'prompting': { color: '#A855F7', mode: 'tabs', panels: {
+      anatomy: { tag: 'prompt design', title: 'The parts of a prompt', lead: 'Role, context, instruction, constraints, examples, format. Build a prompt below and watch a quality score climb as the parts appear.', pts: [
+        ['Role & context', 'set expertise and background.'],
+        ['Instruction & constraints', 'the task and its limits.'],
+        ['Examples', 'demonstrate the pattern.'],
+        ['Output format & delimiters', 'shape and fencing.'],
+      ]},
+      shots: { tag: 'reasoning', title: 'Zero-shot to chain-of-thought', lead: 'The same task gets more reliable as you add examples and ask for step-by-step reasoning. Toggle the modes below.', pts: [
+        ['Zero-shot', 'just ask.'],
+        ['Few-shot (ICL)', 'show worked examples.'],
+        ['Chain-of-thought', 'reason before answering.'],
+        ['ReAct & self-consistency', 'act with tools; vote over chains.'],
+      ]},
+      structured: { tag: 'structured output', title: 'Output you can parse', lead: 'When code consumes the answer, demand a schema. Pick a format below and validate the JSON live.', pts: [
+        ['JSON & schemas', 'a parseable shape.'],
+        ['Function/tool calling', 'API-enforced arguments.'],
+        ['Grounding (RAG)', 'answer only from context, cite.'],
+        ['Prompt injection', 'the key safety risk.'],
+      ]},
+    }},
+
+    /* 20 ── AI Ethics & Safety ── */
+    'ethics': { color: '#F59E0B', mode: 'tabs', panels: {
+      fair: { tag: 'fairness', title: 'When fairness metrics collide', lead: 'Tune two groups’ thresholds below and watch demographic parity, equal opportunity and equalized odds fight each other — you can’t satisfy them all.', pts: [
+        ['Sources of bias', 'historical, representation, measurement.'],
+        ['Fairness definitions', 'parity, equal opportunity, odds, calibration.'],
+        ['Impossibility', 'they conflict when base rates differ.'],
+        ['Mitigation', 'pre-, in-, post-processing; Fairlearn, AIF360.'],
+      ]},
+      align: { tag: 'safety', title: 'Defence in depth', lead: 'No single guardrail is enough. Stack safety layers below and see how many risky requests still slip through.', pts: [
+        ['Alignment problem', 'do what we truly want.'],
+        ['RLHF / DPO / Constitutional AI', 'shape behaviour.'],
+        ['Red-teaming & jailbreaks', 'attack before shipping.'],
+        ['Hallucination & guardrails', 'filter and verify.'],
+      ]},
+      govern: { tag: 'governance', title: 'Responsible release', lead: 'Can you show the model is safe to deploy? Check the practices below and build a readiness score, then meet the frameworks.', pts: [
+        ['Privacy', 'PII, differential privacy, federated learning.'],
+        ['Documentation', 'model cards, datasheets, lineage.'],
+        ['Human oversight', 'accountability for decisions.'],
+        ['Regulation', 'EU AI Act, NIST AI RMF, GDPR.'],
+      ]},
+    }},
   };
 
   function cardHTML(color, c) {

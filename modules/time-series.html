@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Time Series & Forecasting — AI Atlas</title>
+<link rel="stylesheet" href="../styles/atlas.css" />
+<link rel="stylesheet" href="../styles/app.css" />
+<style>
+  .ts-stack{ display:flex; flex-direction:column; gap:8px; }
+  .ts-stack canvas{ border-radius:12px; border:1px solid var(--stroke); background:#0c0c16; width:100%; height:auto; }
+  .ts-cap{ font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-mute); }
+  .ts-cards{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-top:18px; }
+  .ts-card{ padding:18px; border-radius:var(--r); border:1px solid var(--stroke); background:var(--glass); }
+  .ts-card h4{ font-size:14px; margin-bottom:8px; }
+  .ts-card p{ font-size:13px; color:var(--ink-soft); line-height:1.6; }
+  .ts-tag{ display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:11.5px; padding:5px 10px; border-radius:999px; background:var(--glass-2); border:1px solid var(--stroke); color:var(--ink-soft); margin:4px 4px 0 0; }
+</style>
+</head>
+<body data-page="timeseries">
+<div class="atlas-bg"></div>
+<div class="atlas-grid"></div>
+<div class="scrim" id="scrim"></div>
+
+<div class="app">
+  <div id="shell-side"></div>
+
+  <main class="main">
+    <div class="topbar">
+      <button class="menu-btn" onclick="toggleSide()" aria-label="Menu"><svg width="18" height="18" viewBox="0 0 18 18"><path d="M2 4h14M2 9h14M2 14h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+      <div class="crumb">Atlas <span>/</span> <b>Time Series</b></div>
+      <div class="actions"><span class="pill"><span class="dot emerald"></span>forecasting</span></div>
+    </div>
+
+    <div class="page" style="max-width:1240px">
+      <div class="page-head">
+        <span class="eyebrow">Time Series &amp; Forecasting</span>
+        <h1>Data that remembers its order</h1>
+        <p>When time is an axis, order carries meaning: a trend drifts, a season repeats, noise wobbles on top. Pull a series apart into its components, smooth away the jitter, then project the next stretch with a confidence band that honestly widens as you look further ahead.</p>
+      </div>
+
+      <div class="tabs" id="tabs">
+        <div class="tab active" data-tab="decomp">Decomposition</div>
+        <div class="tab" data-tab="smooth">Smoothing</div>
+        <div class="tab" data-tab="forecast">Forecasting</div>
+      </div>
+
+      <!-- ===================== DECOMPOSITION ===================== -->
+      <div id="panel-decomp">
+        <p class="note" style="margin-bottom:16px;max-width:840px">Classical <b style="color:var(--ink)">additive decomposition</b> assumes observed = <b style="color:var(--emerald)">trend</b> + <b style="color:var(--cyan)">seasonality</b> + <b style="color:var(--rose)">residual</b>. Move the sliders to build a series and watch it split into its three parts. The residual is what's left after structure is removed — ideally just noise.</p>
+        <div class="pg">
+          <div class="glass" style="padding:20px;border-radius:var(--r-lg)">
+            <div class="ts-stack"><canvas id="dc" width="720" height="420"></canvas>
+              <span class="ts-cap">observed · trend · seasonal · residual</span></div>
+          </div>
+          <div class="pg-panel">
+            <div class="ctrl"><h4>Build the series</h4>
+              <div class="field"><label>Trend slope <span class="val" id="dv1">0.30</span></label><input type="range" id="d-trend" min="-0.6" max="0.6" step="0.02" value="0.30"></div>
+              <div class="field"><label>Seasonal amplitude <span class="val" id="dv2">18</span></label><input type="range" id="d-amp" min="0" max="40" step="1" value="18"></div>
+              <div class="field"><label>Seasonal period <span class="val" id="dv3">24</span></label><input type="range" id="d-per" min="6" max="48" step="1" value="24"></div>
+              <div class="field"><label>Noise level <span class="val" id="dv4">6</span></label><input type="range" id="d-noise" min="0" max="25" step="1" value="6"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== SMOOTHING ===================== -->
+      <div id="panel-smooth" style="display:none">
+        <p class="note" style="margin-bottom:16px;max-width:840px">Smoothing trades responsiveness for stability. A <b style="color:var(--cyan)">simple moving average</b> averages the last <b>W</b> points equally; an <b style="color:var(--amber)">exponential moving average</b> weights recent points more, decaying by <b>α</b>. Widen the window and the line lags; raise α and it hugs the data.</p>
+        <div class="pg">
+          <div class="glass" style="padding:20px;border-radius:var(--r-lg)">
+            <div class="ts-stack"><canvas id="sm" width="720" height="320"></canvas>
+              <span class="ts-cap">raw (faint) · SMA (cyan) · EMA (amber)</span></div>
+            <div class="eqn" style="margin-top:16px">SMA<sub>t</sub> = mean(x<sub>t−W+1…t</sub>)&nbsp;&nbsp;&nbsp;EMA<sub>t</sub> = <span class="g">α</span>·x<sub>t</sub> + (1−<span class="g">α</span>)·EMA<sub>t−1</sub></div>
+          </div>
+          <div class="pg-panel">
+            <div class="ctrl"><h4>Smoothers</h4>
+              <div class="field"><label>Window W (SMA) <span class="val" id="sv1">7</span></label><input type="range" id="s-win" min="1" max="30" step="1" value="7"></div>
+              <div class="field"><label>α (EMA) <span class="val" id="sv2">0.30</span></label><input type="range" id="s-alpha" min="0.02" max="1" step="0.02" value="0.30"></div>
+              <button class="btn btn-ghost btn-sm" id="s-reroll">↻ New noisy series</button>
+              <p class="note" style="margin-top:12px">Low α ≈ long memory (smooth, laggy). High α ≈ short memory (reactive).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== FORECAST ===================== -->
+      <div id="panel-forecast" style="display:none">
+        <p class="note" style="margin-bottom:16px;max-width:840px">A forecast extends the series into the future. Here <b style="color:var(--indigo-lt)">simple exponential smoothing with drift</b> projects the level forward; the shaded band is a prediction interval that <b style="color:var(--ink)">widens with the horizon</b> — the further out, the less certain. Honest uncertainty is half the job.</p>
+        <div class="pg">
+          <div class="glass" style="padding:20px;border-radius:var(--r-lg)">
+            <div class="ts-stack"><canvas id="fc" width="720" height="340"></canvas>
+              <span class="ts-cap">history (solid) · forecast (dashed) · ±interval (shaded)</span></div>
+          </div>
+          <div class="pg-panel">
+            <div class="ctrl"><h4>Project forward</h4>
+              <div class="field"><label>Horizon H <span class="val" id="fv1">20</span></label><input type="range" id="f-h" min="4" max="48" step="1" value="20"></div>
+              <div class="field"><label>Smoothing α <span class="val" id="fv2">0.40</span></label><input type="range" id="f-alpha" min="0.05" max="0.95" step="0.05" value="0.40"></div>
+              <button class="btn btn-ghost btn-sm" id="f-reroll">↻ New series</button>
+            </div>
+            <div class="metrics">
+              <div class="metric"><div class="l">LEVEL</div><div class="v mono" id="f-lvl">—</div></div>
+              <div class="metric"><div class="l">DRIFT / STEP</div><div class="v mono" id="f-drift">—</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="ts-cards">
+          <div class="ts-card"><h4>Baselines first</h4><p>Naive (last value), seasonal-naive (last season), mean, and drift. Always beat these before reaching for ARIMA or deep nets.</p></div>
+          <div class="ts-card"><h4>ARIMA / ETS</h4><p>ARIMA(p,d,q) models autocorrelation after differencing; SARIMA adds seasonality. ETS is the state-space form of exponential smoothing (Holt-Winters).</p></div>
+          <div class="ts-card"><h4>ML &amp; deep</h4><p>Gradient boosting on lag/rolling features, LSTMs, and Temporal Fusion Transformers — powerful, but validate with rolling-origin backtests to avoid leakage.</p></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="../js/app-shell.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase-config.js"></script>
+<script src="../js/modules-manifest.js"></script>
+<script src="../js/atlas-app.js"></script>
+<script src="../js/curriculum.js"></script>
+<script src="../js/reference.js"></script>
+<script src="../js/assistant.js"></script>
+<script>
+(function(){
+  const NP=120;                              // number of history points
+  function rnd(){ return Math.random()*2-1; }
+  // simple axis + polyline helpers on a canvas ctx given a value range
+  function axes(ctx,W,H,pad){ ctx.strokeStyle='rgba(255,255,255,.12)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(pad,H-pad); ctx.lineTo(W-6,H-pad); ctx.stroke(); }
+  function plot(ctx,data,W,H,pad,lo,hi,color,width,dash){
+    const n=data.length; ctx.strokeStyle=color; ctx.lineWidth=width||1.6; ctx.setLineDash(dash||[]);
+    ctx.beginPath();
+    data.forEach((v,i)=>{ const x=pad+(W-pad-6)*(i/(NP+ (data._ext||0) -1)); const y=(H-pad)-(H-2*pad)*((v-lo)/(hi-lo||1));
+      i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+    ctx.stroke(); ctx.setLineDash([]);
+  }
+  const range=a=>{ let lo=Infinity,hi=-Infinity; a.forEach(v=>{lo=Math.min(lo,v);hi=Math.max(hi,v);}); const m=(hi-lo)*0.1||1; return [lo-m,hi+m]; };
+
+  /* ===== decomposition ===== */
+  const dc=document.getElementById('dc').getContext('2d');
+  function drawDecomp(){
+    const slope=+v('d-trend'), amp=+v('d-amp'), per=+v('d-per'), noise=+v('d-noise');
+    setv('dv1',slope.toFixed(2)); setv('dv2',amp); setv('dv3',per); setv('dv4',noise);
+    const trend=[],seas=[],resid=[],obs=[];
+    for(let i=0;i<NP;i++){ const t=50+slope*i; const s=amp*Math.sin(2*Math.PI*i/per); const e=noise*rnd();
+      trend.push(t); seas.push(s); resid.push(e); obs.push(t+s+e); }
+    const W=720,H=420,pad=30, rowH=H/4;
+    dc.clearRect(0,0,W,H);
+    const rows=[['observed',obs,'#8B8CF6'],['trend',trend,'#34D399'],['seasonal',seas,'#22D3EE'],['residual',resid,'#FB7185']];
+    rows.forEach((rw,idx)=>{
+      dc.save(); dc.translate(0,idx*rowH);
+      const [lo,hi]=range(rw[1]);
+      dc.strokeStyle='rgba(255,255,255,.10)'; dc.beginPath(); dc.moveTo(pad,rowH-10); dc.lineTo(W-6,rowH-10); dc.stroke();
+      plot2(dc,rw[1],W,rowH-6,pad,8,lo,hi,rw[2],1.6);
+      dc.fillStyle='var(--ink-mute)'; dc.fillStyle='#7C7C92'; dc.font='11px JetBrains Mono, monospace'; dc.textAlign='left';
+      dc.fillText(rw[0], pad+2, 14);
+      dc.restore();
+    });
+  }
+  // plot within a sub-band [top..bottom]
+  function plot2(ctx,data,W,bottom,pad,top,lo,hi,color,width){
+    ctx.strokeStyle=color; ctx.lineWidth=width; ctx.beginPath();
+    data.forEach((val,i)=>{ const x=pad+(W-pad-6)*(i/(data.length-1)); const y=bottom-(bottom-top)*((val-lo)/(hi-lo||1));
+      i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+    ctx.stroke();
+  }
+  ['d-trend','d-amp','d-per','d-noise'].forEach(id=>document.getElementById(id).oninput=drawDecomp);
+
+  /* ===== smoothing ===== */
+  const sm=document.getElementById('sm').getContext('2d');
+  let noisy=genNoisy();
+  function genNoisy(){ const a=[]; let x=50; for(let i=0;i<NP;i++){ x+=0.15*Math.sin(i/9)+ (Math.random()*10-5); a.push(x); } return a; }
+  function sma(a,w){ const o=[]; for(let i=0;i<a.length;i++){ let s=0,c=0; for(let j=Math.max(0,i-w+1);j<=i;j++){s+=a[j];c++;} o.push(s/c);} return o; }
+  function ema(a,al){ const o=[a[0]]; for(let i=1;i<a.length;i++) o.push(al*a[i]+(1-al)*o[i-1]); return o; }
+  function drawSmooth(){
+    const w=+v('s-win'), al=+v('s-alpha'); setv('sv1',w); setv('sv2',al.toFixed(2));
+    const W=720,H=320,pad=30; sm.clearRect(0,0,W,H); axes(sm,W,H,pad);
+    const [lo,hi]=range(noisy);
+    plotFull(sm,noisy,W,H,pad,lo,hi,'rgba(185,185,204,.35)',1.2);
+    plotFull(sm,sma(noisy,w),W,H,pad,lo,hi,'#22D3EE',2);
+    plotFull(sm,ema(noisy,al),W,H,pad,lo,hi,'#F59E0B',2);
+  }
+  function plotFull(ctx,data,W,H,pad,lo,hi,color,width){ ctx.strokeStyle=color; ctx.lineWidth=width; ctx.beginPath();
+    data.forEach((val,i)=>{ const x=pad+(W-pad-6)*(i/(data.length-1)); const y=(H-pad)-(H-2*pad)*((val-lo)/(hi-lo||1));
+      i?ctx.lineTo(x,y):ctx.moveTo(x,y); }); ctx.stroke(); }
+  ['s-win','s-alpha'].forEach(id=>document.getElementById(id).oninput=drawSmooth);
+  document.getElementById('s-reroll').onclick=()=>{ noisy=genNoisy(); drawSmooth(); };
+
+  /* ===== forecast ===== */
+  const fc=document.getElementById('fc').getContext('2d');
+  let hist=genHist();
+  function genHist(){ const a=[]; let x=40; for(let i=0;i<NP;i++){ x+=0.12+ (Math.random()*6-3)+4*Math.sin(i/11); a.push(x);} return a; }
+  function drawForecast(){
+    const H_=+v('f-h'), al=+v('f-alpha'); setv('fv1',H_); setv('fv2',al.toFixed(2));
+    // SES level + drift estimate from tail
+    let level=hist[0]; for(let i=1;i<hist.length;i++) level=al*hist[i]+(1-al)*level;
+    const tail=hist.slice(-12); const drift=(tail[tail.length-1]-tail[0])/(tail.length-1);
+    setv('f-lvl',level.toFixed(1)); setv('f-drift',drift.toFixed(2));
+    const resid=Math.sqrt(hist.slice(1).reduce((s,x,i)=>s+Math.pow(x-hist[i],2),0)/(hist.length-1));
+    const fcast=[],up=[],dn=[];
+    for(let h=1;h<=H_;h++){ const yv=level+drift*h; fcast.push(yv); const band=resid*Math.sqrt(h)*1.28; up.push(yv+band); dn.push(yv-band); }
+    const all=hist.concat(fcast,up,dn); const [lo,hi]=range(all);
+    const W=720,H=340,pad=30; const total=NP+H_;
+    fc.clearRect(0,0,W,H); axes(fc,W,H,pad);
+    const X=i=>pad+(W-pad-6)*(i/(total-1));
+    const Y=val=>(H-pad)-(H-2*pad)*((val-lo)/(hi-lo||1));
+    // band polygon
+    fc.fillStyle='rgba(99,102,241,.14)'; fc.beginPath();
+    up.forEach((val,h)=>{ const x=X(NP-1+h+1),y=Y(val); h?fc.lineTo(x,y):fc.moveTo(X(NP-1),Y(hist[NP-1])); });
+    for(let h=dn.length-1;h>=0;h--){ fc.lineTo(X(NP-1+h+1),Y(dn[h])); }
+    fc.closePath(); fc.fill();
+    // history
+    fc.strokeStyle='#B9B9CC'; fc.lineWidth=1.8; fc.beginPath();
+    hist.forEach((val,i)=>{ const x=X(i),y=Y(val); i?fc.lineTo(x,y):fc.moveTo(x,y); }); fc.stroke();
+    // forecast dashed
+    fc.strokeStyle='#8B8CF6'; fc.lineWidth=2; fc.setLineDash([6,5]); fc.beginPath();
+    fc.moveTo(X(NP-1),Y(hist[NP-1]));
+    fcast.forEach((val,h)=>fc.lineTo(X(NP-1+h+1),Y(val))); fc.stroke(); fc.setLineDash([]);
+    // divider
+    fc.strokeStyle='rgba(255,255,255,.18)'; fc.setLineDash([3,4]); fc.beginPath(); fc.moveTo(X(NP-1),pad); fc.lineTo(X(NP-1),H-pad); fc.stroke(); fc.setLineDash([]);
+  }
+  ['f-h','f-alpha'].forEach(id=>document.getElementById(id).oninput=drawForecast);
+  document.getElementById('f-reroll').onclick=()=>{ hist=genHist(); drawForecast(); };
+
+  /* helpers */
+  function v(id){ return document.getElementById(id).value; }
+  function setv(id,val){ document.getElementById(id).textContent=val; }
+
+  /* initial paints */
+  drawDecomp(); drawSmooth(); drawForecast();
+
+  /* ===== tabs ===== */
+  const tabs=document.getElementById('tabs'); const PANELS=['decomp','smooth','forecast'];
+  tabs.onclick=e=>{ const t=e.target.closest('.tab'); if(!t)return;
+    [...tabs.children].forEach(c=>c.classList.remove('active')); t.classList.add('active');
+    PANELS.forEach(p=>document.getElementById('panel-'+p).style.display=(t.dataset.tab===p?'':'none'));
+    if(t.dataset.tab==='decomp')drawDecomp(); if(t.dataset.tab==='smooth')drawSmooth(); if(t.dataset.tab==='forecast')drawForecast();
+  };
+})();
+</script>
+</body>
+</html>

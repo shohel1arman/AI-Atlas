@@ -71,6 +71,31 @@ window.ATLAS_MODULES = [
   { id: 'research', title: 'AI Research Lab', color: '#8B8CF6', href: 'modules/research.html', lessons: [
     { id: 'research', label: 'Statistical Methods' },
   ]},
+  { id: 'cv', title: 'Computer Vision', color: '#22D3EE', href: 'modules/computer-vision.html', lessons: [
+    { id: 'conv',    label: 'Convolution & Filters' },
+    { id: 'detect',  label: 'Detection & IoU' },
+    { id: 'segment', label: 'Segmentation & ViT' },
+  ]},
+  { id: 'rl', title: 'Reinforcement Learning', color: '#FB7185', href: 'modules/reinforcement-learning.html', lessons: [
+    { id: 'mdp',    label: 'MDPs & Gridworld' },
+    { id: 'bandit', label: 'Multi-Armed Bandit' },
+    { id: 'qlearn', label: 'Q-Learning' },
+  ]},
+  { id: 'timeseries', title: 'Time Series & Forecasting', color: '#34D399', href: 'modules/time-series.html', lessons: [
+    { id: 'decomp',   label: 'Decomposition' },
+    { id: 'smooth',   label: 'Smoothing' },
+    { id: 'forecast', label: 'Forecasting' },
+  ]},
+  { id: 'prompting', title: 'Prompt Engineering', color: '#A855F7', href: 'modules/prompt-engineering.html', lessons: [
+    { id: 'anatomy',    label: 'Prompt Anatomy' },
+    { id: 'shots',      label: 'Few-shot & CoT' },
+    { id: 'structured', label: 'Structured Output' },
+  ]},
+  { id: 'ethics', title: 'AI Ethics & Safety', color: '#F59E0B', href: 'modules/ai-ethics.html', lessons: [
+    { id: 'fair',   label: 'Fairness & Bias' },
+    { id: 'align',  label: 'Alignment & Safety' },
+    { id: 'govern', label: 'Governance & Privacy' },
+  ]},
 ];
 
 /* quick lookup by page id */

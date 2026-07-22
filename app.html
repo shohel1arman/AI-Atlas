@@ -64,7 +64,7 @@
       <!-- all modules -->
       <div class="row between center" style="margin-bottom:18px">
         <h2 style="font-size:24px">All modules</h2>
-        <span class="muted" style="font-size:13.5px">14 disciplines · 40+ playgrounds</span>
+        <span class="muted" style="font-size:13.5px">19 disciplines · 55+ playgrounds</span>
       </div>
       <div class="hub-grid" id="mods"></div>
     </div>
@@ -87,6 +87,11 @@
     { id:'programming', t:'Code & Stack', d:'Run Python, R & Go, explore NumPy→PyTorch, and compare SQL vs NoSQL.', c:'#F59E0B', p:0, n:'3 areas · new', href:'modules/programming.html' },
     { id:'mlops', t:'MLOps', d:'Deployment pipelines, monitoring, drift detection, model registry, CI/CD.', c:'#34D399', p:0, n:'1 monitor', href:'modules/mlops.html' },
     { id:'research', t:'AI Research Lab', d:'Bias–variance, cross-validation, bootstrap, uncertainty, statistical testing.', c:'#8B8CF6', p:0, n:'5 tools', href:'modules/research.html' },
+    { id:'cv', t:'Computer Vision', d:'Convolutions, feature maps, object detection & IoU, segmentation and Vision Transformers — live.', c:'#22D3EE', p:0, n:'3 labs · new', href:'modules/computer-vision.html' },
+    { id:'rl', t:'Reinforcement Learning', d:'Gridworld value iteration, multi-armed bandits, and Q-learning that discovers a path from scratch.', c:'#FB7185', p:0, n:'3 labs · new', href:'modules/reinforcement-learning.html' },
+    { id:'timeseries', t:'Time Series & Forecasting', d:'Decompose trend & seasonality, smooth noise, and forecast with honest confidence bands.', c:'#34D399', p:0, n:'3 labs · new', href:'modules/time-series.html' },
+    { id:'prompting', t:'Prompt Engineering', d:'Build prompts part by part, contrast zero/few-shot & chain-of-thought, and get clean structured output.', c:'#A855F7', p:0, n:'3 labs · new', href:'modules/prompt-engineering.html' },
+    { id:'ethics', t:'AI Ethics & Safety', d:'Fairness metrics that collide, layered safety against risky prompts, and a deployment readiness score.', c:'#F59E0B', p:0, n:'3 labs · new', href:'modules/ai-ethics.html' },
   ];
   const wrap = document.getElementById('mods');
   wrap.innerHTML = MODS.map(m => `

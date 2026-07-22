@@ -19,22 +19,9 @@
   var ROOT = inModules ? '../' : '';
   var mod = window.ATLAS_MODULE_BY_ID ? window.ATLAS_MODULE_BY_ID[page] : null;
 
-  /* ---- fast, pre-async guard: avoids a content flash -------- */
-  function hasStoredSession() {
-    try {
-      for (var i = 0; i < localStorage.length; i++) {
-        var k = localStorage.key(i);
-        if (k && k.indexOf('sb-') === 0 && k.indexOf('-auth-token') !== -1) return true;
-      }
-    } catch (e) {}
-    return false;
-  }
-  if (!isAuthPage && !hasStoredSession()) {
-    location.replace(ROOT + 'auth.html');
-    return;
-  }
-
   /* ---- client ---------------------------------------------- */
+  /* All hub/module pages are PUBLIC — anyone can browse every module
+     without an account. Signing in only unlocks progress tracking. */
   var cfg = window.ATLAS_SUPABASE || {};
   if (!window.supabase || !cfg.url || cfg.url.indexOf('YOUR-PROJECT') === 0) {
     console.error('[Atlas] Supabase not configured — edit js/supabase-config.js');
@@ -64,7 +51,7 @@
     return client.auth.signInWithPassword({ email: email, password: password });
   };
   Atlas.signOut = function () {
-    return client.auth.signOut().then(function () { location.replace(ROOT + 'auth.html'); });
+    return client.auth.signOut().then(function () { location.reload(); });
   };
 
   /* ---- progress -------------------------------------------- */
@@ -123,7 +110,16 @@
   }
   function renderProfile() {
     var el = document.querySelector('.side-profile');
-    if (!el || !Atlas.user) return;
+    if (!el) return;
+    if (!Atlas.user) {                       // signed out → invite to sign in
+      el.innerHTML =
+        '<span class="av">?</span>' +
+        '<div style="min-width:0;flex:1"><div class="nm">Guest</div>' +
+          '<div class="sub">Sign in to save progress</div></div>' +
+        '<a class="btn btn-primary btn-sm" href="' + ROOT + 'auth.html" ' +
+          'title="Sign in to track progress" style="padding:5px 9px">Sign in</a>';
+      return;
+    }
     var name = (Atlas.user.user_metadata && Atlas.user.user_metadata.full_name) || '';
     var email = Atlas.user.email || '';
     el.innerHTML =
@@ -137,11 +133,22 @@
 
   /* ---- lesson "Mark complete" UI + auto tracking ----------- */
   function completeBar(m, l) {
-    var done = Atlas.isDone(m, l);
     var wrap = document.createElement('div');
-    wrap.className = 'lesson-complete' + (done ? ' is-done' : '');
+    wrap.className = 'lesson-complete';
     wrap.setAttribute('data-module', m);
     wrap.setAttribute('data-lesson', l);
+
+    if (!Atlas.user) {                       // signed out → progress needs an account
+      wrap.innerHTML =
+        '<a class="lc-toggle" href="' + ROOT + 'auth.html">' +
+          '<span class="lc-box"><svg viewBox="0 0 16 16" width="13" height="13"><path d="M3.5 8.5l3 3 6-7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
+          '<span class="lc-label">Sign in to track your progress</span>' +
+        '</a>';
+      return wrap;
+    }
+
+    var done = Atlas.isDone(m, l);
+    if (done) wrap.classList.add('is-done');
     wrap.innerHTML =
       '<button class="lc-toggle" type="button">' +
         '<span class="lc-box"><svg viewBox="0 0 16 16" width="13" height="13"><path d="M3.5 8.5l3 3 6-7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
@@ -224,22 +231,25 @@
     var session = res.data && res.data.session;
     Atlas.user = session ? session.user : null;
 
-    // guard / redirects
-    if (!Atlas.user && !isAuthPage) { location.replace(ROOT + 'auth.html'); return; }
+    // already signed in and looking at the auth page? send them to the hub.
     if (Atlas.user && isAuthPage) { location.replace('app.html'); return; }
 
-    if (Atlas.user && !isAuthPage) {
+    if (!isAuthPage) {
       injectStyles();
-      onReady(renderProfile);
-      Atlas.loadProgress().then(function () {
-        onReady(function () { mountCompleteBars(); wireAutoTracking(); });
-      });
+      onReady(renderProfile);          // shows the signed-in user OR a "Sign in" prompt
+      if (Atlas.user) {                // signed in → load + track progress
+        Atlas.loadProgress().then(function () {
+          onReady(function () { mountCompleteBars(); wireAutoTracking(); });
+        });
+      } else {                         // guest → full access, sign-in prompts, no tracking
+        onReady(mountCompleteBars);
+      }
     }
     if (Atlas._readyResolve) Atlas._readyResolve(Atlas);
   });
 
-  // keep the tab in sync if the user signs out elsewhere
+  // reflect sign-out that happens in another tab (re-render as guest)
   client.auth.onAuthStateChange(function (event) {
-    if (event === 'SIGNED_OUT' && !isAuthPage) location.replace(ROOT + 'auth.html');
+    if (event === 'SIGNED_OUT' && !isAuthPage && Atlas.user) location.reload();
   });
 })();
