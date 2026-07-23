@@ -1,0 +1,492 @@
+---
+import ModuleLayout from '../../layouts/ModuleLayout.astro';
+import ModuleTabs from '../../components/ModuleTabs.astro';
+---
+
+<ModuleLayout
+  title="Reinforcement Learning — AI Atlas"
+  pageId="rl"
+  crumb="Reinforcement Learning"
+  eyebrow="Reinforcement Learning"
+  heading="Learning from reward, not labels"
+>
+  <Fragment slot="head">
+<style is:global>
+  .rl-wrap{ display:flex; gap:22px; flex-wrap:wrap; align-items:flex-start; justify-content:center; }
+  .rl-stack{ display:flex; flex-direction:column; align-items:center; gap:8px; }
+  .rl-stack canvas{ border-radius:12px; border:1px solid var(--stroke); background:#0c0c16; max-width:100%; }
+  .rl-cap{ font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-mute); }
+  .rl-cards{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-top:18px; }
+  .rl-card{ padding:18px; border-radius:var(--r); border:1px solid var(--stroke); background:var(--glass); }
+  .rl-card h4{ font-size:14px; margin-bottom:8px; }
+  .rl-card p{ font-size:13px; color:var(--ink-soft); line-height:1.6; }
+  .rl-tag{ display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:11.5px; padding:5px 10px; border-radius:999px; background:var(--glass-2); border:1px solid var(--stroke); color:var(--ink-soft); margin:4px 4px 0 0; }
+  .rl-arms{ display:flex; flex-direction:column; gap:10px; }
+  .rl-arm{ display:grid; grid-template-columns:70px 1fr 54px; align-items:center; gap:10px; }
+  .rl-arm .abar{ height:16px; border-radius:999px; background:var(--glass-2); border:1px solid var(--stroke); overflow:hidden; }
+  .rl-arm .abar i{ display:block; height:100%; background:linear-gradient(90deg,var(--rose),var(--amber)); transition:width .25s; }
+  .rl-arm .btn{ padding:6px 10px; }
+  /* extra-widget classes */
+  .rl-canv{ border-radius:12px; border:1px solid var(--stroke); background:#0c0c16; max-width:100%; }
+  .rl-legend{ display:flex; gap:16px; flex-wrap:wrap; margin-top:12px; font-size:12.5px; color:var(--ink-soft); justify-content:center; }
+  .rl-legend i{ display:inline-block; width:12px; height:12px; border-radius:3px; margin-right:6px; vertical-align:middle; }
+  .rl-rewards{ display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
+  .rl-rewards .btn{ justify-content:center; }
+</style>
+  </Fragment>
+  <Fragment slot="status"><span class="pill"><span class="dot"></span>agents &amp; rewards</span></Fragment>
+  <Fragment slot="description">No dataset of right answers — just an agent, an environment, and a reward signal. It acts, sees what happens, and adjusts. Run value iteration until a policy emerges, pull the arms of a slot machine to feel the explore–exploit tension, then watch Q-learning discover a path from scratch.</Fragment>
+
+<ModuleTabs moduleId="rl" scrollable />
+
+      <!-- ===================== THE RL LOOP ===================== -->
+      <div id="panel-loop">
+        <p class="note" style="margin-bottom:16px;max-width:840px">Everything in RL is one turning loop: the <b style="color:var(--ink)">agent</b> observes a <b style="color:var(--ink)">state</b>, picks an <b style="color:var(--ink)">action</b>, and the <b style="color:var(--ink)">environment</b> answers with a <b style="color:var(--ink)">reward</b> and a new state. Here a right-biased agent walks a tiny track toward the goal. Step it by hand or let it run — watch reward accumulate into the <b style="color:var(--ink)">return</b>, then reset when it reaches the goal.</p>
+        <div class="pg">
+          <div class="glass" style="padding:24px;border-radius:var(--r-lg)">
+            <div class="rl-wrap">
+              <div class="rl-stack">
+                <canvas id="rl-loop-cv" class="rl-canv" width="620" height="120"></canvas>
+                <span class="rl-cap">agent A walks s0 → s6 (goal, reward +1) · each step costs −0.05</span>
+              </div>
+            </div>
+            <div class="eqn" style="margin-top:18px">state <span class="c">→</span> <span class="k">agent</span> <span class="c">→</span> action <span class="c">→</span> <span class="k">env</span> <span class="c">→</span> <span class="g">reward</span> + next state <span class="c">→</span> …&nbsp;&nbsp;<span class="c">// return G = Σ rₜ</span></div>
+          </div>
+          <div class="pg-panel">
+            <div class="ctrl"><h4>Drive the loop</h4>
+              <div class="row" style="gap:8px;flex-wrap:wrap">
+                <button class="btn btn-primary btn-sm" id="rl-loop-step">Step</button>
+                <button class="btn btn-ghost btn-sm" id="rl-loop-auto">▶ Auto-run</button>
+                <button class="btn btn-ghost btn-sm" id="rl-loop-reset">Reset</button>
+              </div>
+              <p class="note" style="margin-top:12px">One click = one interaction: the agent chooses, the world responds.</p>
+            </div>
+            <div class="metrics">
+              <div class="metric"><div class="l">STATE</div><div class="v mono" id="rl-loop-state" style="font-size:18px">s0</div></div>
+              <div class="metric"><div class="l">ACTION</div><div class="v mono" id="rl-loop-action" style="font-size:16px">—</div></div>
+            </div>
+            <div class="metrics">
+              <div class="metric"><div class="l">REWARD</div><div class="v mono" id="rl-loop-reward">0.00</div></div>
+              <div class="metric"><div class="l">RETURN G</div><div class="v mono" id="rl-loop-return" style="color:var(--cyan)">0.00</div></div>
+            </div>
+            <div class="metric"><div class="l">EPISODE</div><div class="v mono" id="rl-loop-ep">1</div></div>
+          </div>
+        </div>
+        <div class="rl-cards">
+          <div class="rl-card"><h4>State, action, reward</h4><p>The three signals that define the problem. The agent never sees a "correct" action — only how much reward each choice earned, and it must infer good behaviour from that alone.</p></div>
+          <div class="rl-card"><h4>The Markov property</h4><p>The next state depends only on the <b style="color:var(--ink)">current</b> state and action, not the full history. That memorylessness is what makes value functions and dynamic programming possible.</p></div>
+          <div class="rl-card"><h4>Episodes &amp; return</h4><p>An <b style="color:var(--ink)">episode</b> runs until a terminal state (the goal). The agent's real objective is the <b style="color:var(--ink)">return</b> — total reward over the episode — not any single step's payoff.</p></div>
+        </div>
+      </div>
+
+      <!-- ===================== MDP / VALUE ITERATION ===================== -->
+      <div id="panel-mdp" style="display:none">
+        <p class="note" style="margin-bottom:16px;max-width:840px">A <b style="color:var(--ink)">Markov Decision Process</b> is the world an agent lives in: states, actions, a reward for each move, and a discount <b style="color:var(--ink)">γ</b> that trades off now versus later. <b style="color:var(--ink)">Value iteration</b> repeatedly applies the Bellman equation — the value of a cell is the best action's reward plus the discounted value of where it lands — until values stop changing. The arrows are the <b style="color:var(--ink)">greedy policy</b> that falls out.</p>
+        <div class="pg">
+          <div class="glass" style="padding:24px;border-radius:var(--r-lg)">
+            <div class="rl-wrap">
+              <div class="rl-stack">
+                <canvas id="gw" width="360" height="360"></canvas>
+                <span class="rl-cap">🟢 goal +1 &nbsp; 🔴 pit −1 &nbsp; ▦ wall &nbsp; ● start</span>
+              </div>
+            </div>
+            <div class="eqn" style="margin-top:18px">V(s) = <span class="k">max</span><sub>a</sub> [ R(s,a) + <span class="g">γ</span>·V(s') ]&nbsp;&nbsp;<span class="c">// Bellman optimality — step cost −0.04 per move</span></div>
+          </div>
+          <div class="pg-panel">
+            <div class="ctrl"><h4>Solve the MDP</h4>
+              <div class="field"><label>Discount γ <span class="val" id="gv">0.90</span></label><input type="range" id="gamma" min="0.30" max="0.99" step="0.01" value="0.90"></div>
+              <div class="row" style="gap:8px;flex-wrap:wrap">
+                <button class="btn btn-primary btn-sm" id="vi-step">Step</button>
+                <button class="btn btn-ghost btn-sm" id="vi-run">▶ Run to convergence</button>
+                <button class="btn btn-ghost btn-sm" id="vi-reset">Reset</button>
+              </div>
+              <p class="note" style="margin-top:12px">Colour = state value (blue low → cyan high). Arrows show the best action.</p>
+            </div>
+            <div class="metrics">
+              <div class="metric"><div class="l">ITERATION</div><div class="v mono" id="vi-iter">0</div></div>
+              <div class="metric"><div class="l">MAX Δ VALUE</div><div class="v mono" id="vi-delta">—</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="rl-cards">
+          <div class="rl-card"><h4>The Bellman equation</h4><p>The backbone of RL: a state's value equals the best immediate reward plus the discounted value of the state it leads to. Solving it <i>is</i> solving the MDP.</p></div>
+          <div class="rl-card"><h4>Policy vs value</h4><p>A <b style="color:var(--ink)">value function</b> scores states; a <b style="color:var(--ink)">policy</b> picks actions. Value iteration computes values first, then reads the greedy policy straight off them.</p></div>
+          <div class="rl-card"><h4>Model-based</h4><p>Value iteration needs the full transition and reward model up front. When you have that map, dynamic programming solves the whole grid without ever "acting".</p></div>
+        </div>
+      </div>
+
+      <!-- ===================== DISCOUNT & RETURN ===================== -->
+      <div id="panel-discount" style="display:none">
+        <p class="note" style="margin-bottom:16px;max-width:840px">A reward now is worth more than the same reward later. The <b style="color:var(--ink)">discount factor γ</b> sets how much: the return is <b style="color:var(--ink)">G = r₀ + γr₁ + γ²r₂ + …</b>, so a reward t steps away is scaled by <b style="color:var(--ink)">γᵗ</b>. Drag γ and watch the bars shrink into the future — low γ makes the agent near-sighted, high γ makes it plan far ahead.</p>
+        <div class="pg">
+          <div class="glass" style="padding:24px;border-radius:var(--r-lg)">
+            <div class="rl-wrap">
+              <div class="rl-stack">
+                <canvas id="rl-disc-cv" class="rl-canv" width="560" height="300"></canvas>
+                <span class="rl-cap">solid = γᵗ·rₜ (discounted) · faint = rₜ (raw reward)</span>
+              </div>
+            </div>
+            <div class="eqn" style="margin-top:18px">G = <span class="g">Σ</span><sub>t</sub> γᵗ·rₜ&nbsp;&nbsp;<span class="c">// γ near 0 → greedy for the next reward · γ near 1 → the whole future counts</span></div>
+          </div>
+          <div class="pg-panel">
+            <div class="ctrl"><h4>Discount factor</h4>
+              <div class="field" style="margin-bottom:0"><label>γ <span class="val" id="rl-disc-gv">0.90</span></label><input type="range" id="rl-disc-gamma" min="0" max="0.99" step="0.01" value="0.90"></div>
+              <p class="note" style="margin-top:12px" id="rl-disc-mood">far-sighted — distant rewards still count almost in full</p>
+            </div>
+            <div class="metrics">
+              <div class="metric"><div class="l">DISCOUNTED RETURN</div><div class="v mono" id="rl-disc-return" style="font-size:20px;color:var(--cyan)">—</div></div>
+              <div class="metric"><div class="l">RAW SUM</div><div class="v mono" id="rl-disc-undisc" style="font-size:20px">—</div></div>
+            </div>
+            <div class="metric"><div class="l">EFFECTIVE HORIZON ≈ 1/(1−γ)</div><div class="v mono" id="rl-disc-horizon" style="font-size:16px">10.0 steps</div></div>
+          </div>
+        </div>
+        <div class="rl-cards">
+          <div class="rl-card"><h4>Why discount at all</h4><p>Beyond preferring sooner rewards, γ &lt; 1 keeps the return <b style="color:var(--ink)">finite</b> in never-ending tasks and makes learning numerically stable.</p></div>
+          <div class="rl-card"><h4>Effective horizon</h4><p>Roughly <b style="color:var(--ink)">1/(1−γ)</b> steps: γ = 0.9 sees ~10 steps ahead, γ = 0.99 sees ~100. It's the dial between reflex and long-term planning.</p></div>
+          <div class="rl-card"><h4>Credit assignment</h4><p>Discounting shapes how a late reward is credited back to the earlier actions that earned it — the core difficulty RL algorithms have to solve.</p></div>
+        </div>
+      </div>
+
+      <!-- ===================== BANDIT ===================== -->
+      <div id="panel-bandit" style="display:none">
+        <p class="note" style="margin-bottom:16px;max-width:840px">The simplest RL problem: five slot machines, each with a hidden win probability. Every pull is a trade-off — <b style="color:var(--ink)">exploit</b> the arm that looks best, or <b style="color:var(--ink)">explore</b> a shakier one that might be better. An <b style="color:var(--ink)">ε-greedy</b> policy explores at random a fraction ε of the time. Watch the estimates <b style="color:var(--ink)">Q(a)</b> — running averages of reward — converge toward the true rates.</p>
+        <div class="pg">
+          <div class="glass" style="padding:24px;border-radius:var(--r-lg)">
+            <div class="rl-arms" id="arms"></div>
+            <div class="row" style="gap:8px;margin-top:18px;flex-wrap:wrap">
+              <button class="btn btn-primary btn-sm" id="ban-auto">▶ Auto-play (ε-greedy ×200)</button>
+              <button class="btn btn-ghost btn-sm" id="ban-reset">Reset</button>
+              <button class="btn btn-ghost btn-sm" id="ban-reveal">Reveal true rates</button>
+            </div>
+          </div>
+          <div class="pg-panel">
+            <div class="ctrl"><h4>Exploration</h4>
+              <div class="field"><label>ε (explore rate) <span class="val" id="ev">0.10</span></label><input type="range" id="eps" min="0" max="1" step="0.01" value="0.10"></div>
+              <p class="note">Click an arm to pull it by hand, or auto-play the policy.</p>
+            </div>
+            <div class="metrics">
+              <div class="metric"><div class="l">PULLS</div><div class="v mono" id="ban-pulls">0</div></div>
+              <div class="metric"><div class="l">TOTAL REWARD</div><div class="v mono" id="ban-tot">0</div></div>
+            </div>
+            <div class="metrics">
+              <div class="metric"><div class="l">AVG REWARD</div><div class="v mono" id="ban-avg">—</div></div>
+              <div class="metric"><div class="l">REGRET</div><div class="v mono" id="ban-reg">0.0</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== EXPLORATION ===================== -->
+      <div id="panel-explore" style="display:none">
+        <p class="note" style="margin-bottom:16px;max-width:840px">ε-greedy explores blindly — it wastes pulls on arms it already knows are bad. Smarter strategies target their uncertainty. <b style="color:var(--ink)">UCB</b> adds an "optimism bonus" to rarely-tried arms; <b style="color:var(--ink)">optimistic-greedy</b> starts every estimate sky-high so the agent is <i>disappointed</i> into trying everything once. Run the race and compare <b style="color:var(--ink)">cumulative regret</b> — reward lost versus always pulling the best arm. Lower is better.</p>
+        <div class="pg">
+          <div class="glass" style="padding:24px;border-radius:var(--r-lg)">
+            <div class="rl-wrap">
+              <div class="rl-stack">
+                <canvas id="rl-exp-cv" class="rl-canv" width="560" height="320"></canvas>
+              </div>
+            </div>
+            <div class="rl-legend">
+              <span><i style="background:#F59E0B"></i>ε-greedy</span>
+              <span><i style="background:#22D3EE"></i>UCB</span>
+              <span><i style="background:#34D399"></i>optimistic-greedy</span>
+            </div>
+          </div>
+          <div class="pg-panel">
+            <div class="ctrl"><h4>Run the race</h4>
+              <div class="field"><label>ε (for ε-greedy) <span class="val" id="rl-exp-ev">0.10</span></label><input type="range" id="rl-exp-eps" min="0" max="0.5" step="0.01" value="0.10"></div>
+              <div class="row" style="gap:8px"><button class="btn btn-primary btn-sm" id="rl-exp-run">▶ Re-run 600 pulls</button></div>
+              <p class="note" style="margin-top:12px">Each re-run resamples the same five hidden arms. Flatter line = smarter exploration.</p>
+            </div>
+            <div class="metrics">
+              <div class="metric"><div class="l">ε-GREEDY REGRET</div><div class="v mono" id="rl-exp-eg" style="color:#F59E0B">—</div></div>
+              <div class="metric"><div class="l">UCB REGRET</div><div class="v mono" id="rl-exp-ucb" style="color:#22D3EE">—</div></div>
+            </div>
+            <div class="metrics">
+              <div class="metric"><div class="l">OPTIMISTIC REGRET</div><div class="v mono" id="rl-exp-opt" style="color:#34D399">—</div></div>
+              <div class="metric"><div class="l">WINNER</div><div class="v mono" id="rl-exp-winner" style="font-size:15px">—</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="rl-cards">
+          <div class="rl-card"><h4>Regret</h4><p>The gap between what you earned and what an oracle pulling the best arm would earn. Minimising regret <i>is</i> the goal of a bandit algorithm.</p></div>
+          <div class="rl-card"><h4>Optimism in the face of uncertainty</h4><p>UCB and optimistic init both encode the same idea: prefer options you're <b style="color:var(--ink)">unsure</b> about, because they might be great — and you'll learn either way.</p></div>
+          <div class="rl-card"><h4>Beyond bandits</h4><p>The explore–exploit tension scales to full RL. Modern agents use <b style="color:var(--ink)">entropy bonuses</b>, count-based novelty, or Thompson sampling to keep exploring huge state spaces.</p></div>
+        </div>
+      </div>
+
+      <!-- ===================== Q-LEARNING ===================== -->
+      <div id="panel-qlearn" style="display:none">
+        <p class="note" style="margin-bottom:16px;max-width:840px">In value iteration the agent knew the whole map. <b style="color:var(--ink)">Q-learning</b> is <b style="color:var(--ink)">model-free</b>: the agent knows nothing, and learns action-values <b style="color:var(--ink)">Q(s,a)</b> purely by trial and error over many episodes. Each step nudges its estimate toward reality — the <b style="color:var(--ink)">temporal-difference</b> update. Run episodes and watch a good path light up on the same grid.</p>
+        <div class="pg">
+          <div class="glass" style="padding:24px;border-radius:var(--r-lg)">
+            <div class="rl-wrap">
+              <div class="rl-stack">
+                <canvas id="qw" width="360" height="360"></canvas>
+                <span class="rl-cap">colour = learned max<sub>a</sub> Q(s,a) &nbsp;·&nbsp; arrows = learned policy</span>
+              </div>
+            </div>
+            <div class="eqn" style="margin-top:18px">Q(s,a) ← Q(s,a) + <span class="g">α</span>[ r + <span class="g">γ</span>·<span class="k">max</span><sub>a'</sub> Q(s',a') − Q(s,a) ]&nbsp;&nbsp;<span class="c">// TD update</span></div>
+          </div>
+          <div class="pg-panel">
+            <div class="ctrl"><h4>Train the agent</h4>
+              <div class="field"><label>Learning rate α <span class="val" id="av">0.20</span></label><input type="range" id="alpha" min="0.02" max="0.9" step="0.02" value="0.20"></div>
+              <div class="field"><label>Explore ε <span class="val" id="qev">0.20</span></label><input type="range" id="qeps" min="0" max="0.9" step="0.02" value="0.20"></div>
+              <div class="row" style="gap:8px;flex-wrap:wrap">
+                <button class="btn btn-primary btn-sm" id="q-run">▶ Train 300 episodes</button>
+                <button class="btn btn-ghost btn-sm" id="q-reset">Reset</button>
+              </div>
+            </div>
+            <div class="metrics">
+              <div class="metric"><div class="l">EPISODES</div><div class="v mono" id="q-ep">0</div></div>
+              <div class="metric"><div class="l">LAST RETURN</div><div class="v mono" id="q-ret">—</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="rl-cards">
+          <div class="rl-card"><h4>TD learning</h4><p>Q-learning bootstraps: it updates a guess from a slightly better guess, one step at a time — no need to reach the end of an episode.</p></div>
+          <div class="rl-card"><h4>Off-policy vs SARSA</h4><p>Q-learning is off-policy — it learns the greedy value while exploring. SARSA is on-policy: it learns the value of the policy it actually follows.</p></div>
+          <div class="rl-card"><h4>Deep RL</h4><p>Replace the table with a neural net and you get DQN (replay buffer, target network). Policy-gradient methods — REINFORCE, A2C, PPO — optimise the policy directly.</p></div>
+        </div>
+      </div>
+
+      <!-- ===================== SARSA vs Q-LEARNING ===================== -->
+      <div id="panel-sarsa" style="display:none">
+        <p class="note" style="margin-bottom:16px;max-width:840px">Same TD update, one difference — and it changes the personality of the agent. On the <b style="color:var(--ink)">cliff walk</b>, stepping onto the red edge costs −100 and teleports you back to start. <b style="color:var(--ink)">Q-learning</b> is off-policy: it learns the <i>optimal</i> path hugging the cliff, ignoring that its ε-exploration keeps falling in. <b style="color:var(--ink)">SARSA</b> is on-policy: it accounts for its own exploration and learns a <i>safe</i> detour along the top. Toggle and re-train to see the two paths.</p>
+        <div class="pg">
+          <div class="glass" style="padding:24px;border-radius:var(--r-lg)">
+            <div class="rl-wrap">
+              <div class="rl-stack">
+                <canvas id="rl-sarsa-cv" class="rl-canv" width="480" height="240"></canvas>
+                <span class="rl-cap">line = greedy path the agent learned · S = start · red = cliff (−100)</span>
+              </div>
+            </div>
+            <div class="eqn" style="margin-top:18px">SARSA: r + γ·Q(s',<span class="k">a'</span>) &nbsp;&nbsp;vs&nbsp;&nbsp; Q-learning: r + γ·<span class="k">max</span><sub>a'</sub> Q(s',a')&nbsp;&nbsp;<span class="c">// on-policy vs off-policy target</span></div>
+          </div>
+          <div class="pg-panel">
+            <div class="ctrl"><h4>Algorithm</h4>
+              <div class="seg" id="rl-sarsa-mode"><button class="active" data-v="sarsa">SARSA (safe)</button><button data-v="qlearn">Q-learning (optimal)</button></div>
+              <div class="row" style="gap:8px;margin-top:14px"><button class="btn btn-primary btn-sm" id="rl-sarsa-run">▶ Re-train 500 episodes</button></div>
+              <p class="note" style="margin-top:12px">Both explore with ε = 0.1. The only change is the TD <b style="color:var(--ink)">target</b>.</p>
+            </div>
+            <div class="metrics">
+              <div class="metric"><div class="l">AVG RETURN (last 20)</div><div class="v mono" id="rl-sarsa-return" style="font-size:18px">—</div></div>
+              <div class="metric"><div class="l">PATH LENGTH</div><div class="v mono" id="rl-sarsa-len" style="font-size:18px">—</div></div>
+            </div>
+            <div class="metric"><div class="l">LEARNED ROUTE</div><div class="v mono" id="rl-sarsa-path" style="font-size:14px">—</div></div>
+          </div>
+        </div>
+        <div class="rl-cards">
+          <div class="rl-card"><h4>On-policy (SARSA)</h4><p>Learns the value of the policy it actually runs, ε-exploration and all — so it steers clear of the cliff whose exploratory steps keep hurting.</p></div>
+          <div class="rl-card"><h4>Off-policy (Q-learning)</h4><p>Learns the value of the <b style="color:var(--ink)">greedy</b> policy regardless of how it behaves — recovering the true optimum, even if that optimum is risky while still exploring.</p></div>
+          <div class="rl-card"><h4>Which to use</h4><p>Off-policy is more sample-efficient and underlies DQN. On-policy is safer during training and underlies SARSA and, in spirit, PPO.</p></div>
+        </div>
+      </div>
+
+      <!-- ===================== POLICY GRADIENTS ===================== -->
+      <div id="panel-pg" style="display:none">
+        <p class="note" style="margin-bottom:16px;max-width:840px">Value methods learn <i>how good</i> each action is, then act greedily. <b style="color:var(--ink)">Policy gradients</b> skip that and adjust the policy directly. Here a single-state policy is a <b style="color:var(--ink)">softmax</b> over four action preferences H. Click "reward" on an action and a gradient step nudges its preference up (and the others down) — the probability bars shift toward whatever you reinforce. That is REINFORCE in miniature.</p>
+        <div class="pg">
+          <div class="glass" style="padding:24px;border-radius:var(--r-lg)">
+            <div class="rl-wrap">
+              <div class="rl-stack">
+                <canvas id="rl-pg-cv" class="rl-canv" width="480" height="260"></canvas>
+                <span class="rl-cap">π(a) = softmax(H) · bar height = probability</span>
+              </div>
+            </div>
+            <div class="eqn" style="margin-top:18px">Hₐ ← Hₐ + <span class="g">α</span>·R·(1 − π(a)) ,&nbsp; H<sub>j≠a</sub> ← H<sub>j</sub> − <span class="g">α</span>·R·π(j)&nbsp;&nbsp;<span class="c">// gradient-bandit / REINFORCE step</span></div>
+          </div>
+          <div class="pg-panel">
+            <div class="ctrl"><h4>Reward an action</h4>
+              <div class="rl-rewards">
+                <button class="btn btn-ghost btn-sm" id="rl-pg-r0">Reward A0</button>
+                <button class="btn btn-ghost btn-sm" id="rl-pg-r1">Reward A1</button>
+                <button class="btn btn-ghost btn-sm" id="rl-pg-r2">Reward A2</button>
+                <button class="btn btn-ghost btn-sm" id="rl-pg-r3">Reward A3</button>
+              </div>
+              <div style="margin-top:10px"><button class="btn btn-ghost btn-sm" id="rl-pg-reset" style="width:100%;justify-content:center">Reset preferences</button></div>
+              <p class="note" style="margin-top:12px">Each click is one policy-gradient update — reinforce an action and it becomes more probable.</p>
+            </div>
+            <div class="metrics">
+              <div class="metric"><div class="l">MOST LIKELY</div><div class="v mono" id="rl-pg-top" style="font-size:18px">A0</div></div>
+            </div>
+            <div class="metric"><div class="l">POLICY π(a)</div><div class="v mono" id="rl-pg-probs" style="font-size:12px">—</div></div>
+          </div>
+        </div>
+        <div class="rl-cards">
+          <div class="rl-card"><h4>Why go direct</h4><p>Policy gradients handle <b style="color:var(--ink)">continuous</b> actions and naturally produce <b style="color:var(--ink)">stochastic</b> policies — both awkward for value-based, argmax-driven methods.</p></div>
+          <div class="rl-card"><h4>The score function</h4><p>REINFORCE pushes probability up on actions that led to high return, weighted by ∇log π. High variance, so a <b style="color:var(--ink)">baseline</b> (the value function) is subtracted to steady it.</p></div>
+          <div class="rl-card"><h4>Actor–critic &amp; PPO</h4><p>Pair a policy (actor) with a value estimate (critic) and you get A2C. Add a clipped, trust-region update and you get <b style="color:var(--ink)">PPO</b> — the workhorse behind RLHF.</p></div>
+        </div>
+      </div>
+
+  <Fragment slot="scripts">
+<script is:inline>
+(function(){
+  /* ===== shared gridworld definition (5x5) ===== */
+  const N=5, STEP=-0.04;
+  const START=[4,0], GOAL=[0,4], PIT=[2,2];
+  const WALLS=[[1,1],[1,3],[3,1]];
+  const isWall=(r,c)=>WALLS.some(w=>w[0]===r&&w[1]===c);
+  const isGoal=(r,c)=>r===GOAL[0]&&c===GOAL[1];
+  const isPit=(r,c)=>r===PIT[0]&&c===PIT[1];
+  const isTerm=(r,c)=>isGoal(r,c)||isPit(r,c);
+  const ACTS=[[-1,0],[1,0],[0,-1],[0,1]];      // up,down,left,right
+  const ARR=['↑','↓','←','→'];
+  function step(r,c,a){                          // deterministic; blocked => stay
+    let nr=r+ACTS[a][0], nc=c+ACTS[a][1];
+    if(nr<0||nr>=N||nc<0||nc>=N||isWall(nr,nc)) return [r,c];
+    return [nr,nc];
+  }
+  function reward(r,c){ return isGoal(r,c)?1 : isPit(r,c)?-1 : STEP; }
+
+  /* colour a value in [-1,1]-ish to a blue→cyan ramp */
+  function vcolor(v,lo,hi){
+    const t=hi>lo?(v-lo)/(hi-lo):0.5;
+    const r=Math.round(20+t*10), g=Math.round(40+t*180), b=Math.round(90+t*120);
+    return `rgb(${r},${g},${b})`;
+  }
+  function drawGrid(ctx, V, pol){
+    const cell=360/N; ctx.clearRect(0,0,360,360);
+    let lo=Infinity,hi=-Infinity;
+    for(let r=0;r<N;r++)for(let c=0;c<N;c++){ if(isWall(r,c))continue; lo=Math.min(lo,V[r][c]); hi=Math.max(hi,V[r][c]); }
+    for(let r=0;r<N;r++)for(let c=0;c<N;c++){
+      const x=c*cell,y=r*cell;
+      if(isWall(r,c)){ ctx.fillStyle='#1a1a26'; ctx.fillRect(x,y,cell,cell); }
+      else if(isGoal(r,c)){ ctx.fillStyle='rgba(52,211,153,.85)'; ctx.fillRect(x,y,cell,cell); }
+      else if(isPit(r,c)){ ctx.fillStyle='rgba(251,113,133,.85)'; ctx.fillRect(x,y,cell,cell); }
+      else { ctx.fillStyle=vcolor(V[r][c],lo,hi); ctx.fillRect(x,y,cell,cell); }
+      ctx.strokeStyle='rgba(255,255,255,.10)'; ctx.strokeRect(x+.5,y+.5,cell,cell);
+      // value text
+      if(!isWall(r,c)){ ctx.fillStyle='rgba(255,255,255,.85)'; ctx.font='11px JetBrains Mono, monospace'; ctx.textAlign='left';
+        ctx.fillText((isGoal(r,c)?'+1':isPit(r,c)?'-1':V[r][c].toFixed(2)), x+5, y+14); }
+      // policy arrow
+      if(pol && !isTerm(r,c) && !isWall(r,c) && pol[r][c]>=0){
+        ctx.fillStyle='rgba(255,255,255,.92)'; ctx.font='22px serif'; ctx.textAlign='center';
+        ctx.fillText(ARR[pol[r][c]], x+cell/2, y+cell/2+8);
+      }
+    }
+    // start marker
+    ctx.fillStyle='#fff'; ctx.beginPath();
+    ctx.arc(START[1]*cell+cell-14, START[0]*cell+cell-12, 5, 0, 7); ctx.fill();
+  }
+
+  /* ===== value iteration ===== */
+  const gw=document.getElementById('gw').getContext('2d');
+  let V, POL, iter;
+  function zeroV(){ return Array.from({length:N},()=>Array(N).fill(0)); }
+  function resetVI(){ V=zeroV(); POL=Array.from({length:N},()=>Array(N).fill(-1)); iter=0;
+    document.getElementById('vi-iter').textContent='0'; document.getElementById('vi-delta').textContent='—';
+    drawGrid(gw,V,POL); }
+  function viStep(){
+    const g=+document.getElementById('gamma').value;
+    const nV=zeroV(); let delta=0;
+    for(let r=0;r<N;r++)for(let c=0;c<N;c++){
+      if(isWall(r,c)||isTerm(r,c)){ nV[r][c]=0; continue; }
+      let best=-Infinity,ba=-1;
+      for(let a=0;a<4;a++){ const [sr,sc]=step(r,c,a); const q=reward(sr,sc)+g*V[sr][sc]; if(q>best){best=q;ba=a;} }
+      nV[r][c]=best; POL[r][c]=ba; delta=Math.max(delta,Math.abs(best-V[r][c]));
+    }
+    V=nV; iter++;
+    document.getElementById('vi-iter').textContent=iter;
+    document.getElementById('vi-delta').textContent=delta.toFixed(4);
+    drawGrid(gw,V,POL);
+    return delta;
+  }
+  document.getElementById('gamma').oninput=e=>document.getElementById('gv').textContent=(+e.target.value).toFixed(2);
+  document.getElementById('vi-step').onclick=viStep;
+  document.getElementById('vi-reset').onclick=resetVI;
+  document.getElementById('vi-run').onclick=function(){
+    let n=0; const t=setInterval(()=>{ const d=viStep(); if(d<1e-3||++n>60){clearInterval(t);} },90);
+  };
+  resetVI();
+
+  /* ===== bandit ===== */
+  const TRUE=[0.25,0.55,0.40,0.75,0.60];
+  let Q,Ncnt,pulls,tot,revealed;
+  const armsEl=document.getElementById('arms');
+  function resetBan(){ Q=TRUE.map(()=>0); Ncnt=TRUE.map(()=>0); pulls=0; tot=0; revealed=false; renderArms(); updBan(); }
+  function renderArms(){
+    armsEl.innerHTML=TRUE.map((t,i)=>{
+      const est=Ncnt[i]?Q[i]:0;
+      return `<div class="rl-arm"><button class="btn btn-ghost btn-sm" data-arm="${i}">Arm ${i+1}</button>`+
+        `<div class="abar"><i style="width:${(est*100).toFixed(0)}%"></i></div>`+
+        `<span class="mono" style="font-size:12px;color:var(--ink-soft)">${Ncnt[i]?est.toFixed(2):'—'}${revealed?` <span style="color:var(--ink-mute)">/${t}</span>`:''}</span></div>`;
+    }).join('');
+  }
+  function pull(i){ const r=Math.random()<TRUE[i]?1:0; Ncnt[i]++; Q[i]+=(r-Q[i])/Ncnt[i]; pulls++; tot+=r; return r; }
+  function updBan(){
+    document.getElementById('ban-pulls').textContent=pulls;
+    document.getElementById('ban-tot').textContent=tot;
+    document.getElementById('ban-avg').textContent=pulls?(tot/pulls).toFixed(3):'—';
+    const best=Math.max(...TRUE);
+    document.getElementById('ban-reg').textContent=(best*pulls-TRUE.reduce((s,t,i)=>s+t*Ncnt[i],0)).toFixed(1);
+  }
+  armsEl.onclick=e=>{ const b=e.target.closest('[data-arm]'); if(!b)return; pull(+b.dataset.arm); renderArms(); updBan(); };
+  document.getElementById('eps').oninput=e=>document.getElementById('ev').textContent=(+e.target.value).toFixed(2);
+  document.getElementById('ban-reset').onclick=resetBan;
+  document.getElementById('ban-reveal').onclick=()=>{ revealed=true; renderArms(); };
+  document.getElementById('ban-auto').onclick=function(){
+    const eps=+document.getElementById('eps').value; let n=0;
+    const t=setInterval(()=>{
+      let i; if(Math.random()<eps) i=Math.floor(Math.random()*TRUE.length);
+      else i=Q.indexOf(Math.max(...Q));
+      pull(i); renderArms(); updBan();
+      if(++n>=200) clearInterval(t);
+    },12);
+  };
+  resetBan();
+
+  /* ===== Q-learning ===== */
+  const qw=document.getElementById('qw').getContext('2d');
+  let QT, episodes;
+  function resetQ(){ QT=Array.from({length:N},()=>Array.from({length:N},()=>[0,0,0,0])); episodes=0;
+    document.getElementById('q-ep').textContent='0'; document.getElementById('q-ret').textContent='—'; renderQ(); }
+  function renderQ(){
+    const Vmax=QT.map(row=>row.map(q=>Math.max(...q)));
+    const pol=QT.map((row,r)=>row.map((q,c)=>isTerm(r,c)||isWall(r,c)?-1:q.indexOf(Math.max(...q))));
+    drawGrid(qw,Vmax,pol);
+  }
+  function episode(alpha,gamma,eps){
+    let [r,c]=START, ret=0, steps=0;
+    while(!isTerm(r,c) && steps<80){
+      let a; if(Math.random()<eps) a=Math.floor(Math.random()*4);
+      else a=QT[r][c].indexOf(Math.max(...QT[r][c]));
+      const [nr,nc]=step(r,c,a); const rw=reward(nr,nc); ret+=rw;
+      const target=isTerm(nr,nc)?rw:rw+gamma*Math.max(...QT[nr][nc]);
+      QT[r][c][a]+=alpha*(target-QT[r][c][a]);
+      r=nr;c=nc; steps++;
+    }
+    return ret;
+  }
+  document.getElementById('alpha').oninput=e=>document.getElementById('av').textContent=(+e.target.value).toFixed(2);
+  document.getElementById('qeps').oninput=e=>document.getElementById('qev').textContent=(+e.target.value).toFixed(2);
+  document.getElementById('q-reset').onclick=resetQ;
+  document.getElementById('q-run').onclick=function(){
+    const alpha=+document.getElementById('alpha').value, eps=+document.getElementById('qeps').value, gamma=0.95;
+    let n=0,last=0;
+    const t=setInterval(()=>{
+      for(let k=0;k<15;k++){ last=episode(alpha,gamma,eps); episodes++; }
+      document.getElementById('q-ep').textContent=episodes;
+      document.getElementById('q-ret').textContent=last.toFixed(2);
+      renderQ();
+      if((n+=15)>=300) clearInterval(t);
+    },30);
+  };
+  resetQ();
+
+  /* ===== tabs ===== */
+  const tabs=document.getElementById('tabs');
+  const PANELS=['loop','mdp','discount','bandit','explore','qlearn','sarsa','pg'];
+  tabs.onclick=e=>{ const t=e.target.closest('.tab'); if(!t)return;
+    [...tabs.children].forEach(c=>c.classList.remove('active')); t.classList.add('active');
+    PANELS.forEach(p=>document.getElementById('panel-'+p).style.display=(t.dataset.tab===p?'':'none'));
+    if(t.dataset.tab==='mdp') drawGrid(gw,V,POL);
+    if(t.dataset.tab==='bandit') renderArms();
+    if(t.dataset.tab==='qlearn') renderQ();
+  };
+})();
+</script>
+<script is:inline src="/js/playgrounds/rl-extra.js"></script>
+  </Fragment>
+</ModuleLayout>

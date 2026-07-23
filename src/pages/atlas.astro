@@ -71,6 +71,11 @@ import AppShellLayout from '../layouts/AppShellLayout.astro';
     { id:'programming', t:'Code & Stack', d:'Run code and explore libraries, databases, Git, APIs, containers, compute, and testing.', c:'#F59E0B', p:0, n:'8 playgrounds', href:'/modules/programming/' },
     { id:'mlops', t:'MLOps', d:'Track, register, deploy, monitor, deliver, retrain, and govern production models.', c:'#34D399', p:0, n:'8 playgrounds', href:'/modules/mlops/' },
     { id:'research', t:'AI Research Lab', d:'Explore validation, uncertainty, significance, power, ablations, reproducibility, and responsible claims.', c:'#8B8CF6', p:0, n:'8 playgrounds', href:'/modules/research/' },
+    { id:'cv', t:'Computer Vision', d:'Image tensors, convolution & pooling, augmentation, detection & IoU, segmentation, ViT and CNN architectures — live.', c:'#22D3EE', p:0, n:'8 labs · new', href:'/modules/computer-vision/' },
+    { id:'rl', t:'Reinforcement Learning', d:'The RL loop, MDPs & value iteration, discounting, bandits, exploration, Q-learning, SARSA and policy gradients.', c:'#FB7185', p:0, n:'8 labs · new', href:'/modules/reinforcement-learning/' },
+    { id:'timeseries', t:'Time Series & Forecasting', d:'Decomposition, stationarity, autocorrelation, smoothing, ARIMA, forecasting, backtesting and anomaly detection.', c:'#34D399', p:0, n:'8 labs · new', href:'/modules/time-series/' },
+    { id:'prompting', t:'Prompt Engineering', d:'Prompt anatomy, message roles, few-shot & CoT, reasoning patterns, structured output, decoding params, RAG and injection safety.', c:'#A855F7', p:0, n:'8 labs · new', href:'/modules/prompt-engineering/' },
+    { id:'ethics', t:'AI Ethics & Safety', d:'Sources of bias, colliding fairness metrics, alignment, red-teaming, differential privacy, governance and the regulation map.', c:'#F59E0B', p:0, n:'8 labs · new', href:'/modules/ai-ethics/' },
   ];
   const wrap = document.getElementById('mods');
   wrap.innerHTML = MODS.map(m => `

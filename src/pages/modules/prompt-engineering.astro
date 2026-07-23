@@ -1,0 +1,377 @@
+---
+import ModuleLayout from '../../layouts/ModuleLayout.astro';
+import ModuleTabs from '../../components/ModuleTabs.astro';
+---
+
+<ModuleLayout
+  title="Prompt Engineering — AI Atlas"
+  pageId="prompting"
+  crumb="Prompt Engineering"
+  eyebrow="Prompt Engineering"
+  heading="The interface is language"
+>
+  <Fragment slot="head">
+<style is:global>
+  .pe-in{ width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--stroke); background:rgba(12,12,20,.6); color:var(--ink); font:inherit; font-size:13.5px; outline:none; resize:vertical; }
+  .pe-in:focus{ border-color:var(--indigo); }
+  .pe-lab{ display:block; font-size:11.5px; font-family:var(--mono); letter-spacing:.05em; text-transform:uppercase; color:var(--ink-mute); margin:0 0 6px; }
+  .pe-fld{ margin-bottom:14px; }
+  .pe-pre{ font-family:var(--mono); font-size:12.5px; line-height:1.65; color:var(--ink-soft); background:#0c0c16; border:1px solid var(--stroke); border-radius:12px; padding:16px; white-space:pre-wrap; word-break:break-word; min-height:120px; }
+  .pe-pre b{ color:var(--indigo-lt); font-weight:600; }
+  .pe-check{ display:flex; flex-direction:column; gap:7px; }
+  .pe-ck{ display:flex; align-items:center; gap:9px; font-size:13px; color:var(--ink-mute); }
+  .pe-ck .bx{ width:16px; height:16px; border-radius:5px; border:1.5px solid var(--stroke); display:grid; place-items:center; color:transparent; font-size:11px; }
+  .pe-ck.on{ color:var(--ink); } .pe-ck.on .bx{ background:var(--emerald); border-color:var(--emerald); color:#06120c; }
+  .pe-seg{ display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px; }
+  .pe-seg .btn.active{ background:linear-gradient(180deg,var(--indigo-lt),var(--indigo-dk)); border-color:transparent; color:#fff; }
+  .pe-cards{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-top:18px; }
+  .pe-card{ padding:18px; border-radius:var(--r); border:1px solid var(--stroke); background:var(--glass); }
+  .pe-card h4{ font-size:14px; margin-bottom:8px; } .pe-card p{ font-size:13px; color:var(--ink-soft); line-height:1.6; }
+
+  /* ---- new: decoding-params bar plot ---- */
+  .pp-bars{ display:flex; flex-direction:column; gap:8px; }
+  .pp-row{ display:grid; grid-template-columns:78px 1fr 54px; align-items:center; gap:10px; font-family:var(--mono); font-size:12px; }
+  .pp-tok{ color:var(--ink-soft); text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .pp-track{ height:16px; border-radius:6px; background:rgba(255,255,255,.05); overflow:hidden; }
+  .pp-fill{ height:100%; border-radius:6px; background:linear-gradient(90deg,var(--indigo-lt),var(--indigo-dk)); transition:width .18s ease; min-width:2px; }
+  .pp-pct{ color:var(--ink-mute); text-align:right; }
+  .pp-row.cut .pp-fill{ background:rgba(120,120,140,.28); }
+  .pp-row.cut .pp-tok{ color:var(--ink-mute); text-decoration:line-through; }
+  .pp-row.samp .pp-tok{ color:var(--emerald); font-weight:600; }
+  .pp-row.samp .pp-fill{ background:linear-gradient(90deg,var(--emerald),#0e7490); }
+
+  /* ---- new: reasoning reliability bar ---- */
+  .reason-bar-track{ height:10px; border-radius:6px; background:rgba(255,255,255,.06); overflow:hidden; margin-top:4px; }
+  .reason-bar-fill{ height:100%; background:linear-gradient(90deg,var(--amber),var(--emerald)); transition:width .25s ease; }
+
+  /* ---- new: RAG retrieved docs ---- */
+  .rag-doc{ padding:10px 12px; border-radius:10px; border:1px solid var(--stroke); background:#0c0c16; margin-bottom:8px; font-size:12.5px; color:var(--ink-soft); line-height:1.5; }
+  .rag-doc .rag-meta{ font-family:var(--mono); font-size:10.5px; color:var(--ink-mute); margin-bottom:4px; display:flex; justify-content:space-between; gap:10px; }
+  .rag-doc.top{ border-color:var(--indigo); }
+
+  /* ---- new: injection & safety ---- */
+  .saf-row{ display:flex; align-items:flex-start; gap:10px; padding:10px 12px; border-radius:10px; border:1px solid var(--stroke); background:#0c0c16; margin-bottom:8px; }
+  .saf-row .saf-txt{ flex:1; font-size:12.5px; color:var(--ink-soft); line-height:1.5; }
+  .saf-row .saf-kind{ display:block; font-family:var(--mono); font-size:10.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-mute); margin-bottom:3px; }
+  .saf-badge{ font-family:var(--mono); font-size:10.5px; padding:4px 8px; border-radius:999px; white-space:nowrap; align-self:center; }
+  .saf-badge.block{ background:rgba(52,211,153,.14); color:var(--emerald); border:1px solid rgba(52,211,153,.3); }
+  .saf-badge.slip{ background:rgba(244,63,94,.14); color:var(--rose); border:1px solid rgba(244,63,94,.3); }
+  .saf-badge.safe{ background:rgba(120,120,140,.14); color:var(--ink-mute); border:1px solid var(--stroke); }
+  .saf-toggles{ display:flex; flex-direction:column; gap:10px; }
+  .saf-tog{ display:flex; align-items:center; gap:10px; cursor:pointer; font-size:13px; color:var(--ink-soft); }
+  .saf-tog input{ accent-color:var(--indigo); width:16px; height:16px; flex:0 0 auto; }
+</style>
+  </Fragment>
+  <Fragment slot="status"><span class="pill"><span class="dot violet"></span>prompting</span></Fragment>
+  <Fragment slot="description">A model's behaviour is steered by the words you give it. Assemble a prompt from its parts and watch a quality score climb, switch a task between zero-shot, few-shot and chain-of-thought, then coax a model into clean structured output you can actually parse.</Fragment>
+
+  <ModuleTabs moduleId="prompting" scrollable />
+
+  <!-- ===================== ANATOMY (existing) ===================== -->
+  <div id="panel-anatomy">
+    <p class="note" style="margin-bottom:16px;max-width:840px">A strong prompt usually has the same skeleton: a <b style="color:var(--ink)">role</b>, some <b style="color:var(--ink)">context</b>, a clear <b style="color:var(--ink)">instruction</b>, explicit <b style="color:var(--ink)">constraints</b>, optional <b style="color:var(--ink)">examples</b>, and a specified <b style="color:var(--ink)">output format</b>. Fill the parts and watch the composed prompt — and its quality checklist — update.</p>
+    <div class="pg">
+      <div class="glass" style="padding:22px;border-radius:var(--r-lg)">
+        <div class="pe-fld"><span class="pe-lab">Role / persona</span><input class="pe-in" id="p-role" placeholder="You are a senior data analyst…"></div>
+        <div class="pe-fld"><span class="pe-lab">Context</span><textarea class="pe-in" id="p-ctx" rows="2" placeholder="The user runs a small e-commerce store and shares last quarter's sales…"></textarea></div>
+        <div class="pe-fld"><span class="pe-lab">Instruction / task</span><textarea class="pe-in" id="p-task" rows="2" placeholder="Summarise the three biggest revenue drivers…"></textarea></div>
+        <div class="pe-fld"><span class="pe-lab">Constraints</span><input class="pe-in" id="p-con" placeholder="Under 120 words. No jargon. If unsure, say so."></div>
+        <div class="pe-fld"><span class="pe-lab">Example(s)</span><input class="pe-in" id="p-ex" placeholder="Input: … → Output: …"></div>
+        <div class="pe-fld" style="margin-bottom:0"><span class="pe-lab">Output format</span><input class="pe-in" id="p-fmt" placeholder="Return a bulleted list, then one-line takeaway."></div>
+      </div>
+      <div class="pg-panel">
+        <div class="ctrl"><h4>Composed prompt</h4><div class="pe-pre" id="p-out"></div></div>
+        <div class="ctrl"><h4>Quality — <span id="p-score" style="color:var(--emerald)">0 / 6</span></h4>
+          <div class="pe-check" id="p-checks"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== ROLES (new) ===================== -->
+  <div id="panel-roles" style="display:none">
+    <p class="note" style="margin-bottom:16px;max-width:840px">A chat model reads a <b style="color:var(--ink)">list of messages</b>, each tagged with a role. The <b style="color:var(--ink)">system</b> message sets identity and rules, the <b style="color:var(--ink)">user</b> message asks, and previous <b style="color:var(--ink)">assistant</b> turns are the model's own memory. Pick a persona (or edit the system text) and watch the same question produce a visibly different reply.</p>
+    <div class="pe-seg" id="role-seg">
+      <button class="btn btn-ghost btn-sm active" data-persona="tutor">Friendly tutor</button>
+      <button class="btn btn-ghost btn-sm" data-persona="terse">Terse expert</button>
+      <button class="btn btn-ghost btn-sm" data-persona="json">JSON API</button>
+      <button class="btn btn-ghost btn-sm" data-persona="skeptic">Skeptical reviewer</button>
+      <button class="btn btn-ghost btn-sm" data-persona="pirate">Pirate</button>
+    </div>
+    <div class="pg">
+      <div class="glass" style="padding:22px;border-radius:var(--r-lg)">
+        <div class="pe-fld"><span class="pe-lab">System message</span><textarea class="pe-in" id="role-system" rows="3"></textarea></div>
+        <div class="pe-fld"><span class="pe-lab">User message</span><textarea class="pe-in" id="role-user" rows="2"></textarea></div>
+        <div class="pe-fld" style="margin-bottom:0"><span class="pe-lab">Assistant prefill (optional)</span><input class="pe-in" id="role-asst" placeholder="Sure! Here's…"></div>
+      </div>
+      <div class="pg-panel">
+        <div class="ctrl"><h4>Chat transcript</h4><div class="pe-pre" id="role-transcript" style="min-height:110px"></div></div>
+        <div class="ctrl"><h4>Illustrative assistant reply</h4><div class="pe-pre" id="role-reply" style="min-height:100px"></div></div>
+        <div class="metrics">
+          <div class="metric"><div class="l">ACTIVE PERSONA</div><div class="v mono" id="role-persona" style="font-size:14px">friendly tutor</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="pe-cards">
+      <div class="pe-card"><h4>System sets the frame</h4><p>The system message has the highest priority and colours every later turn — tone, format, refusals. Changing one line here rewrites the whole reply.</p></div>
+      <div class="pe-card"><h4>Turns are the memory</h4><p>Models are stateless; the client resends the full message list each call. Past <b style="color:var(--ink)">assistant</b> turns are how "memory" and conversation state are simulated.</p></div>
+      <div class="pe-card"><h4>Prefill steers format</h4><p>Seeding the start of the assistant turn (a "prefill") nudges it to continue in that shape — e.g. begin with <code>&#123;</code> to force JSON, or a bullet to force a list.</p></div>
+    </div>
+  </div>
+
+  <!-- ===================== SHOTS (existing) ===================== -->
+  <div id="panel-shots" style="display:none">
+    <p class="note" style="margin-bottom:16px;max-width:840px">Same task, three strategies. <b style="color:var(--ink)">Zero-shot</b> just asks. <b style="color:var(--ink)">Few-shot</b> shows worked examples so the model imitates the pattern. <b style="color:var(--ink)">Chain-of-thought</b> asks it to reason step by step before answering — which sharply improves multi-step problems. Toggle and compare.</p>
+    <div class="pe-seg" id="shot-seg">
+      <button class="btn btn-ghost btn-sm active" data-shot="zero">Zero-shot</button>
+      <button class="btn btn-ghost btn-sm" data-shot="few">Few-shot</button>
+      <button class="btn btn-ghost btn-sm" data-shot="cot">Chain-of-thought</button>
+    </div>
+    <div class="pg">
+      <div class="glass" style="padding:22px;border-radius:var(--r-lg)">
+        <h4 style="font-size:13px;color:var(--ink-mute);font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Prompt sent</h4>
+        <div class="pe-pre" id="shot-prompt"></div>
+      </div>
+      <div class="pg-panel">
+        <div class="ctrl"><h4>Illustrative model output</h4><div class="pe-pre" id="shot-out" style="min-height:150px"></div></div>
+        <div class="metrics">
+          <div class="metric"><div class="l">TASK</div><div class="v mono" style="font-size:14px">word problem</div></div>
+          <div class="metric"><div class="l">RELIABILITY</div><div class="v mono" id="shot-rel">low</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== REASONING (new) ===================== -->
+  <div id="panel-reasoning" style="display:none">
+    <p class="note" style="margin-bottom:16px;max-width:840px">Beyond a single chain of thought lie richer <b style="color:var(--ink)">reasoning patterns</b>. <b style="color:var(--ink)">Self-Consistency</b> samples several chains and votes. <b style="color:var(--ink)">ReAct</b> interleaves reasoning with tool calls. <b style="color:var(--ink)">Tree-of-Thought</b> explores and prunes branches. More structure buys more reliability on hard, multi-step tasks — at more tokens and latency.</p>
+    <div class="pe-seg" id="reason-seg">
+      <button class="btn btn-ghost btn-sm active" data-reason="cot">Chain-of-Thought</button>
+      <button class="btn btn-ghost btn-sm" data-reason="sc">Self-Consistency</button>
+      <button class="btn btn-ghost btn-sm" data-reason="react">ReAct</button>
+      <button class="btn btn-ghost btn-sm" data-reason="tot">Tree-of-Thought</button>
+    </div>
+    <div class="pg">
+      <div class="glass" style="padding:22px;border-radius:var(--r-lg)">
+        <h4 style="font-size:13px;color:var(--ink-mute);font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">The task</h4>
+        <div class="pe-pre" id="reason-task" style="min-height:auto">A bookstore had 240 books. On Monday it sold 1/4 of them. On Tuesday it sold 30% of what remained. How many books are left?</div>
+        <h4 style="font-size:13px;color:var(--ink-mute);font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;margin:16px 0 10px">Prompt wording</h4>
+        <div class="pe-pre" id="reason-prompt" style="min-height:70px"></div>
+      </div>
+      <div class="pg-panel">
+        <div class="ctrl"><h4>Illustrative reasoning trace</h4><div class="pe-pre" id="reason-trace" style="min-height:150px"></div></div>
+        <div class="ctrl"><h4>Reliability on multi-step tasks</h4>
+          <div class="reason-bar-track"><div class="reason-bar-fill" id="reason-bar" style="width:62%"></div></div>
+          <p class="note" style="margin-top:8px" id="reason-rel"></p>
+        </div>
+      </div>
+    </div>
+    <div class="pe-cards">
+      <div class="pe-card"><h4>Sample &amp; vote</h4><p><b style="color:var(--ink)">Self-consistency</b> runs the same chain-of-thought many times at nonzero temperature and takes the majority answer — averaging out one-off arithmetic slips.</p></div>
+      <div class="pe-card"><h4>Think, act, observe</h4><p><b style="color:var(--ink)">ReAct</b> lets the model call tools (search, calculator, code) mid-reasoning and feed observations back — grounding steps in real results instead of guesses.</p></div>
+      <div class="pe-card"><h4>Search over thoughts</h4><p><b style="color:var(--ink)">Tree-of-Thought</b> branches into alternatives, scores each, and expands only the promising ones — trading many more tokens for the hardest problems.</p></div>
+    </div>
+  </div>
+
+  <!-- ===================== STRUCTURED (existing) ===================== -->
+  <div id="panel-structured" style="display:none">
+    <p class="note" style="margin-bottom:16px;max-width:840px">When another program consumes the output, free text won't do. Ask for a <b style="color:var(--ink)">schema</b> and give the model an exact shape to fill. Pick a format to see the prompt wording that requests it and a well-formed example — the JSON is validated live with <code>JSON.parse</code>.</p>
+    <div class="pe-seg" id="fmt-seg">
+      <button class="btn btn-ghost btn-sm active" data-fmt="json">JSON</button>
+      <button class="btn btn-ghost btn-sm" data-fmt="kv">Key–value</button>
+      <button class="btn btn-ghost btn-sm" data-fmt="table">Table</button>
+      <button class="btn btn-ghost btn-sm" data-fmt="xml">XML tags</button>
+    </div>
+    <div class="pg">
+      <div class="glass" style="padding:22px;border-radius:var(--r-lg)">
+        <h4 style="font-size:13px;color:var(--ink-mute);font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Prompt instruction</h4>
+        <div class="pe-pre" id="fmt-prompt" style="min-height:70px"></div>
+        <h4 style="font-size:13px;color:var(--ink-mute);font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;margin:16px 0 10px">Example output</h4>
+        <div class="pe-pre" id="fmt-out"></div>
+      </div>
+      <div class="pg-panel">
+        <div class="ctrl"><h4>Validation</h4><div class="pe-pre" id="fmt-valid" style="min-height:50px"></div>
+          <p class="note" style="margin-top:12px">Only JSON is machine-validated here. Tool/function-calling APIs enforce a schema for you server-side.</p>
+        </div>
+      </div>
+    </div>
+    <div class="pe-cards">
+      <div class="pe-card"><h4>JSON mode &amp; tools</h4><p>Modern APIs offer a JSON/response-format mode and function-calling so the model returns arguments matching a schema you define.</p></div>
+      <div class="pe-card"><h4>Delimiters</h4><p>Wrap inputs in triple backticks or tags so the model can't confuse instructions with data — a key defence against prompt injection.</p></div>
+      <div class="pe-card"><h4>Ground &amp; cite</h4><p>For RAG, tell the model to answer only from provided context and cite sources; instruct it to say "I don't know" when the context is silent.</p></div>
+    </div>
+  </div>
+
+  <!-- ===================== PARAMS (new) ===================== -->
+  <div id="panel-params" style="display:none">
+    <p class="note" style="margin-bottom:16px;max-width:840px">At each step the model produces a probability for every possible next token. <b style="color:var(--ink)">Decoding parameters</b> reshape that distribution before a token is sampled: <b style="color:var(--ink)">temperature</b> sharpens or flattens it, <b style="color:var(--ink)">top-k</b> keeps only the k likeliest, and <b style="color:var(--ink)">top-p</b> keeps the smallest set covering probability p. Slide them over this fixed 8-token distribution.</p>
+    <div class="pg">
+      <div class="glass" style="padding:22px;border-radius:var(--r-lg)">
+        <div class="row between center" style="margin-bottom:14px;flex-wrap:wrap;gap:10px">
+          <h4 style="font-size:13px;color:var(--ink-mute);font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em">Next-token distribution</h4>
+          <button class="btn btn-ghost btn-sm" id="params-resample">Resample ↻</button>
+        </div>
+        <p class="note" style="margin-bottom:14px">Context: <span class="mono" style="color:var(--ink-soft)">"The weather this weekend looks ___"</span></p>
+        <div class="pp-bars" id="params-bars"></div>
+        <p class="note" style="margin-top:16px">Sampled token: <b style="color:var(--emerald);font-family:var(--mono)" id="params-sample">—</b></p>
+      </div>
+      <div class="pg-panel">
+        <div class="ctrl"><h4>Decoding controls</h4>
+          <div class="field"><label>Temperature <span class="val" id="params-temp-v">1.00</span></label><input type="range" id="params-temp" min="0.05" max="2" step="0.05" value="1"></div>
+          <div class="field"><label>Top-k <span class="val" id="params-topk-v">8</span></label><input type="range" id="params-topk" min="1" max="8" step="1" value="8"></div>
+          <div class="field" style="margin-bottom:0"><label>Top-p <span class="val" id="params-topp-v">1.00</span></label><input type="range" id="params-topp" min="0.1" max="1" step="0.05" value="1"></div>
+        </div>
+        <div class="metrics">
+          <div class="metric"><div class="l">TOKENS KEPT</div><div class="v mono" id="params-kept" style="font-size:16px">8 / 8</div></div>
+          <div class="metric"><div class="l">TOP PROBABILITY</div><div class="v mono" id="params-top" style="font-size:16px">—</div></div>
+        </div>
+        <p class="note">Temperature reshapes the whole curve (renormalised after); top-k and top-p then prune the tail, and the survivors are renormalised before one is sampled.</p>
+      </div>
+    </div>
+    <div class="pe-cards">
+      <div class="pe-card"><h4>Temperature</h4><p>Divides the logits before softmax. <b style="color:var(--ink)">T→0</b> is greedy — always the top token; <b style="color:var(--ink)">T&gt;1</b> flattens the curve, boosting rare tokens and creativity (and errors).</p></div>
+      <div class="pe-card"><h4>Top-k vs top-p</h4><p><b style="color:var(--ink)">Top-k</b> keeps a fixed count; <b style="color:var(--ink)">top-p</b> (nucleus) keeps a dynamic set sized to the confidence of the moment — narrow when sure, wide when unsure.</p></div>
+      <div class="pe-card"><h4>Combine them</h4><p>They stack: top-k and top-p both prune, then temperature scales what's left. Low temperature with a small nucleus gives safe, repetitive text; the opposite gives surprise.</p></div>
+    </div>
+  </div>
+
+  <!-- ===================== RAG (new) ===================== -->
+  <div id="panel-rag" style="display:none">
+    <p class="note" style="margin-bottom:16px;max-width:840px"><b style="color:var(--ink)">Retrieval-Augmented Generation</b> fights hallucination by fetching relevant text and pasting it into the prompt. Type a query; a toy word-overlap score ranks a tiny corpus, the top chunks are retrieved, and a <b style="color:var(--ink)">grounded</b> prompt with <b style="color:var(--ink)">[n]</b> citations is assembled — contrast it with the ungrounded answer below.</p>
+    <div class="pg">
+      <div class="glass" style="padding:22px;border-radius:var(--r-lg)">
+        <div class="pe-fld"><span class="pe-lab">Query</span><input class="pe-in" id="rag-q" value="When did the James Webb telescope launch?"></div>
+        <button class="btn btn-ghost btn-sm" id="rag-go" style="margin-bottom:16px">Retrieve</button>
+        <h4 style="font-size:13px;color:var(--ink-mute);font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Retrieved chunks</h4>
+        <div id="rag-retrieved"></div>
+      </div>
+      <div class="pg-panel">
+        <div class="ctrl"><h4>Grounded prompt + answer</h4><div class="pe-pre" id="rag-grounded" style="min-height:150px"></div></div>
+        <div class="ctrl"><h4>Ungrounded answer (no retrieval)</h4><div class="pe-pre" id="rag-halluc" style="min-height:70px"></div></div>
+      </div>
+    </div>
+    <div class="pe-cards">
+      <div class="pe-card"><h4>Embed &amp; rank</h4><p>Real systems embed docs and the query into vectors and rank by cosine similarity. This demo uses crude word overlap, but the shape — <b style="color:var(--ink)">retrieve then read</b> — is identical.</p></div>
+      <div class="pe-card"><h4>Cite or refuse</h4><p>The grounded prompt tells the model to answer <b style="color:var(--ink)">only</b> from context and cite <b style="color:var(--ink)">[n]</b>, and to say "I don't know" when the context is silent — making answers checkable.</p></div>
+      <div class="pe-card"><h4>Chunking matters</h4><p>Docs are split into passages before embedding. Too large and retrieval is noisy; too small and context is lost. Overlap between chunks avoids cutting facts in half.</p></div>
+    </div>
+  </div>
+
+  <!-- ===================== SAFETY (new) ===================== -->
+  <div id="panel-safety" style="display:none">
+    <p class="note" style="margin-bottom:16px;max-width:840px">User input can carry <b style="color:var(--ink)">attacks</b>: prompt injection ("ignore previous instructions…"), jailbreaks, and requests for harmful content. No single defence catches everything. Toggle <b style="color:var(--ink)">delimiters</b>, <b style="color:var(--ink)">system rules</b>, and an <b style="color:var(--ink)">output filter</b> and watch how many attacks are blocked versus slip through.</p>
+    <div class="pg">
+      <div class="glass" style="padding:22px;border-radius:var(--r-lg)">
+        <h4 style="font-size:13px;color:var(--ink-mute);font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">Incoming inputs</h4>
+        <div id="safety-list"></div>
+      </div>
+      <div class="pg-panel">
+        <div class="ctrl"><h4>Defences (layer them)</h4>
+          <div class="saf-toggles">
+            <label class="saf-tog"><input type="checkbox" id="def-delim">Delimiters — wrap user data in fenced tags so it can't pose as instructions</label>
+            <label class="saf-tog"><input type="checkbox" id="def-rules">System rules — immutable high-priority instructions the user can't override</label>
+            <label class="saf-tog"><input type="checkbox" id="def-filter">Output filter — scan the response for policy violations before returning</label>
+          </div>
+        </div>
+        <div class="metrics">
+          <div class="metric"><div class="l">BLOCKED</div><div class="v mono" id="safety-blocked" style="font-size:24px;color:var(--emerald)">0</div></div>
+          <div class="metric"><div class="l">SLIPPED THROUGH</div><div class="v mono" id="safety-slipped" style="font-size:24px;color:var(--rose)">0</div></div>
+        </div>
+        <p class="note">Turn everything off to see the baseline, then layer defences. Depth beats any single wall — this is <b style="color:var(--ink)">defence in depth</b>.</p>
+      </div>
+    </div>
+    <div class="pe-cards">
+      <div class="pe-card"><h4>Injection ≠ jailbreak</h4><p><b style="color:var(--ink)">Injection</b> smuggles instructions through data (a web page, a file). A <b style="color:var(--ink)">jailbreak</b> talks the model out of its own rules. Both need different guards.</p></div>
+      <div class="pe-card"><h4>Trust boundaries</h4><p>Treat all retrieved and user content as untrusted. Delimiters plus a firm system prompt keep the model from executing instructions that arrive inside the data.</p></div>
+      <div class="pe-card"><h4>Filter both ways</h4><p>Screen inputs and outputs. An output filter is the last line — it can catch a harmful completion even when an upstream defence was talked past.</p></div>
+    </div>
+  </div>
+
+  <Fragment slot="scripts">
+<script is:inline>
+(function(){
+  /* ===== anatomy builder ===== */
+  const F={role:'p-role',ctx:'p-ctx',task:'p-task',con:'p-con',ex:'p-ex',fmt:'p-fmt'};
+  const LABELS={role:'Role',ctx:'Context',task:'Task',con:'Constraints',ex:'Examples',fmt:'Output format'};
+  function val(id){ return (document.getElementById(id).value||'').trim(); }
+  function buildAnatomy(){
+    const parts=[]; const has={};
+    Object.entries(F).forEach(([k,id])=>{ const t=val(id); has[k]=!!t;
+      if(t){ const head=k==='task'?'Task':LABELS[k]; parts.push('<b>'+head+':</b> '+esc(t)); } });
+    document.getElementById('p-out').innerHTML = parts.length?parts.join('\n\n'):'<span style="color:var(--ink-mute)">Start filling the fields on the left…</span>';
+    const checks=[
+      ['Role / persona set', has.role],
+      ['Task is stated', has.task],
+      ['Context provided', has.ctx],
+      ['Constraints given', has.con],
+      ['Example(s) shown', has.ex],
+      ['Output format specified', has.fmt],
+    ];
+    const score=checks.filter(c=>c[1]).length;
+    document.getElementById('p-score').textContent=score+' / 6';
+    document.getElementById('p-checks').innerHTML=checks.map(c=>
+      `<div class="pe-ck ${c[1]?'on':''}"><span class="bx">✓</span>${c[0]}</div>`).join('');
+  }
+  function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  Object.values(F).forEach(id=>document.getElementById(id).addEventListener('input',buildAnatomy));
+  buildAnatomy();
+
+  /* ===== shots ===== */
+  const SHOTS={
+    zero:{ prompt:'Q: A shop sells pens at 3 for $2. How much do 12 pens cost?\nA:',
+      out:'$8', rel:'low', note:'One shot in the dark — often right on easy tasks, brittle on multi-step ones.' },
+    few:{ prompt:'Q: 2 apples cost $6. How much do 5 apples cost?\nA: $15\n\nQ: 4 pens cost $8. How much do 10 pens cost?\nA: $20\n\nQ: A shop sells pens at 3 for $2. How much do 12 pens cost?\nA:',
+      out:'$8', rel:'medium', note:'Examples pin down the format and method — more consistent.' },
+    cot:{ prompt:'Q: A shop sells pens at 3 for $2. How much do 12 pens cost?\nLet\'s think step by step.',
+      out:'Step 1: price per pen = $2 ÷ 3 = $0.667.\nStep 2: 12 pens = 12 × $0.667 = $8.00.\nAnswer: $8.', rel:'high',
+      note:'Reasoning out loud before answering — best on arithmetic, logic, multi-hop questions.' },
+  };
+  let shot='zero';
+  function drawShot(){
+    const s=SHOTS[shot];
+    document.getElementById('shot-prompt').textContent=s.prompt;
+    document.getElementById('shot-out').textContent=s.out+'\n\n— '+s.note;
+    document.getElementById('shot-rel').textContent=s.rel;
+  }
+  document.getElementById('shot-seg').onclick=e=>{ const b=e.target.closest('[data-shot]'); if(!b)return;
+    shot=b.dataset.shot; [...e.currentTarget.children].forEach(c=>c.classList.toggle('active',c===b)); drawShot(); };
+  drawShot();
+
+  /* ===== structured ===== */
+  const FMT={
+    json:{ prompt:'Extract the person\'s details. Respond ONLY with valid JSON matching:\n{ "name": string, "role": string, "years": number }',
+      out:'{\n  "name": "Ada Lovelace",\n  "role": "mathematician",\n  "years": 12\n}' },
+    kv:{ prompt:'Return the fields as key: value pairs, one per line. No prose.',
+      out:'name: Ada Lovelace\nrole: mathematician\nyears: 12' },
+    table:{ prompt:'Return a Markdown table with columns name | role | years.',
+      out:'| name | role | years |\n|------|------|-------|\n| Ada Lovelace | mathematician | 12 |' },
+    xml:{ prompt:'Wrap each field in XML tags so it can be parsed reliably.',
+      out:'<person>\n  <name>Ada Lovelace</name>\n  <role>mathematician</role>\n  <years>12</years>\n</person>' },
+  };
+  let fmt='json';
+  function drawFmt(){
+    const f=FMT[fmt];
+    document.getElementById('fmt-prompt').textContent=f.prompt;
+    document.getElementById('fmt-out').textContent=f.out;
+    const vEl=document.getElementById('fmt-valid');
+    if(fmt==='json'){ try{ const o=JSON.parse(f.out); vEl.innerHTML='<span style="color:var(--emerald)">✓ Valid JSON</span> — parsed '+Object.keys(o).length+' keys: '+esc(Object.keys(o).join(', ')); }
+      catch(err){ vEl.innerHTML='<span style="color:var(--rose)">✗ Invalid JSON</span> — '+esc(err.message); } }
+    else vEl.innerHTML='<span style="color:var(--ink-mute)">Not JSON — parse with the matching reader ('+fmt+').</span>';
+  }
+  document.getElementById('fmt-seg').onclick=e=>{ const b=e.target.closest('[data-fmt]'); if(!b)return;
+    fmt=b.dataset.fmt; [...e.currentTarget.children].forEach(c=>c.classList.toggle('active',c===b)); drawFmt(); };
+  drawFmt();
+
+  /* ===== tabs ===== */
+  const tabs=document.getElementById('tabs');
+  const PANELS=['anatomy','roles','shots','reasoning','structured','params','rag','safety'];
+  tabs.onclick=e=>{ const t=e.target.closest('.tab'); if(!t)return;
+    [...tabs.children].forEach(c=>{ c.classList.remove('active'); c.setAttribute('aria-selected','false'); c.tabIndex=-1; });
+    t.classList.add('active'); t.setAttribute('aria-selected','true'); t.tabIndex=0;
+    PANELS.forEach(p=>document.getElementById('panel-'+p).style.display=(t.dataset.tab===p?'':'none'));
+  };
+})();
+</script>
+<script is:inline src="/js/playgrounds/prompting-extra.js"></script>
+  </Fragment>
+</ModuleLayout>
