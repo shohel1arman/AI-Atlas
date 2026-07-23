@@ -1,0 +1,35 @@
+---
+import { moduleById } from '../data/modules';
+
+interface Props {
+  moduleId: string;
+  scrollable?: boolean;
+  ariaLabel?: string;
+}
+
+const { moduleId, scrollable = false, ariaLabel } = Astro.props;
+const module = moduleById[moduleId];
+
+if (!module) throw new Error(`Unknown module: ${moduleId}`);
+---
+
+<div
+  class:list={['tabs', { 'tabs-scroll': scrollable }]}
+  id="tabs"
+  role="tablist"
+  aria-label={ariaLabel || `${module.title} topics`}
+>
+  {module.lessons.map((lesson, index) => (
+    <div
+      class:list={['tab', { active: index === 0 }]}
+      id={`tab-${lesson.id}`}
+      data-tab={lesson.id}
+      role="tab"
+      tabindex={index === 0 ? 0 : -1}
+      aria-selected={index === 0 ? 'true' : 'false'}
+      aria-controls={`panel-${lesson.id}`}
+    >
+      {lesson.label}
+    </div>
+  ))}
+</div>

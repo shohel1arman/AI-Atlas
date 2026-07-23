@@ -1,27 +1,20 @@
-# AI Atlas — your design, deploy-ready
+# Deploying AI Atlas
 
-This is your exact AI Atlas design (from Claude Design), verified and packaged for hosting.
-It's a static site — plain HTML/CSS/JS, no build step.
+AI Atlas is a statically generated Astro application. Netlify builds the 17 native Astro routes and publishes `dist/`.
 
-## What's here
-- `index.html` — landing page
-- `app.html` — the module hub (sidebar + all-modules grid)
-- `modules/` — all 12 module pages
-- `styles/`, `js/`, `assets/` — styles, playground scripts, logo
+## Netlify
 
-## Working interactive playgrounds (6)
-Mathematics, Machine Learning, Deep Learning, Data Analysis (SQL),
-Transformers, and Programming (real Python via Pyodide).
+1. Connect the repository to Netlify.
+2. Keep the build command as `npm run build` and the publish directory as `dist`.
+3. Optionally add `PUBLIC_SUPABASE_URL` and `PUBLIC_SUPABASE_ANON_KEY` for accounts and cloud progress.
+4. Deploy.
 
-The other 6 pages (ETL, Generative, LLM-Agents, MLOps, Research, XAI) are
-content/preview pages — exactly as designed. Making them interactive is the
-module-by-module build.
+The required build settings are already defined in `netlify.toml`. Without Supabase environment variables, every module and playground remains available and progress stays in the visitor's browser.
 
-## Deploy (fastest — drag & drop)
-1. Go to https://app.netlify.com/drop
-2. Drag this whole folder onto the page.
-3. Live in seconds.
+## Local production check
 
-## Deploy via GitHub (so pushes auto-update)
-Put these files in a repo and connect it on Netlify. `netlify.toml` is already set
-for static hosting (publish = ".", no build command).
+```bash
+npm install
+npm run build
+npm run preview
+```

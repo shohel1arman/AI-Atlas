@@ -1,0 +1,142 @@
+---
+import ModuleLayout from '../../layouts/ModuleLayout.astro';
+import ModuleTabs from '../../components/ModuleTabs.astro';
+---
+
+<ModuleLayout
+  title="Foundations — AI Atlas"
+  pageId="foundations"
+  crumb="Foundations"
+  eyebrow="Foundations"
+  heading="The map before the territory"
+>
+  <Fragment slot="head">
+<style is:global>
+  .flow{ display:flex; gap:10px; flex-wrap:wrap; }
+  .flow-node{ flex:1; min-width:120px; padding:16px 14px; border-radius:14px; border:1px solid var(--stroke); background:var(--glass); cursor:pointer; transition:.2s; position:relative; text-align:left; }
+  .flow-node:hover{ border-color:var(--stroke-acc); }
+  .flow-node.active{ border-color:transparent; background:linear-gradient(160deg, color-mix(in srgb,var(--indigo) 22%, transparent), var(--glass)); box-shadow:var(--shadow-acc); }
+  .flow-node .n{ font-family:var(--mono); font-size:11px; color:var(--indigo-lt); }
+  .flow-node .t{ font-family:var(--display); font-weight:600; font-size:14px; margin-top:6px; }
+  .flow-node.done .n{ color:var(--emerald); }
+  .era-sys{ display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:12px; padding:5px 10px; border-radius:999px; background:var(--glass-2); border:1px solid var(--stroke); color:var(--ink-soft); margin:4px 4px 0 0; }
+</style>
+  </Fragment>
+  <Fragment slot="status"><span class="pill"><span class="dot"></span>start here</span></Fragment>
+  <Fragment slot="description">Every model in the Atlas rides the same pipeline and answers to the same responsibilities. Step through the AI workflow, then scrub the history of the field.</Fragment>
+
+<ModuleTabs moduleId="foundations" />
+
+      <!-- Workflow -->
+      <div id="panel-flow">
+        <div class="glass" style="padding:22px;border-radius:var(--r-lg);margin-bottom:18px">
+          <div class="row between center" style="margin-bottom:16px;flex-wrap:wrap;gap:10px">
+            <h3 style="font-size:16px">The loop every AI project runs</h3>
+            <button class="btn btn-primary btn-sm" id="flow-run">▶ Run the pipeline</button>
+          </div>
+          <div class="flow" id="flow"></div>
+        </div>
+        <div class="pg" style="grid-template-columns:1fr 320px">
+          <div class="glass" style="padding:26px;border-radius:var(--r-lg)">
+            <span class="pill" id="flow-tag"><span class="dot"></span>stage 1 of 6</span>
+            <h2 style="font-size:24px;margin:14px 0 10px" id="flow-title">Problem definition</h2>
+            <p class="lead" style="font-size:16px;color:var(--ink-soft)" id="flow-desc"></p>
+            <div class="eqn" id="flow-ex" style="margin-top:18px"></div>
+          </div>
+          <div class="pg-panel">
+            <div class="ctrl"><h4>Progress</h4>
+              <div class="bar" style="height:7px;border-radius:999px;background:rgba(30,27,75,.1);overflow:hidden"><i id="flow-bar" style="display:block;height:100%;width:16%;background:linear-gradient(90deg,var(--indigo),var(--cyan));transition:width .4s"></i></div>
+              <p class="note" style="margin-top:14px">Click any stage to jump to it. The loop never really ends — monitoring feeds straight back into the next problem definition.</p>
+            </div>
+            <div class="metrics">
+              <div class="metric"><div class="l">STAGE</div><div class="v mono" id="flow-step">1 / 6</div></div>
+              <div class="metric"><div class="l">PHASE</div><div class="v mono" id="flow-phase" style="font-size:16px">Build</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timeline -->
+      <div id="panel-time" style="display:none">
+        <div class="pg" style="grid-template-columns:1fr 340px">
+          <div class="glass" style="padding:28px;border-radius:var(--r-lg)">
+            <div class="row between center" style="margin-bottom:6px"><span class="pill" id="era-year"><span class="dot cyan"></span>1956</span><span class="mono" style="font-size:12px;color:var(--ink-mute)" id="era-idx">era 1 / 4</span></div>
+            <h2 style="font-size:26px;margin:14px 0 10px" id="era-name">Symbolic AI</h2>
+            <p class="lead" style="font-size:16px;color:var(--ink-soft)" id="era-desc"></p>
+            <div style="margin-top:20px" id="era-sys"></div>
+          </div>
+          <div class="pg-panel">
+            <div class="ctrl"><h4>Scrub the timeline</h4>
+              <div class="field" style="margin-bottom:6px"><label>Era <span class="val" id="era-v">Symbolic</span></label><input type="range" id="era" min="0" max="3" step="1" value="0"></div>
+              <p class="note">Four eras took AI from hand-written rules to systems that write. Each didn’t replace the last so much as absorb it.</p>
+            </div>
+            <div class="ctrl"><h4>The through-line</h4>
+              <p class="note">Less human-specified structure, more learned-from-data structure — at every step.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+  <Fragment slot="scripts">
+<script is:inline>
+(function(){
+  /* ===== Workflow pipeline ===== */
+  const STAGES=[
+    {t:'Problem definition',phase:'Frame',desc:'Before any code: what decision are we improving, and how will we know it worked? Pick the task and the metric.',ex:'goal: reduce churn  ·  metric: recall on “will cancel”  ·  baseline: 0.42'},
+    {t:'Data collection',phase:'Build',desc:'Gather, label and clean the raw material. The model can only be as good — and as fair — as this data.',ex:'sources: CRM + billing + support logs  ·  rows: 240k  ·  split: 70 / 15 / 15'},
+    {t:'Modeling',phase:'Build',desc:'Choose a model family and train it to map inputs to the target. Start simple, add complexity only when it pays.',ex:'baseline: logistic reg → gradient boosting → tune hy-params'},
+    {t:'Evaluation',phase:'Build',desc:'Score on held-out data the model never saw. Check the metric that matters, not just accuracy, and look for bias across groups.',ex:'recall 0.71 · precision 0.63 · AUC 0.88 · fair across regions ✓'},
+    {t:'Deployment',phase:'Ship',desc:'Wrap the model in an API or batch job and roll it out safely — shadow first, then canary, then full traffic.',ex:'FastAPI endpoint · canary 5% · p95 latency 40ms'},
+    {t:'Monitoring',phase:'Operate',desc:'Watch it in the wild. Data drifts, behaviour shifts — alerts and retraining close the loop back to step one.',ex:'drift alert on “plan_type” → schedule retrain → new problem def'},
+  ];
+  let cur=0, timer=null;
+  const flow=document.getElementById('flow');
+  flow.innerHTML=STAGES.map((s,i)=>`<button class="flow-node" data-i="${i}"><span class="n">0${i+1}</span><div class="t">${s.t}</div></button>`).join('');
+  function paint(){
+    [...flow.children].forEach((el,i)=>{ el.classList.toggle('active',i===cur); el.classList.toggle('done',i<cur); });
+    const s=STAGES[cur];
+    document.getElementById('flow-title').textContent=s.t;
+    document.getElementById('flow-desc').textContent=s.desc;
+    document.getElementById('flow-ex').textContent=s.ex;
+    document.getElementById('flow-tag').innerHTML=`<span class="dot"></span>stage ${cur+1} of 6`;
+    document.getElementById('flow-step').textContent=(cur+1)+' / 6';
+    document.getElementById('flow-phase').textContent=s.phase;
+    document.getElementById('flow-bar').style.width=((cur+1)/6*100)+'%';
+  }
+  flow.onclick=e=>{const b=e.target.closest('[data-i]');if(!b)return;stop();cur=+b.dataset.i;paint();};
+  function stop(){ if(timer){clearInterval(timer);timer=null;document.getElementById('flow-run').textContent='▶ Run the pipeline';} }
+  document.getElementById('flow-run').onclick=()=>{
+    if(timer){stop();return;}
+    document.getElementById('flow-run').textContent='⏸ Pause';
+    cur=0;paint();
+    timer=setInterval(()=>{ if(cur>=STAGES.length-1){stop();return;} cur++;paint(); },1100);
+  };
+  paint();
+
+  /* ===== Timeline ===== */
+  const ERAS=[
+    {year:'1956',name:'Symbolic AI',desc:'Intelligence as hand-written rules and logic. Experts encoded knowledge directly; the machine just followed the if-then trees.',sys:['Logic Theorist','ELIZA','Expert Systems','SHRDLU']},
+    {year:'1990s',name:'Statistical ML',desc:'Instead of coding rules, learn them from data. Probability and optimisation let models generalise from examples.',sys:['SVMs','Decision Trees','Naive Bayes','Random Forests']},
+    {year:'2012',name:'Deep Learning',desc:'Deep neural networks learn their own features from raw pixels and text — no hand-engineering. AlexNet cracked vision; the rest followed.',sys:['AlexNet','ResNet','word2vec','AlphaGo']},
+    {year:'2020s',name:'Generative AI',desc:'Models that don’t just classify but create — text, images, code and video — from a single prompt, at scale.',sys:['GPT-4','Stable Diffusion','Whisper','Sora']},
+  ];
+  const eraName=n=>['Symbolic','Statistical','Deep','Generative'][n];
+  function paintEra(i){
+    const e=ERAS[i];
+    document.getElementById('era-year').innerHTML=`<span class="dot cyan"></span>${e.year}`;
+    document.getElementById('era-idx').textContent=`era ${i+1} / 4`;
+    document.getElementById('era-name').textContent=e.name;
+    document.getElementById('era-desc').textContent=e.desc;
+    document.getElementById('era-v').textContent=eraName(i);
+    document.getElementById('era-sys').innerHTML=e.sys.map(s=>`<span class="era-sys">${s}</span>`).join('');
+  }
+  document.getElementById('era').oninput=ev=>paintEra(+ev.target.value);
+  paintEra(0);
+
+  /* tabs */
+  const tabs=document.getElementById('tabs');
+  tabs.onclick=e=>{const t=e.target.closest('.tab');if(!t)return;[...tabs.children].forEach(c=>c.classList.remove('active'));t.classList.add('active');document.getElementById('panel-flow').style.display=t.dataset.tab==='flow'?'':'none';document.getElementById('panel-time').style.display=t.dataset.tab==='time'?'':'none';if(t.dataset.tab!=='flow')stop();};
+})();
+</script>
+  </Fragment>
+</ModuleLayout>

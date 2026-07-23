@@ -1,0 +1,25 @@
+---
+import BaseDocument from './BaseDocument.astro';
+import '../styles/app.css';
+
+interface Props {
+  title: string;
+  pageId: string;
+}
+
+const { title, pageId } = Astro.props;
+---
+
+<BaseDocument title={title} pageId={pageId}>
+  <Fragment slot="head"><slot name="head" /></Fragment>
+
+  <div class="atlas-bg"></div>
+  <div class="atlas-grid"></div>
+  <div class="scrim" id="scrim"></div>
+  <div class="app">
+    <div id="shell-side"></div>
+    <main class="main"><slot /></main>
+  </div>
+
+  <Fragment slot="scripts"><slot name="scripts" /></Fragment>
+</BaseDocument>

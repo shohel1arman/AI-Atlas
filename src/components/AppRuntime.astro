@@ -1,0 +1,15 @@
+---
+interface Props {
+  includeCurriculum?: boolean;
+}
+
+const { includeCurriculum = false } = Astro.props;
+---
+
+<script is:inline src="/js/app-shell.js"></script>
+<script is:inline src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script is:inline src="/js/supabase-config.js"></script>
+<script is:inline src="/js/modules-manifest.js"></script>
+<script is:inline src="/js/atlas-app.js"></script>
+{includeCurriculum && <script is:inline src="/js/curriculum.js"></script>}
+<script is:inline src="/js/assistant.js"></script>

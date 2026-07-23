@@ -1,0 +1,67 @@
+---
+import ModuleLayout from '../../layouts/ModuleLayout.astro';
+import ModuleTabs from '../../components/ModuleTabs.astro';
+import EtlPlaygrounds from '../../components/playgrounds/EtlPlaygrounds.astro';
+---
+
+<ModuleLayout
+  title="ETL & Data Engineering — AI Atlas"
+  pageId="etl"
+  crumb="ETL & Data Engineering"
+  eyebrow="ETL & Data Engineering"
+  heading="Build reliable paths from raw data to useful data"
+>
+  <Fragment slot="status"><span class="pill"><span class="dot cyan"></span>8 interactive playgrounds</span></Fragment>
+  <Fragment slot="description">Trace data through a DAG, compare ingestion modes, clean records, model a warehouse, distribute work, orchestrate retries, enforce quality, and keep features aligned.</Fragment>
+
+  <ModuleTabs moduleId="etl" scrollable />
+  <EtlPlaygrounds />
+
+  <Fragment slot="scripts">
+    <script is:inline>
+      (() => {
+        const lessonIds = ['etl', 'ingest', 'transform', 'warehouse', 'spark', 'orchestrate', 'quality', 'features'];
+        const tabs = document.getElementById('tabs');
+        if (!tabs) return;
+        const tabItems = [...tabs.querySelectorAll('.tab')];
+        lessonIds.forEach((id) => {
+          const panel = document.getElementById('panel-' + id);
+          if (!panel) return;
+          panel.setAttribute('role', 'tabpanel');
+          panel.setAttribute('aria-labelledby', 'tab-' + id);
+        });
+        const selectTab = (tab, focus = false) => {
+          tabItems.forEach((item) => {
+            const selected = item === tab;
+            item.classList.toggle('active', selected);
+            item.setAttribute('aria-selected', String(selected));
+            item.tabIndex = selected ? 0 : -1;
+          });
+          lessonIds.forEach((id) => {
+            const panel = document.getElementById('panel-' + id);
+            if (panel) panel.style.display = id === tab.dataset.tab ? '' : 'none';
+          });
+          document.dispatchEvent(new CustomEvent('etl:tab', { detail: tab.dataset.tab }));
+          if (focus) tab.focus();
+        };
+        tabs.addEventListener('click', (event) => {
+          const tab = event.target.closest('.tab');
+          if (tab) selectTab(tab);
+        });
+        tabs.addEventListener('keydown', (event) => {
+          const current = event.target.closest('.tab');
+          if (!current) return;
+          const index = tabItems.indexOf(current);
+          let next = index;
+          if (event.key === 'ArrowRight') next = (index + 1) % tabItems.length;
+          else if (event.key === 'ArrowLeft') next = (index - 1 + tabItems.length) % tabItems.length;
+          else if (event.key === 'Home') next = 0;
+          else if (event.key === 'End') next = tabItems.length - 1;
+          else return;
+          event.preventDefault();
+          selectTab(tabItems[next], true);
+        });
+      })();
+    </script>
+  </Fragment>
+</ModuleLayout>

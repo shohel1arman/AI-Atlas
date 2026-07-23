@@ -1,0 +1,249 @@
+---
+import ModuleLayout from '../../layouts/ModuleLayout.astro';
+import ModuleTabs from '../../components/ModuleTabs.astro';
+---
+
+<ModuleLayout
+  title="Machine Learning Playground — AI Atlas"
+  pageId="machine-learning"
+  crumb="Machine Learning"
+  eyebrow="Machine Learning Playground"
+  heading="Classic models, each a live sandbox"
+>
+  <Fragment slot="status"><span class="pill"><span class="dot cyan"></span>8 playgrounds</span></Fragment>
+  <Fragment slot="description">Drag the data and watch the model chase it. Fit a regression line, raise the polynomial degree until it overfits, or watch K-Means centroids settle into clusters step by step.</Fragment>
+
+<ModuleTabs moduleId="machine-learning" scrollable />
+
+      <!-- Regression -->
+      <div id="panel-reg">
+        <div class="pg">
+          <div class="pg-stage" style="aspect-ratio:16/11;min-height:0">
+            <div class="stage-bar"><span class="pill" style="background:rgba(12,12,20,.7)">click empty space to add a point · drag points</span></div>
+            <canvas id="reg"></canvas>
+          </div>
+          <div class="pg-panel">
+            <div class="ctrl"><h4>Model</h4>
+              <div class="field"><label for="deg">Polynomial degree <span class="val" id="deg-v">1 · linear</span></label><input type="range" id="deg" min="1" max="8" step="1" value="1"></div>
+              <div style="display:flex;gap:10px"><button class="btn btn-ghost btn-sm" id="reg-reset" style="flex:1;justify-content:center">Reset data</button></div>
+            </div>
+            <div class="metrics">
+              <div class="metric"><div class="l">MSE</div><div class="v mono" id="r-mse" style="color:var(--rose)">—</div></div>
+              <div class="metric"><div class="l">R²</div><div class="v mono" id="r-r2" style="color:var(--emerald)">—</div></div>
+            </div>
+            <div class="ctrl"><h4>Best-fit equation</h4><div class="eqn" id="reg-eqn"></div></div>
+            <p class="note">Raise the <b style="color:var(--ink)">degree</b> and watch R² climb as the curve snakes through every point — that's <b style="color:var(--ink)">overfitting</b>. The red lines are residuals; least squares minimizes their squared sum.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- KMeans -->
+      <div id="panel-km" style="display:none">
+        <div class="pg">
+          <div class="pg-stage" style="aspect-ratio:16/11;min-height:0">
+            <div class="stage-bar">
+              <button class="iconbtn primary" id="k-play" aria-label="Play or pause clustering"><svg id="k-icon" width="16" height="16" viewBox="0 0 16 16"><path d="M4 3l9 5-9 5z" fill="#fff"/></svg></button>
+              <button class="iconbtn" id="k-step" aria-label="Advance clustering one step"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M4 3l6 5-6 5zM11 3h2v10h-2z" fill="currentColor"/></svg></button>
+              <button class="iconbtn" id="k-new" aria-label="Generate new clustering data"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M8 3a5 5 0 1 1-4.6 3" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M3 2.5V6h3.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <div class="spacer"></div>
+              <span class="pill" style="background:rgba(12,12,20,.7)">centroids = crosshairs</span>
+            </div>
+            <canvas id="km"></canvas>
+          </div>
+          <div class="pg-panel">
+            <div class="ctrl"><h4>Clusters (k)</h4><div class="seg" id="kseg"><button data-v="2">2</button><button class="active" data-v="3">3</button><button data-v="4">4</button><button data-v="5">5</button></div></div>
+            <div class="metrics"><div class="metric"><div class="l">ITERATION</div><div class="v mono" id="k-iter">0</div></div><div class="metric"><div class="l">K</div><div class="v mono" id="k-k">3</div></div></div>
+            <p class="note">Each iteration: <b style="color:var(--ink)">assign</b> every point to its nearest centroid, then <b style="color:var(--ink)">move</b> each centroid to the mean of its members. Repeat until nothing moves. Try the wrong <b style="color:var(--ink)">k</b> and watch clusters split or merge awkwardly.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Classification (live) -->
+      <div id="panel-cls" style="display:none">
+        <div class="pg">
+          <div class="pg-stage" style="aspect-ratio:16/11;min-height:0">
+            <div class="stage-bar">
+              <span class="pill" style="background:rgba(12,12,20,.7)">click to add · click a point to remove</span>
+              <div class="spacer"></div>
+              <div class="seg" id="cls-class"><button class="active" data-v="0">Class A</button><button data-v="1">Class B</button></div>
+            </div>
+            <canvas id="cls"></canvas>
+          </div>
+          <div class="pg-panel">
+            <div class="ctrl"><h4>Model</h4>
+              <div class="seg" id="cls-model"><button class="active" data-v="logistic">Logistic</button><button data-v="knn">KNN</button></div>
+              <div class="field" id="cls-kwrap" style="margin:12px 0 0;display:none"><label for="cls-k">Neighbors k <span class="val" id="cls-k-v">5</span></label><input type="range" id="cls-k" min="1" max="15" step="2" value="5"></div>
+              <div style="display:flex;gap:10px;margin-top:12px"><button class="btn btn-ghost btn-sm" id="cls-seed" style="flex:1;justify-content:center">New data</button><button class="btn btn-ghost btn-sm" id="cls-clear" style="flex:1;justify-content:center">Clear</button></div>
+            </div>
+            <div class="ctrl"><h4>Confusion matrix</h4>
+              <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px">
+                <div class="metric" style="text-align:center;background:rgba(52,211,153,0.14);border-color:rgba(52,211,153,0.4)"><div class="v mono" style="font-size:20px" id="c-tp">—</div><div class="l">true pos</div></div>
+                <div class="metric" style="text-align:center"><div class="v mono" style="font-size:20px" id="c-fn">—</div><div class="l">false neg</div></div>
+                <div class="metric" style="text-align:center"><div class="v mono" style="font-size:20px" id="c-fp">—</div><div class="l">false pos</div></div>
+                <div class="metric" style="text-align:center;background:rgba(52,211,153,0.14);border-color:rgba(52,211,153,0.4)"><div class="v mono" style="font-size:20px" id="c-tn">—</div><div class="l">true neg</div></div>
+              </div>
+            </div>
+            <div class="metrics">
+              <div class="metric"><div class="l">ACCURACY</div><div class="v mono" id="c-acc" style="color:var(--emerald)">—</div></div>
+              <div class="metric"><div class="l">PRECISION</div><div class="v mono" id="c-prec">—</div></div>
+              <div class="metric"><div class="l">RECALL</div><div class="v mono" id="c-rec">—</div></div>
+            </div>
+            <p class="note"><b style="color:var(--ink)">Logistic</b> draws one straight boundary; <b style="color:var(--ink)">KNN</b> carves a jagged one that hugs the points. Place points near the border and watch precision and recall move.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ensembles (live) -->
+      <div id="panel-tree" style="display:none">
+        <div class="pg">
+          <div class="pg-stage" style="aspect-ratio:16/11;min-height:0">
+            <div class="stage-bar">
+              <span class="pill" style="background:rgba(12,12,20,.7)">click to add · click a point to remove</span>
+              <div class="spacer"></div>
+              <div class="seg" id="tr-class"><button class="active" data-v="0">Class A</button><button data-v="1">Class B</button></div>
+            </div>
+            <canvas id="tree"></canvas>
+          </div>
+          <div class="pg-panel">
+            <div class="ctrl"><h4>Model</h4>
+              <div class="seg" id="tr-mode"><button class="active" data-v="tree">Decision Tree</button><button data-v="forest">Random Forest</button></div>
+              <div class="field" id="tr-dwrap" style="margin:12px 0 0"><label for="tr-d">Tree depth <span class="val" id="tr-d-v">4</span></label><input type="range" id="tr-d" min="1" max="8" step="1" value="4"></div>
+              <div class="field" id="tr-twrap" style="margin:12px 0 0;display:none"><label for="tr-t">Number of trees <span class="val" id="tr-t-v">25</span></label><input type="range" id="tr-t" min="1" max="60" step="1" value="25"></div>
+              <div style="display:flex;gap:10px;margin-top:12px"><button class="btn btn-ghost btn-sm" id="tr-seed" style="flex:1;justify-content:center">New data</button><button class="btn btn-ghost btn-sm" id="tr-clear" style="flex:1;justify-content:center">Clear</button></div>
+            </div>
+            <div class="metrics">
+              <div class="metric"><div class="l">TRAIN ACCURACY</div><div class="v mono" id="tr-acc" style="color:var(--emerald)">—</div></div>
+            </div>
+            <p class="note">A single <b style="color:var(--ink)">decision tree</b> makes blocky, axis-aligned cuts — raise the depth and watch it carve a staircase around the circle (and start overfitting). Switch to a <b style="color:var(--ink)">Random Forest</b> and add trees: each is trained on a bootstrap sample, and averaging them <b style="color:var(--ink)">smooths the jagged boundary</b>.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Model Evaluation -->
+      <div id="panel-eval" style="display:none">
+        <div class="pg">
+          <div class="pg-stage" style="aspect-ratio:16/11;min-height:0"><div class="stage-bar"><span class="pill"><span class="dot cyan"></span>cross-validation score</span></div><canvas id="eval-canvas"></canvas></div>
+          <div class="pg-panel">
+            <div class="ctrl"><h4>Validation setup</h4><div class="field"><label for="eval-complexity">Model complexity <span class="val" id="eval-complexity-v">4</span></label><input id="eval-complexity" type="range" min="1" max="10" value="4" step="1"></div><div class="field" style="margin-bottom:0"><label for="eval-folds">Cross-validation folds <span class="val" id="eval-folds-v">5</span></label><input id="eval-folds" type="range" min="2" max="10" value="5" step="1"></div></div>
+            <button class="btn btn-ghost" id="eval-resample" type="button">Resample folds</button>
+            <div class="metrics"><div class="metric"><div class="l">TRAIN SCORE</div><div class="v mono" id="eval-train">—</div></div><div class="metric"><div class="l">VALIDATION</div><div class="v mono" id="eval-valid">—</div></div><div class="metric"><div class="l">GENERALIZATION GAP</div><div class="v mono" id="eval-gap">—</div></div><div class="metric"><div class="l">DIAGNOSIS</div><div class="v mono" id="eval-state">—</div></div></div>
+            <p class="note">Increase complexity to move from underfitting toward a useful fit—and eventually into overfitting, where training improves while validation degrades.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Regularization -->
+      <div id="panel-regz" style="display:none">
+        <div class="pg">
+          <div class="pg-stage" style="aspect-ratio:16/11;min-height:0"><div class="stage-bar"><span class="pill"><span class="dot emerald"></span>coefficient shrinkage</span></div><canvas id="regz-canvas"></canvas></div>
+          <div class="pg-panel">
+            <div class="ctrl"><h4>Penalty</h4><div class="seg" id="regz-mode"><button class="active" data-v="l2">Ridge · L2</button><button data-v="l1">Lasso · L1</button></div><div class="field" style="margin:12px 0 0"><label for="regz-lambda">Strength λ <span class="val" id="regz-lambda-v">0.50</span></label><input id="regz-lambda" type="range" min="0" max="4" value="0.5" step="0.1"></div></div>
+            <div class="metrics"><div class="metric"><div class="l">NON-ZERO WEIGHTS</div><div class="v mono" id="regz-active">—</div></div><div class="metric"><div class="l">WEIGHT NORM</div><div class="v mono" id="regz-norm">—</div></div><div class="metric"><div class="l">DATA LOSS</div><div class="v mono" id="regz-loss">—</div></div><div class="metric"><div class="l">PENALTY</div><div class="v mono" id="regz-penalty">—</div></div></div>
+            <p class="note">Ridge smoothly shrinks every coefficient. Lasso can drive weak coefficients exactly to zero, performing a form of feature selection.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature Engineering -->
+      <div id="panel-feat" style="display:none">
+        <div class="pg">
+          <div class="pg-stage" style="aspect-ratio:16/11;min-height:0"><div class="stage-bar"><span class="pill"><span class="dot"></span>age</span><span class="pill"><span class="dot cyan"></span>income</span></div><canvas id="feat-canvas"></canvas></div>
+          <div class="pg-panel">
+            <div class="ctrl"><h4>Scaling method</h4><div class="seg" id="feat-mode"><button class="active" data-v="raw">Raw</button><button data-v="standard">Standardize</button><button data-v="minmax">Min–max</button></div></div>
+            <div class="ctrl"><h4>Data condition</h4><div class="field" style="margin-bottom:0"><label for="feat-outlier">Income outlier <span class="val" id="feat-outlier-v">1.0×</span></label><input id="feat-outlier" type="range" min="1" max="5" value="1" step="0.25"></div></div>
+            <div class="metrics"><div class="metric"><div class="l">AGE RANGE</div><div class="v mono" id="feat-age">—</div></div><div class="metric"><div class="l">INCOME RANGE</div><div class="v mono" id="feat-income">—</div></div><div class="metric"><div class="l">DISTANCE SHARE</div><div class="v mono" id="feat-share">—</div></div><div class="metric"><div class="l">METHOD</div><div class="v mono" id="feat-method">raw</div></div></div>
+            <p class="note">Without scaling, income dominates distance-based models. Standardization balances typical variation; min–max scaling is more sensitive to extreme values.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Anomaly Detection -->
+      <div id="panel-anom" style="display:none">
+        <div class="pg">
+          <div class="pg-stage" style="aspect-ratio:16/11;min-height:0"><div class="stage-bar"><span class="pill"><span class="dot rose"></span>flagged anomaly</span></div><canvas id="anom-canvas"></canvas></div>
+          <div class="pg-panel">
+            <div class="ctrl"><h4>Detector</h4><div class="seg" id="anom-mode"><button class="active" data-v="distance">Distance</button><button data-v="density">Local density</button></div><div class="field" style="margin:12px 0 0"><label for="anom-threshold">Sensitivity <span class="val" id="anom-threshold-v">0.70</span></label><input id="anom-threshold" type="range" min="0.2" max="0.95" value="0.7" step="0.05"></div></div>
+            <button class="btn btn-ghost" id="anom-new" type="button">Generate new sample</button>
+            <div class="metrics"><div class="metric"><div class="l">FLAGGED</div><div class="v mono" id="anom-flagged">—</div></div><div class="metric"><div class="l">TRUE ANOMALIES</div><div class="v mono" id="anom-true">4</div></div><div class="metric"><div class="l">PRECISION</div><div class="v mono" id="anom-precision">—</div></div><div class="metric"><div class="l">RECALL</div><div class="v mono" id="anom-recall">—</div></div></div>
+            <p class="note">Raise sensitivity to flag more observations. Detection is a tradeoff: aggressive thresholds catch more true anomalies but also create false alarms.</p>
+          </div>
+        </div>
+      </div>
+
+  <Fragment slot="scripts">
+<script is:inline src="/js/playgrounds/ml.js"></script>
+<script is:inline src="/js/playgrounds/ml-extra.js"></script>
+<script is:inline>
+(function () {
+  // regression
+  const rl = RegressionLab(document.getElementById('reg'), (s) => {
+    document.getElementById('r-mse').textContent = s.mse.toFixed(4);
+    document.getElementById('r-r2').textContent = Math.max(0, s.r2).toFixed(3);
+    const terms = s.coef.map((c, d) => d === 0 ? c.toFixed(2) : `<span class="g">${c >= 0 ? '+' : ''}${c.toFixed(2)}</span>x${d > 1 ? '<sup>' + d + '</sup>' : ''}`).join(' ');
+    document.getElementById('reg-eqn').innerHTML = `ŷ = ${terms}`;
+  });
+  rl.draw();
+  const degNames = {1:'1 · linear',2:'2 · quadratic',3:'3 · cubic'};
+  document.getElementById('deg').oninput = e => { const d=+e.target.value; document.getElementById('deg-v').textContent = degNames[d]||(d+' · high'); rl.setDegree(d); };
+  document.getElementById('reg-reset').onclick = () => rl.reset();
+
+  // kmeans
+  const kl = KMeansLab(document.getElementById('km'), (s) => { document.getElementById('k-iter').textContent = s.iter; document.getElementById('k-k').textContent = s.k; });
+  kl.init();
+  const kIcon = document.getElementById('k-icon');
+  document.getElementById('k-play').onclick = () => { const r = kl.toggle(); kIcon.innerHTML = r ? '<rect x="4" y="3" width="3" height="10" fill="#fff"/><rect x="9" y="3" width="3" height="10" fill="#fff"/>' : '<path d="M4 3l9 5-9 5z" fill="#fff"/>'; };
+  document.getElementById('k-step').onclick = () => kl.step();
+  document.getElementById('k-new').onclick = () => { kl.newData(); kIcon.innerHTML='<path d="M4 3l9 5-9 5z" fill="#fff"/>'; };
+  const kseg=document.getElementById('kseg'); kseg.onclick=e=>{const b=e.target.closest('button');if(!b)return;[...kseg.children].forEach(c=>c.classList.remove('active'));b.classList.add('active');kl.setK(+b.dataset.v);kIcon.innerHTML='<path d="M4 3l9 5-9 5z" fill="#fff"/>';};
+
+  // classification
+  const cl = ClassifierLab(document.getElementById('cls'), (s) => {
+    document.getElementById('c-tp').textContent = s.tp;
+    document.getElementById('c-fn').textContent = s.fn;
+    document.getElementById('c-fp').textContent = s.fp;
+    document.getElementById('c-tn').textContent = s.tn;
+    document.getElementById('c-acc').textContent = (s.acc * 100).toFixed(1) + '%';
+    document.getElementById('c-prec').textContent = isNaN(s.prec) ? '—' : s.prec.toFixed(2);
+    document.getElementById('c-rec').textContent = isNaN(s.rec) ? '—' : s.rec.toFixed(2);
+  });
+  cl.seed2();
+  const clsModel=document.getElementById('cls-model'); clsModel.onclick=e=>{const b=e.target.closest('button');if(!b)return;[...clsModel.children].forEach(c=>c.classList.remove('active'));b.classList.add('active');document.getElementById('cls-kwrap').style.display=b.dataset.v==='knn'?'':'none';cl.setModel(b.dataset.v);};
+  const clsClass=document.getElementById('cls-class'); clsClass.onclick=e=>{const b=e.target.closest('button');if(!b)return;[...clsClass.children].forEach(c=>c.classList.remove('active'));b.classList.add('active');cl.setActive(+b.dataset.v);};
+  document.getElementById('cls-k').oninput=e=>{document.getElementById('cls-k-v').textContent=e.target.value;cl.setK(+e.target.value);};
+  document.getElementById('cls-seed').onclick=()=>cl.seed2();
+  document.getElementById('cls-clear').onclick=()=>cl.clear();
+
+  // ensembles
+  const el2 = EnsembleLab(document.getElementById('tree'), (s) => {
+    document.getElementById('tr-acc').textContent = (s.acc * 100).toFixed(1) + '%';
+  });
+  el2.seed2();
+  const trMode=document.getElementById('tr-mode'); trMode.onclick=e=>{const b=e.target.closest('button');if(!b)return;[...trMode.children].forEach(c=>c.classList.remove('active'));b.classList.add('active');const forest=b.dataset.v==='forest';document.getElementById('tr-dwrap').style.display=forest?'none':'';document.getElementById('tr-twrap').style.display=forest?'':'none';el2.setMode(b.dataset.v);};
+  const trClass=document.getElementById('tr-class'); trClass.onclick=e=>{const b=e.target.closest('button');if(!b)return;[...trClass.children].forEach(c=>c.classList.remove('active'));b.classList.add('active');el2.setActive(+b.dataset.v);};
+  document.getElementById('tr-d').oninput=e=>{document.getElementById('tr-d-v').textContent=e.target.value;el2.setDepth(+e.target.value);};
+  document.getElementById('tr-t').oninput=e=>{document.getElementById('tr-t-v').textContent=e.target.value;el2.setTrees(+e.target.value);};
+  document.getElementById('tr-seed').onclick=()=>el2.seed2();
+  document.getElementById('tr-clear').onclick=()=>el2.clear();
+
+  // Keep every segmented control's selected state available to assistive technology.
+  function syncSegmentState(seg){[...seg.querySelectorAll('button')].forEach(button=>button.setAttribute('aria-pressed',String(button.classList.contains('active'))));}
+  document.querySelectorAll('.seg').forEach(syncSegmentState);
+  document.addEventListener('click',e=>{const seg=e.target.closest('.seg');if(seg)queueMicrotask(()=>syncSegmentState(seg));});
+
+  // tabs
+  const tabs=document.getElementById('tabs');
+  const mlTabs=['reg','km','cls','tree','eval','regz','feat','anom'];
+  [...tabs.children].forEach(t=>{const id=t.dataset.tab,panel=document.getElementById('panel-'+id);t.id='tab-'+id;t.setAttribute('aria-controls','panel-'+id);panel.setAttribute('role','tabpanel');panel.setAttribute('aria-labelledby','tab-'+id);});
+  function activateMLTab(t,focus=false){
+    [...tabs.children].forEach(c=>{const active=c===t;c.classList.toggle('active',active);c.setAttribute('aria-selected',String(active));c.tabIndex=active?0:-1;});
+    mlTabs.forEach(id=>document.getElementById('panel-'+id).style.display=id===t.dataset.tab?'':'none');
+    if(t.dataset.tab!=='km'){kl.pause();kIcon.innerHTML='<path d="M4 3l9 5-9 5z" fill="#fff"/>';}
+    if(focus)t.focus();
+    if(t.dataset.tab==='reg')rl.draw(); if(t.dataset.tab==='km')kl.draw(); if(t.dataset.tab==='cls')cl.draw(); if(t.dataset.tab==='tree')el2.draw(); if(window.MLExtra)window.MLExtra.redraw(t.dataset.tab);
+  }
+  tabs.onclick=e=>{const t=e.target.closest('.tab');if(t)activateMLTab(t);};
+  tabs.onkeydown=e=>{const current=e.target.closest('.tab');if(!current)return;const items=[...tabs.children],index=items.indexOf(current);let next=index;if(e.key==='ArrowRight')next=(index+1)%items.length;else if(e.key==='ArrowLeft')next=(index-1+items.length)%items.length;else if(e.key==='Home')next=0;else if(e.key==='End')next=items.length-1;else return;e.preventDefault();activateMLTab(items[next],true);};
+})();
+</script>
+  </Fragment>
+</ModuleLayout>

@@ -1,0 +1,125 @@
+---
+import AppRuntime from '../components/AppRuntime.astro';
+import ModuleTopbar from '../components/ModuleTopbar.astro';
+import AppShellLayout from '../layouts/AppShellLayout.astro';
+---
+
+<AppShellLayout title="AI Atlas — All Modules" pageId="hub">
+  <ModuleTopbar crumb="Home">
+    <a class="btn btn-ghost btn-sm" href="/">↗ Landing</a>
+    <a class="btn btn-primary btn-sm" href="/modules/deep-learning/">Continue learning ›</a>
+  </ModuleTopbar>
+
+  <div class="page">
+      <!-- continue learning hero -->
+      <div class="glass" style="padding:32px;border-radius:var(--r-lg);position:relative;overflow:hidden;margin-bottom:34px">
+        <div class="glow" style="position:absolute;width:340px;height:340px;background:var(--indigo);filter:blur(110px);opacity:.16;top:-160px;right:-60px"></div>
+        <span class="eyebrow">Pick up where you left off</span>
+        <div class="row between center" style="margin-top:16px;gap:24px;flex-wrap:wrap">
+          <div style="max-width:540px">
+            <h1 style="font-size:clamp(26px,3vw,36px);margin-bottom:10px">Backpropagation, step by step</h1>
+            <p class="muted" style="font-size:15px">You're 3 of 7 lessons into the Deep Learning Lab. Next: watch gradients flow backward through a 3-layer network.</p>
+            <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap">
+              <a class="btn btn-primary" id="hero-resume" href="/modules/deep-learning/">Resume lesson ›</a>
+              <a class="btn btn-ghost" href="/modules/mathematics/">Review the math first</a>
+            </div>
+          </div>
+          <div style="width:260px;flex:0 0 auto">
+            <div class="prog-l" style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--ink-mute);margin-bottom:8px"><span id="hero-modname">Deep Learning Lab</span><span id="hero-pct">43%</span></div>
+            <div class="bar" style="height:7px;border-radius:999px;background:#1a1a28;overflow:hidden"><i id="hero-bar" style="display:block;height:100%;width:43%;background:linear-gradient(90deg,var(--indigo),var(--cyan))"></i></div>
+            <div style="margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div class="metric"><div class="l">LESSONS DONE</div><div class="v" id="hero-lessons">0</div></div>
+              <div class="metric"><div class="l">XP</div><div class="v" id="hero-xp">0</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- learning paths -->
+      <div class="row between center" style="margin-bottom:18px">
+        <h2 style="font-size:24px">Guided learning paths</h2>
+        <span class="muted" style="font-size:13.5px">curated routes through the Atlas</span>
+      </div>
+      <div class="grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:48px">
+        <div class="card" style="padding:22px"><span class="pill"><span class="dot cyan"></span>4 modules · beginner</span><h3 style="font-size:19px;margin:14px 0 8px">From Zero to Neural Net</h3><p style="color:var(--ink-mute);font-size:13.5px;margin:0">Vectors → gradients → perceptron → backprop. The shortest line to understanding deep learning.</p></div>
+        <div class="card" style="padding:22px"><span class="pill"><span class="dot violet"></span>3 modules · intermediate</span><h3 style="font-size:19px;margin:14px 0 8px">Understanding LLMs</h3><p style="color:var(--ink-mute);font-size:13.5px;margin:0">Tokenization → embeddings → attention → the full transformer, end to end.</p></div>
+        <div class="card" style="padding:22px"><span class="pill"><span class="dot emerald"></span>3 modules · applied</span><h3 style="font-size:19px;margin:14px 0 8px">Ship a Model</h3><p style="color:var(--ink-mute);font-size:13.5px;margin:0">ETL pipelines → training → MLOps deployment and drift monitoring.</p></div>
+      </div>
+
+      <!-- all modules -->
+      <div class="row between center" style="margin-bottom:18px">
+        <h2 style="font-size:24px">All modules</h2>
+        <span class="muted" style="font-size:13.5px">14 disciplines · 40+ playgrounds</span>
+      </div>
+      <div class="hub-grid" id="mods"></div>
+  </div>
+
+<Fragment slot="scripts">
+<script is:inline>
+  const MODS = [
+    { id:'foundations', t:'Foundations', d:'What AI is, the workflow pipeline, responsible-AI, and the history of the field — start here.', c:'#8B8CF6', p:0, n:'2 labs · start', href:'/modules/foundations/' },
+    { id:'mathematics', t:'Mathematics', d:'Vectors, matrices, gradients, probability — the intuition behind every equation.', c:'#34D399', p:62, n:'10 playgrounds', href:'/modules/mathematics/' },
+    { id:'data-analysis', t:'Data Analysis', d:'Real SQL query runner, a cross-filtering BI dashboard and live data visualization.', c:'#2EC4DE', p:0, n:'8 playgrounds', href:'/modules/data-analysis/' },
+    { id:'machine-learning', t:'Machine Learning', d:'Regression, clustering, classification and ensembles as live sandboxes.', c:'#22D3EE', p:38, n:'8 playgrounds', href:'/modules/machine-learning/' },
+    { id:'deep-learning', t:'Deep Learning Lab', d:'Build networks by hand. Forward pass, backprop, CNNs, RNNs, optimizers, regularization and transfer learning.', c:'#6366F1', p:43, n:'8 playgrounds', href:'/modules/deep-learning/' },
+    { id:'nlp', t:'Language & Generation', d:'Tokens, TF-IDF, N-grams, embeddings, classification, entities, sampling and sequence decoding.', c:'#A855F7', p:0, n:'8 playgrounds', href:'/modules/nlp/' },
+    { id:'transformers', t:'Transformers & LLMs', d:'Tokenization, position encoding, attention, transformer blocks, generation, context, RAG and model architectures.', c:'#A855F7', p:12, n:'8 playgrounds', href:'/modules/transformers/' },
+    { id:'llm-agents', t:'LLM & Agents Lab', d:'Build and size models, design prompts, call tools, orchestrate agents, manage memory, fine-tune and evaluate.', c:'#818CF8', p:0, n:'8 playgrounds', href:'/modules/llm-agents/' },
+    { id:'generative', t:'Generative AI', d:'Diffusion, schedules, latent space, guidance, prompts, structural controls, audio and video generation.', c:'#FB7185', p:0, n:'8 playgrounds', href:'/modules/generative/' },
+    { id:'xai', t:'Explainable AI', d:'SHAP, LIME, global importance, PDP, Grad-CAM, counterfactuals, fairness and LLM internals.', c:'#F59E0B', p:0, n:'8 playgrounds', href:'/modules/xai/' },
+    { id:'etl', t:'ETL & Data Eng.', d:'Build DAGs, streams, transforms, warehouses, orchestration, quality checks, and feature stores.', c:'#22D3EE', p:0, n:'8 playgrounds', href:'/modules/etl/' },
+    { id:'programming', t:'Code & Stack', d:'Run code and explore libraries, databases, Git, APIs, containers, compute, and testing.', c:'#F59E0B', p:0, n:'8 playgrounds', href:'/modules/programming/' },
+    { id:'mlops', t:'MLOps', d:'Track, register, deploy, monitor, deliver, retrain, and govern production models.', c:'#34D399', p:0, n:'8 playgrounds', href:'/modules/mlops/' },
+    { id:'research', t:'AI Research Lab', d:'Explore validation, uncertainty, significance, power, ablations, reproducibility, and responsible claims.', c:'#8B8CF6', p:0, n:'8 playgrounds', href:'/modules/research/' },
+  ];
+  const wrap = document.getElementById('mods');
+  wrap.innerHTML = MODS.map(m => `
+    <a class="mod-card" href="${m.href}" data-mod="${m.id}">
+      <div class="glow" style="position:absolute;width:200px;height:200px;border-radius:50%;filter:blur(60px);opacity:.18;top:-70px;right:-50px;background:${m.c}"></div>
+      <div class="micon" style="color:${m.c};background:${m.c}1a;border-color:${m.c}40">
+        <svg viewBox="0 0 20 20" width="22" height="22"><circle cx="10" cy="10" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="10" cy="10" r="2" fill="currentColor"/></svg>
+      </div>
+      <h3>${m.t}</h3>
+      <p>${m.d}</p>
+      <div class="prog">
+        <div class="prog-l"><span>${m.n}</span><span data-pct>0%</span></div>
+        <div class="bar"><i data-bar style="width:0%"></i></div>
+      </div>
+    </a>`).join('');
+
+  // ---- paint real progress from Supabase (via window.Atlas) ----
+  function paintDashboard() {
+    const A = window.Atlas, defs = window.ATLAS_MODULES;
+    if (!A || !defs) return;
+    let totalDone = 0, totalLessons = 0, resume = null;
+    defs.forEach(def => {
+      const pct = A.modulePercent(def.id);
+      const done = def.lessons.filter(ls => A.isDone(def.id, ls.id)).length;
+      totalDone += done; totalLessons += def.lessons.length;
+      const card = wrap.querySelector(`[data-mod="${def.id}"]`);
+      if (card) {
+        card.querySelector('[data-pct]').textContent = pct + '%';
+        card.querySelector('[data-bar]').style.width = pct + '%';
+      }
+      // best "continue" candidate: most-progressed module that isn't finished
+      if (pct < 100 && (!resume || pct > resume.pct)) resume = { def, pct };
+    });
+    if (!resume) resume = { def: defs[0], pct: A.modulePercent(defs[0].id) };
+
+    // hero
+    const set = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+    set('hero-modname', resume.def.title);
+    set('hero-pct', resume.pct + '%');
+    const hb = document.getElementById('hero-bar'); if (hb) hb.style.width = resume.pct + '%';
+    const hr = document.getElementById('hero-resume');
+    if (hr) hr.href = resume.def.href;
+    set('hero-lessons', totalDone + ' / ' + totalLessons);
+    set('hero-xp', (totalDone * 40).toLocaleString());
+  }
+
+  document.addEventListener('atlas:progress', paintDashboard);
+  if (window.Atlas && window.Atlas.ready) window.Atlas.ready.then(paintDashboard);
+</script>
+<AppRuntime />
+</Fragment>
+</AppShellLayout>

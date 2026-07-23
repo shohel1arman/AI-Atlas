@@ -1,0 +1,71 @@
+---
+import ModuleLayout from '../../layouts/ModuleLayout.astro';
+import ModuleTabs from '../../components/ModuleTabs.astro';
+import CodeStackPlaygrounds from '../../components/playgrounds/CodeStackPlaygrounds.astro';
+---
+
+<ModuleLayout
+  title="Code & Stack — AI Atlas"
+  pageId="programming"
+  crumb="Code & Stack"
+  eyebrow="Code & Stack"
+  heading="The languages and systems that power AI"
+>
+  <Fragment slot="status"><span class="pill"><span class="dot amber"></span>8 interactive playgrounds</span></Fragment>
+  <Fragment slot="description">Run code, assemble the library stack, choose data stores, practise Git and APIs, package containers, size compute, and test an AI service before release.</Fragment>
+
+  <ModuleTabs moduleId="programming" scrollable />
+  <CodeStackPlaygrounds />
+
+  <Fragment slot="before-runtime">
+    <script is:inline src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"></script>
+    <script is:inline src="/js/playgrounds/learn.js"></script>
+  </Fragment>
+
+  <Fragment slot="scripts">
+    <script is:inline>
+      (() => {
+        const lessonIds = ['lang', 'libs', 'db', 'git', 'api', 'containers', 'compute', 'test'];
+        const tabs = document.getElementById('tabs');
+        if (!tabs) return;
+        const tabItems = [...tabs.querySelectorAll('.tab')];
+        lessonIds.forEach((id) => {
+          const panel = document.getElementById('panel-' + id);
+          if (!panel) return;
+          panel.setAttribute('role', 'tabpanel');
+          panel.setAttribute('aria-labelledby', 'tab-' + id);
+        });
+        const selectTab = (tab, focus = false) => {
+          tabItems.forEach((item) => {
+            const selected = item === tab;
+            item.classList.toggle('active', selected);
+            item.setAttribute('aria-selected', String(selected));
+            item.tabIndex = selected ? 0 : -1;
+          });
+          lessonIds.forEach((id) => {
+            const panel = document.getElementById('panel-' + id);
+            if (panel) panel.style.display = id === tab.dataset.tab ? '' : 'none';
+          });
+          if (focus) tab.focus();
+        };
+        tabs.addEventListener('click', (event) => {
+          const tab = event.target.closest('.tab');
+          if (tab) selectTab(tab);
+        });
+        tabs.addEventListener('keydown', (event) => {
+          const current = event.target.closest('.tab');
+          if (!current) return;
+          const index = tabItems.indexOf(current);
+          let next = index;
+          if (event.key === 'ArrowRight') next = (index + 1) % tabItems.length;
+          else if (event.key === 'ArrowLeft') next = (index - 1 + tabItems.length) % tabItems.length;
+          else if (event.key === 'Home') next = 0;
+          else if (event.key === 'End') next = tabItems.length - 1;
+          else return;
+          event.preventDefault();
+          selectTab(tabItems[next], true);
+        });
+      })();
+    </script>
+  </Fragment>
+</ModuleLayout>

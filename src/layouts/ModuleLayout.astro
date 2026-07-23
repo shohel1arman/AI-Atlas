@@ -1,0 +1,33 @@
+---
+import AppShellLayout from './AppShellLayout.astro';
+import ModuleIntro from '../components/ModuleIntro.astro';
+import ModuleRuntime from '../components/ModuleRuntime.astro';
+import ModuleTopbar from '../components/ModuleTopbar.astro';
+
+interface Props {
+  title: string;
+  pageId: string;
+  crumb: string;
+  eyebrow: string;
+  heading: string;
+  maxWidth?: string;
+}
+
+const { title, pageId, crumb, eyebrow, heading, maxWidth = '1240px' } = Astro.props;
+---
+
+<AppShellLayout title={title} pageId={pageId}>
+  <Fragment slot="head"><slot name="head" /></Fragment>
+
+  <ModuleTopbar crumb={crumb}><slot name="status" /></ModuleTopbar>
+  <div class="page" style={`max-width:${maxWidth}`}>
+    <ModuleIntro eyebrow={eyebrow} heading={heading}><slot name="description" /></ModuleIntro>
+    <slot />
+  </div>
+
+  <Fragment slot="scripts">
+    <slot name="before-runtime" />
+    <ModuleRuntime />
+    <slot name="scripts" />
+  </Fragment>
+</AppShellLayout>

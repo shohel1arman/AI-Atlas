@@ -1,9 +1,7 @@
 # Auth & Progress Tracking (Supabase)
 
-AI Atlas now has **email/password accounts** and **per-lesson progress tracking**.
-Every signed-in student's completion is saved to Supabase and shown on the hub dashboard
-(`app.html`). One role: **student** (a `role` column is reserved on `profiles` if you ever
-want to add supervisors later).
+AI Atlas supports optional **email/password accounts** and **per-lesson progress tracking**.
+Anonymous visitors can use the entire application; their completion is stored locally. Signed-in progress is synced to Supabase and shown on the Astro dashboard at `/atlas/`.
 
 ## What you need to do (3 steps)
 
@@ -16,14 +14,11 @@ This creates two tables with Row-Level Security so each user can only read/write
 - `progress` — one row per completed lesson `(user_id, module, lesson)`
 
 ### 2. Add your project keys
-Edit [`js/supabase-config.js`](js/supabase-config.js) and paste your values from
-**Project Settings → API**:
+Copy `.env.example` to `.env` and add the public values from **Project Settings → API**:
 
-```js
-window.ATLAS_SUPABASE = {
-  url:     'https://xxxxxxxx.supabase.co',   // Project URL
-  anonKey: 'eyJ...',                          // anon / public key (safe to commit — RLS protects data)
-};
+```bash
+PUBLIC_SUPABASE_URL=https://xxxxxxxx.supabase.co
+PUBLIC_SUPABASE_ANON_KEY=eyJ...
 ```
 
 ### 3. (Optional) turn off email confirmation for quick testing
@@ -34,7 +29,7 @@ By default Supabase emails a confirmation link on signup. To let accounts sign i
 **Authentication → URL Configuration:**
 
 - **Site URL:** `https://aiat1as.netlify.app`
-- **Redirect URLs** (add each): `https://aiat1as.netlify.app/**` and `http://localhost:8000/**`
+- **Redirect URLs** (add each): `https://aiat1as.netlify.app/**` and `http://localhost:4321/**`
 
 The `/**` wildcards let auth redirect back to any page.
 
@@ -42,15 +37,14 @@ The `/**` wildcards let auth redirect back to any page.
 
 | Piece | File |
 |---|---|
-| Config (your keys) | `js/supabase-config.js` |
-| Login / signup page | `auth.html` |
-| Client, auth guard, progress API, tracking | `js/atlas-app.js` |
-| Module → lesson map (drives % complete) | `js/modules-manifest.js` |
-| Dashboard rendering | `app.html` (inline script) |
+| Generated browser config | `src/pages/js/supabase-config.js.ts` |
+| Login / signup page | `src/pages/auth.astro` |
+| Optional auth and progress API | `public/js/atlas-app.js` |
+| Module → lesson map | `public/js/modules-manifest.js` |
+| Dashboard rendering | `src/pages/atlas.astro` |
 | Database + RLS | `supabase/schema.sql` |
 
-- **Auth guard:** `app.html` and every `modules/*.html` require a session; signed-out visitors
-  are redirected to `auth.html`. The landing page (`index.html`) stays public.
+- **Authentication is optional:** signed-out visitors remain in the learning experience and use local progress. Signing in adds cross-device Supabase sync.
 - **Progress is recorded two ways** (you chose both):
   - **Auto** — clicking any control inside a lesson's playground marks that lesson complete.
   - **Manual** — a "Mark this lesson complete" toggle is injected at the top of each lesson;
@@ -61,6 +55,6 @@ The `/**` wildcards let auth redirect back to any page.
 ## Test locally
 
 ```bash
-python3 -m http.server 8000
-# open http://localhost:8000/index.html → Sign in → create an account
+npm run dev
+# open http://localhost:4321/auth/
 ```

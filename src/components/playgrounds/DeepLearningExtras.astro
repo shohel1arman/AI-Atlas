@@ -1,0 +1,166 @@
+<!-- Convolution playground -->
+<div id="panel-cnn" style="display:none">
+  <div class="pg">
+    <div class="pg-stage" style="aspect-ratio:16/11;min-height:0">
+      <div class="stage-bar"><span class="pill"><span class="dot violet"></span>kernel window → feature map</span></div>
+      <canvas id="dl-cnn-canvas" role="img" aria-label="Convolution kernel scanning an image grid"></canvas>
+    </div>
+    <div class="pg-panel">
+      <div class="ctrl"><h4>Kernel</h4><div class="seg" id="dl-cnn-kernel"><button class="active" data-v="edge">Edge</button><button data-v="blur">Blur</button><button data-v="sharpen">Sharpen</button></div></div>
+      <div class="ctrl"><h4>Scan position</h4><div class="field"><label for="dl-cnn-step">Window <span class="val" id="dl-cnn-step-v">1 / 25</span></label><input id="dl-cnn-step" type="range" min="0" max="24" value="0" /></div><button class="btn btn-primary btn-sm" id="dl-cnn-next" type="button" style="width:100%;justify-content:center">Advance kernel ›</button></div>
+      <div class="metrics" aria-live="polite"><div class="metric"><div class="l">LOCAL SUM</div><div class="v mono" id="dl-cnn-sum">0.00</div></div><div class="metric"><div class="l">OUTPUT SIZE</div><div class="v mono">5 × 5</div></div></div>
+      <p class="note">The same 3×3 weights scan every location. That weight sharing is why CNNs detect a feature anywhere in an image.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Sequence playground -->
+<div id="panel-seq" style="display:none">
+  <div class="pg">
+    <div class="pg-stage" style="aspect-ratio:16/11;min-height:0">
+      <div class="stage-bar"><span class="pill"><span class="dot cyan"></span>hidden state through time</span></div>
+      <canvas id="dl-seq-canvas" role="img" aria-label="Recurrent network hidden state moving through a sequence"></canvas>
+    </div>
+    <div class="pg-panel">
+      <div class="ctrl"><h4>Memory cell</h4><div class="seg" id="dl-seq-cell"><button class="active" data-v="rnn">RNN</button><button data-v="lstm">LSTM</button><button data-v="gru">GRU</button></div></div>
+      <div class="ctrl"><h4>Sequence</h4><div class="field"><label for="dl-seq-step">Current token <span class="val" id="dl-seq-step-v">The</span></label><input id="dl-seq-step" type="range" min="0" max="6" value="0" /></div></div>
+      <div class="metrics" aria-live="polite"><div class="metric"><div class="l">MEMORY</div><div class="v mono" id="dl-seq-memory">100%</div></div><div class="metric"><div class="l">GATES</div><div class="v mono" id="dl-seq-gates">0</div></div></div>
+      <p class="note" id="dl-seq-note">A vanilla RNN repeatedly transforms one hidden state, so early information fades quickly.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Generative playground -->
+<div id="panel-gen" style="display:none">
+  <div class="pg">
+    <div class="pg-stage" style="aspect-ratio:16/11;min-height:0">
+      <div class="stage-bar"><span class="pill"><span class="dot rose"></span>latent representation</span></div>
+      <canvas id="dl-gen-canvas" role="img" aria-label="Autoencoder reconstruction or GAN training visualization"></canvas>
+    </div>
+    <div class="pg-panel">
+      <div class="ctrl"><h4>Generative model</h4><div class="seg" id="dl-gen-mode"><button class="active" data-v="ae">Autoencoder</button><button data-v="gan">GAN</button></div></div>
+      <div class="ctrl"><div class="field"><label for="dl-gen-latent">Latent dimensions <span class="val" id="dl-gen-latent-v">2</span></label><input id="dl-gen-latent" type="range" min="1" max="8" value="2" /></div><div class="field"><label for="dl-gen-noise">Noise <span class="val" id="dl-gen-noise-v">0.20</span></label><input id="dl-gen-noise" type="range" min="0" max="0.8" step="0.05" value="0.2" /></div></div>
+      <div class="metrics" aria-live="polite"><div class="metric"><div class="l" id="dl-gen-metric-label">RECON ERROR</div><div class="v mono" id="dl-gen-metric">0.16</div></div><div class="metric"><div class="l">BOTTLENECK</div><div class="v mono" id="dl-gen-bottle">2D</div></div></div>
+      <p class="note" id="dl-gen-note">The encoder compresses the input into a small latent code; the decoder reconstructs from only that code.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Activation playground -->
+<div id="panel-act" style="display:none">
+  <div class="pg">
+    <div class="pg-stage" style="aspect-ratio:16/11;min-height:0"><div class="stage-bar"><span class="pill"><span class="dot amber"></span>function and local gradient</span></div><canvas id="dl-act-canvas" role="img" aria-label="Activation function curve and gradient"></canvas></div>
+    <div class="pg-panel">
+      <div class="ctrl"><h4>Activation</h4><div class="seg" id="dl-act-kind"><button class="active" data-v="relu">ReLU</button><button data-v="sigmoid">Sigmoid</button><button data-v="tanh">tanh</button><button data-v="gelu">GELU</button></div></div>
+      <div class="ctrl"><div class="field"><label for="dl-act-input">Input x <span class="val" id="dl-act-input-v">1.0</span></label><input id="dl-act-input" type="range" min="-5" max="5" step="0.1" value="1" /></div><div class="field"><label for="dl-act-scale">Weight scale <span class="val" id="dl-act-scale-v">1.0×</span></label><input id="dl-act-scale" type="range" min="0.2" max="3" step="0.1" value="1" /></div></div>
+      <div class="metrics" aria-live="polite"><div class="metric"><div class="l">OUTPUT</div><div class="v mono" id="dl-act-output">1.00</div></div><div class="metric"><div class="l">GRADIENT</div><div class="v mono" id="dl-act-grad">1.00</div></div></div>
+      <p class="note" id="dl-act-note">ReLU keeps a strong gradient for positive inputs, but its negative half is inactive.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Optimizer playground -->
+<div id="panel-opt" style="display:none">
+  <div class="pg">
+    <div class="pg-stage" style="aspect-ratio:16/11;min-height:0"><div class="stage-bar"><span class="pill"><span class="dot emerald"></span>parameter path on loss contours</span></div><canvas id="dl-opt-canvas" role="img" aria-label="Optimizer descending a loss surface"></canvas></div>
+    <div class="pg-panel">
+      <div class="ctrl"><h4>Optimizer</h4><div class="seg" id="dl-opt-kind"><button class="active" data-v="sgd">SGD</button><button data-v="momentum">Momentum</button><button data-v="adam">Adam</button></div></div>
+      <div class="ctrl"><div class="field"><label for="dl-opt-lr">Learning rate <span class="val" id="dl-opt-lr-v">0.08</span></label><input id="dl-opt-lr" type="range" min="0.01" max="0.3" step="0.01" value="0.08" /></div><div style="display:flex;gap:8px"><button class="btn btn-primary btn-sm" id="dl-opt-play" type="button" style="flex:1;justify-content:center">▶ Run</button><button class="btn btn-ghost btn-sm" id="dl-opt-step" type="button">Step</button><button class="btn btn-ghost btn-sm" id="dl-opt-reset" type="button">Reset</button></div></div>
+      <div class="metrics" aria-live="polite"><div class="metric"><div class="l">STEP</div><div class="v mono" id="dl-opt-step-v">0</div></div><div class="metric"><div class="l">LOSS</div><div class="v mono" id="dl-opt-loss">8.44</div></div></div>
+      <p class="note" id="dl-opt-note">SGD follows the immediate gradient and tends to zig-zag across narrow valleys.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Regularization playground -->
+<div id="panel-reg" style="display:none">
+  <div class="pg">
+    <div class="pg-stage" style="aspect-ratio:16/11;min-height:0"><div class="stage-bar"><span class="pill"><span class="dot violet"></span>training vs validation</span></div><canvas id="dl-reg-canvas" role="img" aria-label="Training and validation loss curves under regularization"></canvas></div>
+    <div class="pg-panel">
+      <div class="ctrl"><div class="field"><label for="dl-reg-cap">Model capacity <span class="val" id="dl-reg-cap-v">6 layers</span></label><input id="dl-reg-cap" type="range" min="1" max="12" value="6" /></div><div class="field"><label for="dl-reg-drop">Dropout <span class="val" id="dl-reg-drop-v">20%</span></label><input id="dl-reg-drop" type="range" min="0" max="0.7" step="0.05" value="0.2" /></div><div class="field"><label for="dl-reg-l2">Weight decay <span class="val" id="dl-reg-l2-v">0.01</span></label><input id="dl-reg-l2" type="range" min="0" max="0.1" step="0.01" value="0.01" /></div></div>
+      <div class="metrics" aria-live="polite"><div class="metric"><div class="l">GENERALIZATION GAP</div><div class="v mono" id="dl-reg-gap">0.12</div></div><div class="metric"><div class="l">BEST EPOCH</div><div class="v mono" id="dl-reg-epoch">32</div></div></div>
+      <p class="note" id="dl-reg-note">The model has enough capacity, while dropout and weight decay keep the validation gap controlled.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Transfer learning playground -->
+<div id="panel-transfer" style="display:none">
+  <div class="pg">
+    <div class="pg-stage" style="aspect-ratio:16/11;min-height:0"><div class="stage-bar"><span class="pill"><span class="dot cyan"></span>pretrained backbone → new head</span></div><canvas id="dl-transfer-canvas" role="img" aria-label="Frozen and trainable layers in a transfer learning model"></canvas></div>
+    <div class="pg-panel">
+      <div class="ctrl"><div class="field"><label for="dl-transfer-freeze">Frozen backbone layers <span class="val" id="dl-transfer-freeze-v">4 / 6</span></label><input id="dl-transfer-freeze" type="range" min="0" max="6" value="4" /></div><div class="field"><label for="dl-transfer-data">Labelled examples <span class="val" id="dl-transfer-data-v">1,000</span></label><input id="dl-transfer-data" type="range" min="100" max="10000" step="100" value="1000" /></div></div>
+      <div class="metrics" aria-live="polite"><div class="metric"><div class="l">TRAINABLE PARAMS</div><div class="v mono" id="dl-transfer-params">26.2M</div></div><div class="metric"><div class="l">EST. ACCURACY</div><div class="v mono" id="dl-transfer-acc">82%</div></div><div class="metric"><div class="l">RELATIVE TIME</div><div class="v mono" id="dl-transfer-time">2.4×</div></div><div class="metric"><div class="l">STRATEGY</div><div class="v mono" id="dl-transfer-strategy" style="font-size:14px">fine-tune head</div></div></div>
+      <p class="note">Freeze generic early features when data is scarce. Unfreeze more layers when your target domain differs from pretraining.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  const byId = (id: string) => document.getElementById(id)!;
+  const canvas = (id: string) => byId(id) as HTMLCanvasElement;
+  const value = (id: string) => (byId(id) as HTMLInputElement).value;
+  const number = (id: string) => Number(value(id));
+  const setText = (id: string, text: string) => { byId(id).textContent = text; };
+  const activeValue = (id: string) => (byId(id).querySelector('button.active') as HTMLButtonElement).dataset.v!;
+  const colors = { ink:'#E5E7F2', mute:'#9CA3AF', grid:'rgba(255,255,255,.10)', violet:'#A5B4FC', cyan:'#67E8F9', green:'#6EE7B7', rose:'#FB7185', amber:'#FBBF24' };
+
+  function fit(target: HTMLCanvasElement) {
+    const rect = target.getBoundingClientRect();
+    if (!rect.width || !rect.height) return null;
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    target.width = Math.round(rect.width * dpr); target.height = Math.round(rect.height * dpr);
+    const context = target.getContext('2d')!; context.setTransform(dpr,0,0,dpr,0,0);
+    context.clearRect(0,0,rect.width,rect.height);
+    return { context, width:rect.width, height:rect.height };
+  }
+  function segment(id: string, redraw: () => void) {
+    const group = byId(id);
+    group.addEventListener('click', event => {
+      const button = (event.target as Element).closest('button'); if (!button) return;
+      group.querySelectorAll('button').forEach(item => { const selected=item===button; item.classList.toggle('active',selected); item.setAttribute('aria-pressed',String(selected)); });
+      redraw();
+    });
+    group.querySelectorAll('button').forEach(item => item.setAttribute('aria-pressed',String(item.classList.contains('active'))));
+  }
+  function watchRange(id: string, redraw: () => void) { byId(id).addEventListener('input', redraw); }
+  function axes(context: CanvasRenderingContext2D, width: number, height: number) { context.strokeStyle=colors.grid; context.lineWidth=1; context.beginPath(); context.moveTo(36,height/2);context.lineTo(width-22,height/2);context.moveTo(width/2,34);context.lineTo(width/2,height-28);context.stroke(); }
+
+  const image = [[0,0,0,0,0,0,0],[0,0,1,1,1,0,0],[0,0,1,0,1,0,0],[0,0,1,1,1,0,0],[0,0,0,1,0,0,0],[0,0,0,1,0,0,0],[0,0,0,0,0,0,0]];
+  const kernels: Record<string,number[][]> = { edge:[[-1,-1,-1],[-1,8,-1],[-1,-1,-1]], blur:[[1/9,1/9,1/9],[1/9,1/9,1/9],[1/9,1/9,1/9]], sharpen:[[0,-1,0],[-1,5,-1],[0,-1,0]] };
+  function drawCnn() {
+    const view=fit(canvas('dl-cnn-canvas')); if(!view)return; const {context,width,height}=view; const kernel=kernels[activeValue('dl-cnn-kernel')]; const step=number('dl-cnn-step'), row=Math.floor(step/5), col=step%5; const size=Math.min((height-110)/7,(width*.48-30)/7), ox=32, oy=78;
+    for(let y=0;y<7;y++)for(let x=0;x<7;x++){context.fillStyle=image[y][x]?'#6366F1':'#14141F';context.fillRect(ox+x*size,oy+y*size,size-2,size-2);} context.strokeStyle=colors.amber;context.lineWidth=3;context.strokeRect(ox+col*size-1,oy+row*size-1,size*3-1,size*3-1);
+    const outputs:number[][]=[]; for(let y=0;y<5;y++){outputs[y]=[];for(let x=0;x<5;x++){let sum=0;for(let ky=0;ky<3;ky++)for(let kx=0;kx<3;kx++)sum+=image[y+ky][x+kx]*kernel[ky][kx];outputs[y][x]=sum;}}
+    const outX=width*.58, outSize=Math.min(size*1.05,(width-outX-28)/5); for(let y=0;y<5;y++)for(let x=0;x<5;x++){const v=outputs[y][x],a=Math.min(1,Math.abs(v)/3);context.fillStyle=v>=0?`rgba(103,232,249,${.15+a*.75})`:`rgba(251,113,133,${.15+a*.75})`;context.fillRect(outX+x*outSize,oy+size+(y*outSize),outSize-2,outSize-2);} context.fillStyle=colors.ink;context.font='12px ui-monospace';context.fillText('INPUT · 7×7',ox,oy-18);context.fillText('FEATURE MAP · 5×5',outX,oy-18);setText('dl-cnn-sum',outputs[row][col].toFixed(2));setText('dl-cnn-step-v',`${step+1} / 25`);
+  }
+
+  const tokens=['The','model','remembers','the','first','important','token'];
+  function drawSeq(){const view=fit(canvas('dl-seq-canvas'));if(!view)return;const{context,width,height}=view,step=number('dl-seq-step'),cell=activeValue('dl-seq-cell'),retain=cell==='lstm'?.9:cell==='gru'?.78:.55;let memory=1;const gap=(width-90)/(tokens.length-1),y=height*.54;context.strokeStyle=colors.grid;context.lineWidth=3;context.beginPath();context.moveTo(44,y);context.lineTo(width-44,y);context.stroke();for(let i=0;i<tokens.length;i++){if(i>0)memory*=retain;const x=44+i*gap,active=i<=step;context.beginPath();context.arc(x,y,active?18:13,0,Math.PI*2);context.fillStyle=active?`rgba(99,102,241,${.25+memory*.7})`:'#1C1C2B';context.fill();context.strokeStyle=active?colors.violet:colors.grid;context.stroke();context.fillStyle=active?colors.ink:colors.mute;context.font='12px ui-monospace';context.textAlign='center';context.fillText(tokens[i],x,y+42);if(i===step){context.fillStyle=colors.cyan;context.fillText(`h = ${memory.toFixed(2)}`,x,y-30);}}const current=Math.pow(retain,step);setText('dl-seq-step-v',tokens[step]);setText('dl-seq-memory',`${Math.round(current*100)}%`);setText('dl-seq-gates',cell==='rnn'?'0':cell==='gru'?'2':'3');setText('dl-seq-note',cell==='rnn'?'A vanilla RNN repeatedly transforms one hidden state, so early information fades quickly.':cell==='lstm'?'LSTM input, forget and output gates protect useful memory across long sequences.':'GRU combines reset and update gates for a lighter gated memory cell.');}
+
+  function drawGen(){const view=fit(canvas('dl-gen-canvas'));if(!view)return;const{context,width,height}=view,mode=activeValue('dl-gen-mode'),latent=number('dl-gen-latent'),noise=number('dl-gen-noise');context.fillStyle=colors.ink;context.font='13px ui-monospace';context.textAlign='center';if(mode==='ae'){const nodes=[['INPUT',width*.16,42],['ENCODE',width*.38,24],['LATENT',width*.5,Math.max(12,latent*5)],['DECODE',width*.62,24],['RECON',width*.84,42]];nodes.forEach(([label,x,r],i)=>{context.beginPath();context.arc(Number(x),height*.52,Number(r),0,Math.PI*2);context.fillStyle=i===2?'rgba(251,191,36,.65)':'rgba(99,102,241,.55)';context.fill();context.fillStyle=colors.ink;context.fillText(String(label),Number(x),height*.52+70);if(i<nodes.length-1){context.strokeStyle=colors.grid;context.beginPath();context.moveTo(Number(x)+Number(r),height*.52);context.lineTo(Number(nodes[i+1][1])-Number(nodes[i+1][2]),height*.52);context.stroke();}});const err=Math.max(.02,(9-latent)*.025+noise*.28);setText('dl-gen-metric-label','RECON ERROR');setText('dl-gen-metric',err.toFixed(2));setText('dl-gen-note','The encoder compresses the input into a small latent code; the decoder reconstructs from only that code.');}else{for(let i=0;i<42;i++){const real=i<21,x=(real?width*.32:width*.68)+(Math.sin(i*4.7)*noise*45),y=height*.5+Math.cos(i*2.9)*75;context.beginPath();context.arc(x,y,5,0,Math.PI*2);context.fillStyle=real?colors.cyan:colors.rose;context.fill();}context.fillStyle=colors.ink;context.fillText('REAL DATA',width*.32,height*.78);context.fillText('GENERATOR',width*.68,height*.78);setText('dl-gen-metric-label','DISCRIMINATOR');setText('dl-gen-metric',`${Math.round(50+noise*38)}%`);setText('dl-gen-note','The generator tries to match real samples while the discriminator learns to tell real from fake. Balance is the goal.');}setText('dl-gen-latent-v',String(latent));setText('dl-gen-noise-v',noise.toFixed(2));setText('dl-gen-bottle',`${latent}D`);}
+
+  const activations:Record<string,{f:(x:number)=>number,d:(x:number)=>number,note:string}>={relu:{f:x=>Math.max(0,x),d:x=>x>0?1:0,note:'ReLU keeps a strong gradient for positive inputs, but its negative half is inactive.'},sigmoid:{f:x=>1/(1+Math.exp(-x)),d:x=>{const y=1/(1+Math.exp(-x));return y*(1-y)},note:'Sigmoid is useful for gates and probabilities, but large inputs saturate toward a zero gradient.'},tanh:{f:x=>Math.tanh(x),d:x=>1-Math.tanh(x)**2,note:'tanh is zero-centered, yet still saturates when the scaled input becomes large.'},gelu:{f:x=>.5*x*(1+Math.tanh(.797885*(x+.044715*x**3))),d:x=>{const e=.001;return(.5*(x+e)*(1+Math.tanh(.797885*((x+e)+.044715*(x+e)**3)))-.5*(x-e)*(1+Math.tanh(.797885*((x-e)+.044715*(x-e)**3))))/(2*e)},note:'GELU smoothly gates values by magnitude and is widely used in transformer feed-forward layers.'}};
+  function drawAct(){const view=fit(canvas('dl-act-canvas'));if(!view)return;const{context,width,height}=view,kind=activeValue('dl-act-kind'),fn=activations[kind],input=number('dl-act-input'),scale=number('dl-act-scale');axes(context,width,height);const X=(x:number)=>width/2+x*(width-72)/10,Y=(y:number)=>height/2-y*(height-70)/8;context.beginPath();for(let i=0;i<=160;i++){const x=-5+i/16,y=fn.f(x*scale);i?context.lineTo(X(x),Y(y)):context.moveTo(X(x),Y(y));}context.strokeStyle=colors.violet;context.lineWidth=3;context.stroke();const out=fn.f(input*scale),grad=fn.d(input*scale)*scale;context.beginPath();context.arc(X(input),Y(out),7,0,Math.PI*2);context.fillStyle=colors.cyan;context.fill();setText('dl-act-input-v',input.toFixed(1));setText('dl-act-scale-v',`${scale.toFixed(1)}×`);setText('dl-act-output',out.toFixed(2));setText('dl-act-grad',grad.toFixed(2));setText('dl-act-note',fn.note);}
+
+  let opt={x:2.4,y:-1.3,vx:0,vy:0,mx:0,my:0,vx2:0,vy2:0,step:0,trail:[] as {x:number,y:number}[],running:false,raf:0,visible:false}; const loss=(x:number,y:number)=>x*x+2.2*y*y;
+  function drawOpt(){const view=fit(canvas('dl-opt-canvas'));if(!view)return;const{context,width,height}=view,X=(x:number)=>width/2+x*(width-90)/6,Y=(y:number)=>height/2-y*(height-90)/4;for(let i=1;i<=6;i++){context.beginPath();context.ellipse(X(0),Y(0),i*(width-90)/18,i*(height-90)/28,0,0,Math.PI*2);context.strokeStyle=`rgba(165,180,252,${.08+i*.035})`;context.stroke();}if(opt.trail.length){context.beginPath();opt.trail.forEach((p,i)=>i?context.lineTo(X(p.x),Y(p.y)):context.moveTo(X(p.x),Y(p.y)));context.strokeStyle=colors.cyan;context.lineWidth=2;context.stroke();}context.beginPath();context.arc(X(opt.x),Y(opt.y),8,0,Math.PI*2);context.fillStyle=colors.amber;context.fill();setText('dl-opt-step-v',String(opt.step));setText('dl-opt-loss',loss(opt.x,opt.y).toFixed(3));}
+  function optimizerStep(){const kind=activeValue('dl-opt-kind'),lr=number('dl-opt-lr'),gx=2*opt.x,gy=4.4*opt.y;opt.step++;if(kind==='sgd'){opt.x-=lr*gx;opt.y-=lr*gy;}else if(kind==='momentum'){opt.vx=.82*opt.vx+gx;opt.vy=.82*opt.vy+gy;opt.x-=lr*opt.vx;opt.y-=lr*opt.vy;}else{opt.mx=.9*opt.mx+.1*gx;opt.my=.9*opt.my+.1*gy;opt.vx2=.999*opt.vx2+.001*gx*gx;opt.vy2=.999*opt.vy2+.001*gy*gy;const bx=opt.mx/(1-.9**opt.step),by=opt.my/(1-.9**opt.step),vx=opt.vx2/(1-.999**opt.step),vy=opt.vy2/(1-.999**opt.step);opt.x-=lr*bx/(Math.sqrt(vx)+1e-8);opt.y-=lr*by/(Math.sqrt(vy)+1e-8);}opt.trail.push({x:opt.x,y:opt.y});if(opt.trail.length>80)opt.trail.shift();drawOpt();if(loss(opt.x,opt.y)<.001||opt.step>120)stopOptimizer();}
+  function optimizerLoop(){opt.raf=0;if(!opt.running||!opt.visible||document.hidden)return;optimizerStep();opt.raf=requestAnimationFrame(optimizerLoop);}
+  function stopOptimizer(){opt.running=false;if(opt.raf)cancelAnimationFrame(opt.raf);opt.raf=0;setText('dl-opt-play','▶ Run');}
+  function resetOptimizer(){stopOptimizer();opt={...opt,x:2.4,y:-1.3,vx:0,vy:0,mx:0,my:0,vx2:0,vy2:0,step:0,trail:[],running:false,raf:0};drawOpt();}
+
+  function drawReg(){const view=fit(canvas('dl-reg-canvas'));if(!view)return;const{context,width,height}=view,cap=number('dl-reg-cap'),drop=number('dl-reg-drop'),l2=number('dl-reg-l2'),pad=46;const train:number[]=[],val:number[]=[];for(let e=0;e<60;e++){const t=.78*Math.exp(-e/(9+cap*.3))+.035+1/(cap+5)*.12;const over=Math.max(0,e-26)*(cap/12)*.006*(1-drop)*(1-l2*5);const under=drop*.16+l2*.7;train.push(t+under*.25);val.push(t+.07+under+over);}const max=1,X=(i:number)=>pad+i/59*(width-pad-24),Y=(v:number)=>height-36-v/max*(height-76);for(const [series,color] of [[train,colors.cyan],[val,colors.rose]] as [number[],string][]){context.beginPath();series.forEach((v,i)=>i?context.lineTo(X(i),Y(v)):context.moveTo(X(i),Y(v)));context.strokeStyle=color;context.lineWidth=2.5;context.stroke();}context.fillStyle=colors.cyan;context.font='12px ui-monospace';context.fillText('TRAIN',pad,34);context.fillStyle=colors.rose;context.fillText('VALIDATION',pad+74,34);let best=0;val.forEach((v,i)=>{if(v<val[best])best=i});const gap=Math.max(0,val[59]-train[59]);setText('dl-reg-cap-v',`${cap} ${cap===1?'layer':'layers'}`);setText('dl-reg-drop-v',`${Math.round(drop*100)}%`);setText('dl-reg-l2-v',l2.toFixed(2));setText('dl-reg-gap',gap.toFixed(2));setText('dl-reg-epoch',String(best+1));setText('dl-reg-note',gap>.22?'The validation curve is separating: reduce capacity or add regularization.':drop>.55||l2>.07?'Strong regularization is controlling the gap, but the model is beginning to underfit.':'The model has enough capacity, while dropout and weight decay keep the validation gap controlled.');}
+
+  const layerParams=[2.1,4.7,12,18,25,1.2];
+  function drawTransfer(){const view=fit(canvas('dl-transfer-canvas'));if(!view)return;const{context,width,height}=view,frozen=number('dl-transfer-freeze'),data=number('dl-transfer-data'),gap=(width-90)/5;for(let i=0;i<6;i++){const x=36+i*gap,w=Math.min(64,gap-12),h=90+i*12,y=height/2-h/2;context.fillStyle=i<frozen?'rgba(148,163,184,.22)':'rgba(99,102,241,.55)';context.strokeStyle=i<frozen?'#94A3B8':colors.violet;context.lineWidth=2;context.fillRect(x,y,w,h);context.strokeRect(x,y,w,h);context.fillStyle=colors.ink;context.font='11px ui-monospace';context.textAlign='center';context.fillText(i<frozen?'FROZEN':'TRAIN',x+w/2,height*.78);if(i<5){context.strokeStyle=colors.grid;context.beginPath();context.moveTo(x+w,height/2);context.lineTo(x+gap,height/2);context.stroke();}}const trainable=layerParams.slice(frozen).reduce((a,b)=>a+b,0),dataBoost=Math.log10(data/100)*7,unfrozen=(6-frozen)*1.8,acc=Math.min(94,66+dataBoost+unfrozen),time=.7+(6-frozen)*.42;setText('dl-transfer-freeze-v',`${frozen} / 6`);setText('dl-transfer-data-v',data.toLocaleString());setText('dl-transfer-params',`${trainable.toFixed(1)}M`);setText('dl-transfer-acc',`${Math.round(acc)}%`);setText('dl-transfer-time',`${time.toFixed(1)}×`);setText('dl-transfer-strategy',frozen>=5?'linear probe':frozen>=3?'fine-tune head':'full fine-tune');}
+
+  segment('dl-cnn-kernel',drawCnn);watchRange('dl-cnn-step',drawCnn);byId('dl-cnn-next').addEventListener('click',()=>{const input=byId('dl-cnn-step') as HTMLInputElement;input.value=String((Number(input.value)+1)%25);drawCnn();});
+  segment('dl-seq-cell',drawSeq);watchRange('dl-seq-step',drawSeq);segment('dl-gen-mode',drawGen);watchRange('dl-gen-latent',drawGen);watchRange('dl-gen-noise',drawGen);segment('dl-act-kind',drawAct);watchRange('dl-act-input',drawAct);watchRange('dl-act-scale',drawAct);
+  segment('dl-opt-kind',()=>{resetOptimizer();setText('dl-opt-note',activeValue('dl-opt-kind')==='sgd'?'SGD follows the immediate gradient and tends to zig-zag across narrow valleys.':activeValue('dl-opt-kind')==='momentum'?'Momentum builds velocity, crossing shallow directions while damping oscillation.':'Adam normalizes updates with running gradient moments for adaptive steps.');});watchRange('dl-opt-lr',()=>{setText('dl-opt-lr-v',number('dl-opt-lr').toFixed(2));resetOptimizer();});byId('dl-opt-play').addEventListener('click',()=>{if(matchMedia('(prefers-reduced-motion: reduce)').matches){optimizerStep();return;}opt.running=!opt.running;setText('dl-opt-play',opt.running?'Pause':'▶ Run');if(opt.running&&!opt.raf)opt.raf=requestAnimationFrame(optimizerLoop);});byId('dl-opt-step').addEventListener('click',optimizerStep);byId('dl-opt-reset').addEventListener('click',resetOptimizer);
+  ['dl-reg-cap','dl-reg-drop','dl-reg-l2'].forEach(id=>watchRange(id,drawReg));['dl-transfer-freeze','dl-transfer-data'].forEach(id=>watchRange(id,drawTransfer));
+  const redrawers:Record<string,()=>void>={cnn:drawCnn,seq:drawSeq,gen:drawGen,act:drawAct,opt:drawOpt,reg:drawReg,transfer:drawTransfer};
+  document.addEventListener('deep-learning:tab',event=>{const id=(event as CustomEvent<string>).detail;if(id!=='opt')stopOptimizer();requestAnimationFrame(()=>redrawers[id]?.());});
+  new IntersectionObserver(([entry])=>{opt.visible=entry.isIntersecting;if(!opt.visible)stopOptimizer();},{rootMargin:'80px'}).observe(canvas('dl-opt-canvas'));
+  window.addEventListener('resize',()=>{const selected=document.querySelector<HTMLDivElement>('#tabs .tab.active')?.dataset.tab;if(selected)redrawers[selected]?.();});
+</script>

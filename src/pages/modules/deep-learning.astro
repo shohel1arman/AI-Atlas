@@ -1,0 +1,179 @@
+---
+import ModuleLayout from '../../layouts/ModuleLayout.astro';
+import ModuleTabs from '../../components/ModuleTabs.astro';
+import DeepLearningExtras from '../../components/playgrounds/DeepLearningExtras.astro';
+---
+
+<ModuleLayout
+  title="Deep Learning Lab — AI Atlas"
+  pageId="deep-learning"
+  crumb="Deep Learning Lab"
+  eyebrow="Deep Learning Lab"
+  heading="Build a neural network with your hands"
+>
+  <Fragment slot="status"><span class="pill"><span class="dot"></span>8 interactive playgrounds</span></Fragment>
+  <Fragment slot="description">A real multilayer perceptron, training live in your browser. Pick a dataset, shape the hidden layers, choose an activation, and press play — watch the decision boundary form as gradients reshape every weight.</Fragment>
+
+<ModuleTabs moduleId="deep-learning" scrollable />
+
+      <!-- ===== NN tab ===== -->
+      <div id="panel-nn">
+        <div class="pg">
+          <div class="pg-stage" style="aspect-ratio:1/1;min-height:0">
+            <div class="stage-bar">
+              <button class="iconbtn primary" id="play" aria-label="Play/Pause">
+                <svg id="play-icon" width="16" height="16" viewBox="0 0 16 16"><path d="M4 3l9 5-9 5z" fill="#fff"/></svg>
+              </button>
+              <button class="iconbtn" id="step" aria-label="Step"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M4 3l6 5-6 5zM11 3h2v10h-2z" fill="currentColor"/></svg></button>
+              <button class="iconbtn" id="reset" aria-label="Reset"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M8 3a5 5 0 1 1-4.6 3" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M3 2.5V6h3.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <div class="spacer"></div>
+              <span class="pill" style="background:rgba(12,12,20,.7)"><span class="dot amber"></span>class A</span>
+              <span class="pill" style="background:rgba(12,12,20,.7)"><span class="dot cyan"></span>class B</span>
+            </div>
+            <canvas id="boundary"></canvas>
+          </div>
+
+          <div class="pg-panel">
+            <div class="ctrl">
+              <h4>Dataset</h4>
+              <div class="seg" id="dataset">
+                <button class="active" data-v="circle">Circle</button>
+                <button data-v="xor">XOR</button>
+                <button data-v="spiral">Spiral</button>
+                <button data-v="gauss">Gauss</button>
+              </div>
+              <div class="field" style="margin-top:16px">
+                <label>Noise <span class="val" id="noise-v">0.18</span></label>
+                <input type="range" id="noise" min="0" max="0.5" step="0.02" value="0.18" />
+              </div>
+            </div>
+
+            <div class="ctrl">
+              <h4>Architecture</h4>
+              <div class="field">
+                <label>Hidden layers <span class="val" id="arch-v">4 · 4</span></label>
+                <div class="seg" id="arch">
+                  <button data-v="4">[4]</button>
+                  <button class="active" data-v="4,4">[4,4]</button>
+                  <button data-v="6,4">[6,4]</button>
+                  <button data-v="8,6,4">[8,6,4]</button>
+                </div>
+              </div>
+              <div class="field">
+                <label>Activation</label>
+                <div class="seg" id="act">
+                  <button class="active" data-v="tanh">tanh</button>
+                  <button data-v="relu">ReLU</button>
+                  <button data-v="sigmoid">sigmoid</button>
+                </div>
+              </div>
+              <div class="field" style="margin-bottom:0">
+                <label>Learning rate <span class="val" id="lr-v">0.08</span></label>
+                <input type="range" id="lr" min="0.01" max="0.5" step="0.01" value="0.08" />
+              </div>
+            </div>
+
+            <div class="ctrl">
+              <h4>Network</h4>
+              <canvas id="netdiag" style="width:100%;height:150px;display:block"></canvas>
+              <p class="note" style="margin-top:10px">Edge thickness = weight magnitude · <span style="color:var(--amber)">orange = +</span> / <span style="color:var(--cyan)">cyan = −</span></p>
+            </div>
+
+            <div class="metrics">
+              <div class="metric"><div class="l">EPOCH</div><div class="v mono" id="m-epoch">0</div></div>
+              <div class="metric"><div class="l">LOSS</div><div class="v mono" id="m-loss" style="color:var(--rose)">1.00</div></div>
+              <div class="metric"><div class="l">ACCURACY</div><div class="v mono" id="m-acc" style="color:var(--emerald)">—</div></div>
+              <div class="metric"><div class="l">LOSS CURVE</div><canvas id="losschart" style="width:100%;height:30px;margin-top:4px"></canvas></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass" style="padding:24px;border-radius:var(--r-lg);margin-top:26px">
+          <h3 style="font-size:18px;margin-bottom:10px">What's happening under the hood</h3>
+          <div class="grid" style="grid-template-columns:1fr 1fr;gap:24px">
+            <div>
+              <p class="note" style="margin-bottom:14px">Each training step runs a <b style="color:var(--ink)">forward pass</b> (inputs flow right, each neuron computing a weighted sum + activation), measures the <b style="color:var(--ink)">loss</b>, then <b style="color:var(--ink)">backpropagates</b> the error to nudge every weight downhill.</p>
+              <div class="eqn"><span class="c"># forward</span><br/><span class="k">z</span> = <span class="n">W</span>·a + <span class="n">b</span><br/><span class="k">a'</span> = <span class="g">σ</span>(z)<br/><br/><span class="c"># update</span><br/><span class="n">W</span> ← <span class="n">W</span> − <span class="k">η</span> ∂L/∂W</div>
+            </div>
+            <div>
+              <p class="note" style="margin-bottom:14px">Try this:</p>
+              <ul class="note" style="margin:0;padding-left:18px;line-height:2">
+                <li>Switch to <b style="color:var(--ink)">Spiral</b> with <b style="color:var(--ink)">[4]</b> — watch it struggle.</li>
+                <li>Add layers <b style="color:var(--ink)">[8,6,4]</b> — the boundary curls to fit.</li>
+                <li>Push <b style="color:var(--ink)">learning rate</b> high — watch the loss bounce.</li>
+                <li>Increase <b style="color:var(--ink)">noise</b> — overfitting gets harder.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <DeepLearningExtras />
+
+  <Fragment slot="scripts">
+<script is:inline src="/js/playgrounds/nn.js"></script>
+<script is:inline>
+(function () {
+  const boundary = document.getElementById('boundary');
+  const netdiag = document.getElementById('netdiag');
+  const lossc = document.getElementById('losschart');
+  const lctx = lossc.getContext('2d');
+
+  function drawLoss(hist) {
+    const DPR = Math.min(devicePixelRatio || 1, 2);
+    const r = lossc.getBoundingClientRect();
+    lossc.width = r.width * DPR; lossc.height = r.height * DPR; lctx.setTransform(DPR,0,0,DPR,0,0);
+    lctx.clearRect(0,0,r.width,r.height);
+    if (!hist || hist.length < 2) return;
+    const max = Math.max(...hist, 0.5), min = 0;
+    lctx.beginPath();
+    hist.forEach((v,i)=>{ const x=i/(hist.length-1)*r.width; const y=r.height-(v-min)/(max-min)*r.height; i?lctx.lineTo(x,y):lctx.moveTo(x,y); });
+    lctx.strokeStyle = '#FB7185'; lctx.lineWidth = 1.5; lctx.stroke();
+  }
+
+  const pg = NNPlayground({
+    stage: boundary, netCanvas: netdiag,
+    onMetrics: (m) => {
+      document.getElementById('m-epoch').textContent = m.epoch;
+      document.getElementById('m-loss').textContent = m.loss.toFixed(3);
+      document.getElementById('m-acc').textContent = m.acc ? (m.acc*100).toFixed(0)+'%' : '—';
+      drawLoss(m.lossHist);
+    }
+  });
+  pg.init();
+
+  // controls
+  const playIcon = document.getElementById('play-icon');
+  document.getElementById('play').onclick = () => {
+    const running = pg.toggle();
+    playIcon.innerHTML = running ? '<rect x="4" y="3" width="3" height="10" fill="#fff"/><rect x="9" y="3" width="3" height="10" fill="#fff"/>' : '<path d="M4 3l9 5-9 5z" fill="#fff"/>';
+  };
+  document.getElementById('step').onclick = () => pg.step();
+  document.getElementById('reset').onclick = () => { pg.reset(); playIcon.innerHTML='<path d="M4 3l9 5-9 5z" fill="#fff"/>'; };
+
+  function seg(id, cb) { const el=document.getElementById(id); el.onclick=(e)=>{const b=e.target.closest('button');if(!b)return;[...el.children].forEach(c=>c.classList.remove('active'));b.classList.add('active');cb(b.dataset.v);}; }
+  seg('dataset', v => pg.set('dataset', v));
+  seg('arch', v => { const h=v.split(',').map(Number); pg.set('hidden', h); document.getElementById('arch-v').textContent = h.join(' · '); });
+  seg('act', v => pg.set('act', v));
+  document.getElementById('noise').oninput = e => { const v=+e.target.value; document.getElementById('noise-v').textContent=v.toFixed(2); pg.set('noise', v); };
+  document.getElementById('lr').oninput = e => { const v=+e.target.value; document.getElementById('lr-v').textContent=v.toFixed(2); pg.state.lr=v; };
+
+  // tabs
+  const tabs = document.getElementById('tabs');
+  const lessonIds = ['nn','cnn','seq','gen','act','opt','reg','transfer'];
+  lessonIds.forEach(id => { const panel=document.getElementById('panel-'+id); if(panel){ panel.setAttribute('role','tabpanel'); panel.setAttribute('aria-labelledby','tab-'+id); } });
+  function activateTab(t, focus=false) {
+    [...tabs.children].forEach(c => { const active=c===t; c.classList.toggle('active',active); c.setAttribute('aria-selected',String(active)); c.tabIndex=active?0:-1; });
+    lessonIds.forEach(id => document.getElementById('panel-'+id).style.display=id===t.dataset.tab?'':'none');
+    if (t.dataset.tab === 'nn') pg.redraw(); else pg.pause();
+    document.dispatchEvent(new CustomEvent('deep-learning:tab',{detail:t.dataset.tab}));
+    if (focus) t.focus();
+  }
+  tabs.onclick = e => { const t=e.target.closest('.tab'); if(t) activateTab(t); };
+  tabs.onkeydown = e => { const current=e.target.closest('.tab'); if(!current)return; const items=[...tabs.children],index=items.indexOf(current); let next=index; if(e.key==='ArrowRight')next=(index+1)%items.length;else if(e.key==='ArrowLeft')next=(index-1+items.length)%items.length;else if(e.key==='Home')next=0;else if(e.key==='End')next=items.length-1;else return;e.preventDefault();activateTab(items[next],true); };
+
+  window.addEventListener('resize', () => pg.redraw());
+})();
+</script>
+  </Fragment>
+</ModuleLayout>
