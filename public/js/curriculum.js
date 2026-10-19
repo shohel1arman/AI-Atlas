@@ -782,7 +782,7 @@
 
   function cardHTML(color, c) {
     const pts = c.pts.map(([t, d]) => `<div class="tc-pt"><b>${t}</b> — ${d}</div>`).join('');
-    return `<div class="topic-card" style="--c:${color}">
+    return `<div class="topic-card" style="--c:#52525b">
       <span class="tc-eyebrow">${c.tag}</span>
       <h3>${c.title}</h3>
       <p class="tc-lead">${c.lead}</p>
@@ -800,7 +800,7 @@
     </article>`).join('');
     const steps = detail.example.steps.map(([term, text]) => `<div class="td-step"><b>${term}</b><span>${text}</span></div>`).join('');
     const practice = detail.practice.map(([term, text], index) => `<li><span class="td-check">${index + 1}</span><div><b>${term}</b><p>${text}</p></div></li>`).join('');
-    return `<section class="topic-detail" style="--c:${color}" aria-labelledby="detail-${id}">
+    return `<section class="topic-detail" style="--c:#52525b" aria-labelledby="detail-${id}">
       <div class="td-head">
         <span class="tc-eyebrow">complete lesson</span>
         <h3 id="detail-${id}">Understand vectors, not just the arrows</h3>

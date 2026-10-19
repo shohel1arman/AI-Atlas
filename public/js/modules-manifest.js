@@ -8,11 +8,11 @@
    matches a tab's data-tab (or the page id for single pages).
    ============================================================ */
 window.ATLAS_MODULES = [
-  { id: 'foundations', title: 'Foundations', color: '#8B8CF6', href: '/modules/foundations/', lessons: [
+  { id: 'foundations', title: 'Foundations', color: '#52525b', href: '/modules/foundations/', lessons: [
     { id: 'flow', label: 'AI Workflow Pipeline' },
     { id: 'time', label: 'History of AI' },
   ]},
-  { id: 'mathematics', title: 'Mathematics', color: '#34D399', href: '/modules/mathematics/', lessons: [
+  { id: 'mathematics', title: 'Mathematics', color: '#52525b', href: '/modules/mathematics/', lessons: [
     { id: 'vec',  label: 'Vectors' },
     { id: 'tensor', label: 'Tensors' },
     { id: 'matops', label: 'Matrix Operations' },
@@ -24,7 +24,7 @@ window.ATLAS_MODULES = [
     { id: 'stats', label: 'Statistics' },
     { id: 'info', label: 'Information Theory' },
   ]},
-  { id: 'data-analysis', title: 'Data Analysis', color: '#2EC4DE', href: '/modules/data-analysis/', lessons: [
+  { id: 'data-analysis', title: 'Data Analysis', color: '#52525b', href: '/modules/data-analysis/', lessons: [
     { id: 'sql',  label: 'SQL Explorer' },
     { id: 'clean', label: 'Data Cleaning' },
     { id: 'eda', label: 'Exploratory Analysis' },
@@ -34,7 +34,7 @@ window.ATLAS_MODULES = [
     { id: 'ab', label: 'A/B Testing' },
     { id: 'time', label: 'Time Series' },
   ]},
-  { id: 'machine-learning', title: 'Machine Learning', color: '#22D3EE', href: '/modules/machine-learning/', lessons: [
+  { id: 'machine-learning', title: 'Machine Learning', color: '#52525b', href: '/modules/machine-learning/', lessons: [
     { id: 'reg',  label: 'Regression' },
     { id: 'km',   label: 'Clustering (K-Means)' },
     { id: 'cls',  label: 'Classification' },
@@ -44,7 +44,7 @@ window.ATLAS_MODULES = [
     { id: 'feat', label: 'Feature Engineering' },
     { id: 'anom', label: 'Anomaly Detection' },
   ]},
-  { id: 'deep-learning', title: 'Deep Learning Lab', color: '#6366F1', href: '/modules/deep-learning/', lessons: [
+  { id: 'deep-learning', title: 'Deep Learning Lab', color: '#52525b', href: '/modules/deep-learning/', lessons: [
     { id: 'nn',  label: 'Neural Net Playground' },
     { id: 'cnn', label: 'Convolutions' },
     { id: 'seq', label: 'RNN · LSTM' },
@@ -54,7 +54,7 @@ window.ATLAS_MODULES = [
     { id: 'reg', label: 'Regularization' },
     { id: 'transfer', label: 'Transfer Learning' },
   ]},
-  { id: 'nlp', title: 'Language & Generation', color: '#A855F7', href: '/modules/nlp/', lessons: [
+  { id: 'nlp', title: 'Language & Generation', color: '#52525b', href: '/modules/nlp/', lessons: [
     { id: 'tok',   label: 'Tokenizer' },
     { id: 'tfidf', label: 'TF-IDF' },
     { id: 'samp',  label: 'Sampling & Temperature' },
@@ -64,7 +64,7 @@ window.ATLAS_MODULES = [
     { id: 'ner', label: 'Named Entities' },
     { id: 'seq2seq', label: 'Seq2Seq Decoding' },
   ]},
-  { id: 'transformers', title: 'Transformers & LLMs', color: '#A855F7', href: '/modules/transformers/', lessons: [
+  { id: 'transformers', title: 'Transformers & LLMs', color: '#52525b', href: '/modules/transformers/', lessons: [
     { id: 'attn', label: 'Self-Attention' },
     { id: 'tok',  label: 'Tokenization' },
     { id: 'pos', label: 'Position Encoding' },
@@ -74,7 +74,7 @@ window.ATLAS_MODULES = [
     { id: 'rag',  label: 'RAG & Embeddings' },
     { id: 'arch', label: 'Encoder vs Decoder' },
   ]},
-  { id: 'llm-agents', title: 'LLM & Agents Lab', color: '#818CF8', href: '/modules/llm-agents/', lessons: [
+  { id: 'llm-agents', title: 'LLM & Agents Lab', color: '#52525b', href: '/modules/llm-agents/', lessons: [
     { id: 'build', label: 'Build an LLM' },
     { id: 'local', label: 'Run on Your PC' },
     { id: 'prompt', label: 'Prompt Design' },
@@ -84,7 +84,7 @@ window.ATLAS_MODULES = [
     { id: 'tune',  label: 'Fine-tune & LoRA' },
     { id: 'eval', label: 'Evaluation & Safety' },
   ]},
-  { id: 'generative', title: 'Generative AI', color: '#FB7185', href: '/modules/generative/', lessons: [
+  { id: 'generative', title: 'Generative AI', color: '#52525b', href: '/modules/generative/', lessons: [
     { id: 'generative', label: 'Diffusion Denoiser' },
     { id: 'schedule', label: 'Noise Schedules' },
     { id: 'latent', label: 'Latent Space' },
@@ -94,7 +94,7 @@ window.ATLAS_MODULES = [
     { id: 'audio', label: 'Audio Generation' },
     { id: 'video', label: 'Video Generation' },
   ]},
-  { id: 'xai', title: 'Explainable AI', color: '#F59E0B', href: '/modules/xai/', lessons: [
+  { id: 'xai', title: 'Explainable AI', color: '#52525b', href: '/modules/xai/', lessons: [
     { id: 'xai', label: 'SHAP Attribution' },
     { id: 'lime', label: 'LIME Neighbourhood' },
     { id: 'global', label: 'Global Importance' },
@@ -104,7 +104,7 @@ window.ATLAS_MODULES = [
     { id: 'fairness', label: 'Fairness Audit' },
     { id: 'llm', label: 'LLM Interpretability' },
   ]},
-  { id: 'etl', title: 'ETL & Data Eng.', color: '#22D3EE', href: '/modules/etl/', lessons: [
+  { id: 'etl', title: 'ETL & Data Eng.', color: '#52525b', href: '/modules/etl/', lessons: [
     { id: 'etl', label: 'ETL DAG Builder' },
     { id: 'ingest', label: 'Batch & Streaming' },
     { id: 'transform', label: 'Data Transforms' },
@@ -114,7 +114,7 @@ window.ATLAS_MODULES = [
     { id: 'quality', label: 'Data Quality' },
     { id: 'features', label: 'Feature Stores' },
   ]},
-  { id: 'programming', title: 'Code & Stack', color: '#F59E0B', href: '/modules/programming/', lessons: [
+  { id: 'programming', title: 'Code & Stack', color: '#52525b', href: '/modules/programming/', lessons: [
     { id: 'lang', label: 'Learn & Run' },
     { id: 'libs', label: 'AI Libraries' },
     { id: 'db',   label: 'SQL vs NoSQL' },
@@ -124,7 +124,7 @@ window.ATLAS_MODULES = [
     { id: 'compute', label: 'Cloud & Compute' },
     { id: 'test', label: 'Testing & Debugging' },
   ]},
-  { id: 'mlops', title: 'MLOps', color: '#34D399', href: '/modules/mlops/', lessons: [
+  { id: 'mlops', title: 'MLOps', color: '#52525b', href: '/modules/mlops/', lessons: [
     { id: 'mlops', label: 'Drift Monitor' },
     { id: 'experiments', label: 'Experiment Tracking' },
     { id: 'registry', label: 'Model Registry' },
@@ -134,7 +134,7 @@ window.ATLAS_MODULES = [
     { id: 'retrain', label: 'Automated Retraining' },
     { id: 'govern', label: 'Governance & Lineage' },
   ]},
-  { id: 'research', title: 'AI Research Lab', color: '#8B8CF6', href: '/modules/research/', lessons: [
+  { id: 'research', title: 'AI Research Lab', color: '#52525b', href: '/modules/research/', lessons: [
     { id: 'research', label: 'Bias & Variance' },
     { id: 'cv', label: 'Cross-Validation' },
     { id: 'bootstrap', label: 'Bootstrap & CI' },
@@ -144,7 +144,7 @@ window.ATLAS_MODULES = [
     { id: 'reproduce', label: 'Reproducibility' },
     { id: 'report', label: 'Research Reporting' },
   ]},
-  { id: 'cv', title: 'Computer Vision', color: '#22D3EE', href: '/modules/computer-vision/', lessons: [
+  { id: 'cv', title: 'Computer Vision', color: '#52525b', href: '/modules/computer-vision/', lessons: [
     { id: 'repr',    label: 'Image as Numbers' },
     { id: 'conv',    label: 'Convolution & Filters' },
     { id: 'pool',    label: 'Pooling & Stride' },
@@ -154,7 +154,7 @@ window.ATLAS_MODULES = [
     { id: 'vit',     label: 'Vision Transformers' },
     { id: 'arch',    label: 'CNN Architectures' },
   ]},
-  { id: 'rl', title: 'Reinforcement Learning', color: '#FB7185', href: '/modules/reinforcement-learning/', lessons: [
+  { id: 'rl', title: 'Reinforcement Learning', color: '#52525b', href: '/modules/reinforcement-learning/', lessons: [
     { id: 'loop',     label: 'The RL Loop' },
     { id: 'mdp',      label: 'MDPs & Gridworld' },
     { id: 'discount', label: 'Discount & Return' },
@@ -164,7 +164,7 @@ window.ATLAS_MODULES = [
     { id: 'sarsa',    label: 'SARSA vs Q-Learning' },
     { id: 'pg',       label: 'Policy Gradients' },
   ]},
-  { id: 'timeseries', title: 'Time Series & Forecasting', color: '#34D399', href: '/modules/time-series/', lessons: [
+  { id: 'timeseries', title: 'Time Series & Forecasting', color: '#52525b', href: '/modules/time-series/', lessons: [
     { id: 'decomp',       label: 'Decomposition' },
     { id: 'stationarity', label: 'Stationarity' },
     { id: 'autocorr',     label: 'Autocorrelation' },
@@ -174,7 +174,7 @@ window.ATLAS_MODULES = [
     { id: 'eval',         label: 'Backtesting' },
     { id: 'anomaly',      label: 'Anomaly Detection' },
   ]},
-  { id: 'prompting', title: 'Prompt Engineering', color: '#A855F7', href: '/modules/prompt-engineering/', lessons: [
+  { id: 'prompting', title: 'Prompt Engineering', color: '#52525b', href: '/modules/prompt-engineering/', lessons: [
     { id: 'anatomy',    label: 'Prompt Anatomy' },
     { id: 'roles',      label: 'Message Roles' },
     { id: 'shots',      label: 'Few-shot & CoT' },
@@ -184,7 +184,7 @@ window.ATLAS_MODULES = [
     { id: 'rag',        label: 'Grounding & RAG' },
     { id: 'safety',     label: 'Injection & Safety' },
   ]},
-  { id: 'ethics', title: 'AI Ethics & Safety', color: '#F59E0B', href: '/modules/ai-ethics/', lessons: [
+  { id: 'ethics', title: 'AI Ethics & Safety', color: '#52525b', href: '/modules/ai-ethics/', lessons: [
     { id: 'bias',       label: 'Sources of Bias' },
     { id: 'fair',       label: 'Fairness Metrics' },
     { id: 'impossible', label: 'Impossibility' },

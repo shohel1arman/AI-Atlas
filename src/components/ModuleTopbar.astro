@@ -12,6 +12,12 @@ const { crumb } = Astro.props;
       <path d="M2 4h14M2 9h14M2 14h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
     </svg>
   </button>
-  <div class="crumb">Atlas <span>/</span> <b>{crumb}</b></div>
-  <div class="actions"><slot /></div>
+  <div class="crumb"><span data-i18n="Atlas">Atlas</span> <span>/</span> <b data-i18n={crumb}>{crumb}</b></div>
+  <div class="actions">
+    <div class="lang-switch" role="group" aria-label="Language">
+      <button type="button" data-lang-btn="en">EN</button>
+      <button type="button" data-lang-btn="bn">বাংলা</button>
+    </div>
+    <slot />
+  </div>
 </div>

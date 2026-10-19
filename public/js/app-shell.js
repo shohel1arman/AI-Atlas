@@ -69,18 +69,18 @@
     <a class="side-brand" href="/">${mark} AI Atlas</a>
     <div class="side-search" onclick="document.getElementById('atlas-chat-fab')&&document.getElementById('atlas-chat-fab').click()">
       <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.4"/><path d="M11 11l3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
-      Ask Atlas… <span class="kbd">⌘K</span>
+      <span data-i18n="Ask Atlas…">Ask Atlas…</span> <span class="kbd">⌘K</span>
     </div>`;
   NAV.forEach(g => {
-    html += `<div class="side-group">${g.group}</div>`;
+    html += `<div class="side-group" data-i18n="${g.group}">${g.group}</div>`;
     g.items.forEach(it => {
       const active = it.id === page ? ' active' : '';
-      html += `<a class="side-link${active}" href="${it.href}"><span class="si"><svg viewBox="0 0 20 20" width="18" height="18">${it.icon}</svg></span>${it.label}${it.badge ? `<span class="badge">${it.badge}</span>` : ''}</a>`;
+      html += `<a class="side-link${active}" href="${it.href}"><span class="si"><svg viewBox="0 0 20 20" width="18" height="18">${it.icon}</svg></span><span class="side-label" data-i18n="${it.label}">${it.label}</span>${it.badge ? `<span class="badge">${it.badge}</span>` : ''}</a>`;
     });
   });
   html += `<div class="side-foot"><div class="side-profile">
       <span class="av">YU</span>
-      <div><div class="nm">Your Atlas</div><div class="sub">Free explorer</div></div>
+      <div><div class="nm" data-i18n="Your Atlas">Your Atlas</div><div class="sub" data-i18n="Free explorer">Free explorer</div></div>
     </div></div></aside>`;
 
   const mount = document.getElementById('shell-side');

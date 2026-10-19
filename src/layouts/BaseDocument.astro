@@ -20,5 +20,6 @@ const { title, pageId } = Astro.props;
   <body data-page={pageId || undefined}>
     <slot />
     <slot name="scripts" />
+    <script is:inline src="/js/i18n.js"></script>
   </body>
 </html>

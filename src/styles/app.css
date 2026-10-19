@@ -4,36 +4,36 @@
    Scoped to .app so the dark marketing landing is unaffected.
    --bg-3 stays dark on purpose so playground/canvas "screens" keep working. */
 .app {
-  --bg: #F8FAFC; --bg-2: #EEF2F8;
-  --ink: #1E1B4B; --ink-soft: #46437A; --ink-mute: #6B7280; --ink-faint: rgba(30,27,75,0.22);
-  --indigo: #2563EB; --indigo-lt: #3B82F6; --indigo-dk: #1D4ED8;
-  --indigo-glow: rgba(37,99,235,0.26); --cyan-glow: rgba(8,145,178,0.22);
-  --glass: rgba(255,255,255,0.74); --glass-2: rgba(255,255,255,0.92); --glass-hi: #ffffff;
-  --stroke: rgba(30,27,75,0.10); --stroke-hi: rgba(30,27,75,0.18); --stroke-acc: rgba(37,99,235,0.40);
-  --shadow: 0 20px 50px -26px rgba(30,27,75,0.20); --shadow-acc: 0 24px 60px -30px rgba(37,99,235,0.28);
+  --bg: #ffffff; --bg-2: #f5f5f6;
+  --ink: #0b0b0d; --ink-soft: #3f3f46; --ink-mute: #71717a; --ink-faint: rgba(11,11,13,0.20);
+  --indigo: #18181b; --indigo-lt: #27272a; --indigo-dk: #000000;
+  --indigo-glow: rgba(0,0,0,0.16); --cyan-glow: rgba(0,0,0,0.10);
+  --glass: rgba(0,0,0,0.025); --glass-2: rgba(0,0,0,0.045); --glass-hi: rgba(0,0,0,0.075);
+  --stroke: rgba(11,11,13,0.12); --stroke-hi: rgba(11,11,13,0.20); --stroke-acc: rgba(11,11,13,0.42);
+  --shadow: 0 20px 50px -26px rgba(11,11,13,0.18); --shadow-acc: 0 24px 60px -30px rgba(11,11,13,0.22);
   background: var(--bg); color: var(--ink); position: relative; z-index: 0;
 }
-.app .topbar { background: rgba(248,250,252,0.88); border-bottom-color: var(--stroke); }
+.app .topbar { background: rgba(255,255,255,0.88); border-bottom-color: var(--stroke); }
 .app .crumb b { color: var(--ink); }
-/* deep-indigo sidebar with light-on-dark tokens */
+/* near-black monochrome sidebar with light-on-dark tokens */
 .app .side {
-  background: #1E1B4B; border-right-color: rgba(255,255,255,0.07);
-  --ink: #F8FAFC; --ink-soft: #C7D2FE; --ink-mute: #9AA0D4;
+  background: #0b0b0d; border-right-color: rgba(255,255,255,0.08);
+  --ink: #f4f4f5; --ink-soft: #c7c7cf; --ink-mute: #8a8a93;
   --glass-2: rgba(255,255,255,0.07); --glass-hi: rgba(255,255,255,0.13);
-  --stroke: rgba(255,255,255,0.10); --stroke-hi: rgba(255,255,255,0.16); --stroke-acc: rgba(96,165,250,0.5);
+  --stroke: rgba(255,255,255,0.10); --stroke-hi: rgba(255,255,255,0.16); --stroke-acc: rgba(255,255,255,0.45);
 }
-.app .side-link.active { background: linear-gradient(90deg, rgba(37,99,235,0.38), rgba(37,99,235,0.08)); color: #fff; box-shadow: inset 2px 0 0 #60A5FA; }
-.app .side-link .badge { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.13); color: #C7D2FE; }
-.app .side-profile .av { background: linear-gradient(135deg, #3B82F6, #7C3AED); }
+.app .side-link.active { background: linear-gradient(90deg, rgba(255,255,255,0.18), rgba(255,255,255,0.04)); color: #fff; box-shadow: inset 2px 0 0 #ffffff; }
+.app .side-link .badge { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.13); color: #c7c7cf; }
+.app .side-profile .av { background: linear-gradient(135deg, #52525b, #0b0b0d); }
 /* progress tracks & bars */
-.app .bar { background: rgba(30,27,75,0.10) !important; }
-.app .mod-card .bar i, .app .glass .bar i { background: linear-gradient(90deg, #2563EB, #3B82F6) !important; }
+.app .bar { background: rgba(11,11,13,0.10) !important; }
+.app .mod-card .bar i, .app .glass .bar i { background: linear-gradient(90deg, #0b0b0d, #52525b) !important; }
 /* light controls */
-.app .seg { background: #E7ECF5; border-color: var(--stroke); }
+.app .seg { background: #ededee; border-color: var(--stroke); }
 .app .seg button { color: var(--ink-mute); }
-.app .seg button.active { background: #2563EB; color: #fff; }
-.app input[type=range] { background: #D7DEEC; }
-.app .res-table th { background: #EEF2F8; }
+.app .seg button.active { background: #18181b; color: #fff; }
+.app input[type=range] { background: #e4e4e7; accent-color: #18181b; }
+.app .res-table th { background: #f0f0f1; }
 .app .lang-pill { background: #fff; }
 
 .app { display: grid; grid-template-columns: 264px 1fr; min-height: 100vh; }
