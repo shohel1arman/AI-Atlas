@@ -236,7 +236,141 @@
     'The RL Loop': 'আরএল লুপ', 'Tokenization': 'টোকেনাইজেশন', 'Tokenizer': 'টোকেনাইজার', 'Tool Calling': 'টুল কলিং',
     'Transfer Learning': 'ট্রান্সফার লার্নিং', 'Transformer Block': 'ট্রান্সফরমার ব্লক', 'Vectors': 'ভেক্টর',
     'Video Generation': 'ভিডিও জেনারেশন', 'Vision Transformers': 'ভিশন ট্রান্সফরমার', 'Warehouse Modeling': 'ওয়্যারহাউস মডেলিং',
-    'Word Embeddings': 'ওয়ার্ড এমবেডিং'
+    'Word Embeddings': 'ওয়ার্ড এমবেডিং',
+
+    /* ===== lesson tags ===== */
+    'accountability': 'জবাবদিহিতা', 'actionable explanation': 'কার্যকর ব্যাখ্যা', 'agents': 'এজেন্ট',
+    'analytics modeling': 'অ্যানালিটিক্স মডেলিং', 'architecture': 'আর্কিটেকচার', 'audio generation': 'অডিও জেনারেশন',
+    'automation policy': 'অটোমেশন পলিসি', 'bi dashboard': 'বিআই ড্যাশবোর্ড', 'build': 'বিল্ড',
+    'calculus · change': 'ক্যালকুলাস · পরিবর্তন', 'calculus · optimization': 'ক্যালকুলাস · অপটিমাইজেশন',
+    'causal contribution': 'কার্যকারণ অবদান', 'conditional generation': 'কন্ডিশনাল জেনারেশন', 'conditioning': 'কন্ডিশনিং',
+    'creative control': 'ক্রিয়েটিভ কন্ট্রোল', 'data contracts': 'ডেটা কন্ট্রাক্ট', 'data ingestion': 'ডেটা ইনজেশন',
+    'data preparation': 'ডেটা প্রস্তুতি', 'data quality': 'ডেটা কোয়ালিটি', 'data stores': 'ডেটা স্টোর',
+    'delivery automation': 'ডেলিভারি অটোমেশন', 'descriptive statistics': 'বর্ণনামূলক পরিসংখ্যান', 'diffusion': 'ডিফিউশন',
+    'diffusion dynamics': 'ডিফিউশন ডাইনামিক্স', 'distributed compute': 'ডিস্ট্রিবিউটেড কম্পিউট', 'ensembles': 'এনসেম্বল',
+    'experimental design': 'এক্সপেরিমেন্টাল ডিজাইন', 'experimentation': 'এক্সপেরিমেন্টেশন', 'exploratory analysis': 'এক্সপ্লোরেটরি বিশ্লেষণ',
+    'feature effects': 'ফিচার ইফেক্ট', 'fine-tuning': 'ফাইন-টিউনিং', 'frameworks': 'ফ্রেমওয়ার্ক',
+    'function calling': 'ফাংশন কলিং', 'fundamentals': 'মৌলিক বিষয়', 'generalization': 'জেনারালাইজেশন',
+    'generation': 'জেনারেশন', 'generative': 'জেনারেটিভ', 'global behaviour': 'গ্লোবাল আচরণ',
+    'history · 4 eras': 'ইতিহাস · ৪ যুগ', 'inference': 'ইনফারেন্স', 'information extraction': 'ইনফরমেশন এক্সট্রাকশন',
+    'information theory': 'ইনফরমেশন থিওরি', 'infrastructure': 'ইনফ্রাস্ট্রাকচার', 'language model internals': 'ল্যাঙ্গুয়েজ মডেল ইন্টারনাল',
+    'language modelling': 'ল্যাঙ্গুয়েজ মডেলিং', 'linear algebra': 'লিনিয়ার অ্যালজেবরা',
+    'linear algebra · computation': 'লিনিয়ার অ্যালজেবরা · কম্পিউটেশন', 'linear algebra · dimensions': 'লিনিয়ার অ্যালজেবরা · ডাইমেনশন',
+    'linear algebra · structure': 'লিনিয়ার অ্যালজেবরা · স্ট্রাকচার', 'local attribution': 'লোকাল অ্যাট্রিবিউশন',
+    'local surrogate': 'লোকাল সারোগেট', 'machine-learning data': 'মেশিন-লার্নিং ডেটা', 'memory budget': 'মেমরি বাজেট',
+    'model control': 'মডেল কন্ট্রোল', 'model families': 'মডেল ফ্যামিলি', 'model lifecycle': 'মডেল লাইফসাইকেল',
+    'nlp basics': 'এনএলপি বেসিক', 'nlp task': 'এনএলপি টাস্ক', 'non-linearity': 'নন-লিনিয়ারিটি', 'operations': 'অপারেশন',
+    'pipelines': 'পাইপলাইন', 'portable runtime': 'পোর্টেবল রানটাইম', 'probability · statistics': 'সম্ভাব্যতা · পরিসংখ্যান',
+    'probability · uncertainty': 'সম্ভাব্যতা · অনিশ্চয়তা', 'process · 6 stages': 'প্রক্রিয়া · ৬ ধাপ',
+    'production signals': 'প্রোডাকশন সিগন্যাল', 'prompting': 'প্রম্পটিং', 'python for ai': 'এআইয়ের জন্য পাইথন',
+    'quality & safety': 'গুণমান ও নিরাপত্তা', 'relationships': 'সম্পর্ক', 'representation': 'রিপ্রেজেন্টেশন',
+    'reproducibility': 'রিপ্রোডিউসিবিলিটি', 'research artifacts': 'গবেষণা আর্টিফ্যাক্ট', 'responsible ai': 'দায়িত্বশীল এআই',
+    'retrieval': 'রিট্রিভাল', 'reuse': 'পুনর্ব্যবহার', 'safe release': 'নিরাপদ রিলিজ',
+    'scientific communication': 'বৈজ্ঞানিক যোগাযোগ', 'sequence': 'সিকোয়েন্স', 'sequence order': 'সিকোয়েন্স অর্ডার',
+    'service interfaces': 'সার্ভিস ইন্টারফেস', 'software quality': 'সফটওয়্যার কোয়ালিটি', 'sql explorer': 'এসকিউএল এক্সপ্লোরার',
+    'state': 'স্টেট', 'statistical testing': 'পরিসংখ্যানিক পরীক্ষা', 'structural guidance': 'স্ট্রাকচারাল গাইডেন্স',
+    'supervised · classification': 'সুপারভাইজড · ক্লাসিফিকেশন', 'supervised · regression': 'সুপারভাইজড · রিগ্রেশন',
+    'text generation': 'টেক্সট জেনারেশন', 'time series': 'টাইম সিরিজ', 'tokenization': 'টোকেনাইজেশন',
+    'training dynamics': 'ট্রেনিং ডাইনামিক্স', 'uncertainty': 'অনিশ্চয়তা', 'unsupervised detection': 'আনসুপারভাইজড ডিটেকশন',
+    'unsupervised · clustering': 'আনসুপারভাইজড · ক্লাস্টারিং', 'validation': 'ভ্যালিডেশন', 'version control': 'ভার্সন কন্ট্রোল',
+    'video generation': 'ভিডিও জেনারেশন', 'vision': 'ভিশন', 'vision attribution': 'ভিশন অ্যাট্রিবিউশন',
+    'workflow control': 'ওয়ার্কফ্লো কন্ট্রোল',
+
+    /* ===== lesson titles ===== */
+    'A network, trained by backprop': 'ব্যাকপ্রপ দিয়ে প্রশিক্ষিত একটি নেটওয়ার্ক',
+    'Activations shape what a network can learn': 'অ্যাক্টিভেশন ঠিক করে একটি নেটওয়ার্ক কী শিখতে পারে',
+    'Addition & scalar multiplication': 'যোগ ও স্কেলার গুণ', 'An LLM in a loop': 'লুপের মধ্যে একটি এলএলএম',
+    'An LLM, end to end': 'একটি এলএলএম, শুরু থেকে শেষ', 'Assemble the AI library stack': 'এআই লাইব্রেরি স্ট্যাক সাজান',
+    'Attributing a decision': 'একটি সিদ্ধান্তের কারণ নির্ণয়', 'Audit group-level outcomes': 'গ্রুপ-পর্যায়ের ফলাফল অডিট করুন',
+    'Balance alignment and diversity': 'অ্যালাইনমেন্ট ও বৈচিত্র্যের ভারসাম্য', 'Balance bias and variance': 'বায়াস ও ভ্যারিয়েন্সের ভারসাম্য',
+    'Batch or stream?': 'ব্যাচ নাকি স্ট্রিম?', 'Branch, commit, and merge': 'ব্রাঞ্চ, কমিট ও মার্জ',
+    'Calculus for learning systems': 'লার্নিং সিস্টেমের জন্য ক্যালকুলাস', 'Call an AI service': 'একটি এআই সার্ভিস কল করুন',
+    'Catch failures before release': 'রিলিজের আগেই ব্যর্থতা ধরুন', 'Classify text from its evidence': 'প্রমাণ থেকে টেক্সট শ্রেণিবদ্ধ করুন',
+    'Clean before you calculate': 'হিসাবের আগে পরিষ্কার করুন', 'Compose a generation prompt': 'একটি জেনারেশন প্রম্পট সাজান',
+    'Connect the model to tools': 'মডেলকে টুলের সাথে যুক্ত করুন',
+    'Constrain complexity with regularization': 'রেগুলারাইজেশন দিয়ে জটিলতা নিয়ন্ত্রণ করুন',
+    'Control and inpaint a generation': 'একটি জেনারেশন নিয়ন্ত্রণ ও ইনপেইন্ট করুন',
+    'Control capacity before it memorizes': 'মুখস্থ করার আগেই ক্যাপাসিটি নিয়ন্ত্রণ করুন',
+    'Control production exposure': 'প্রোডাকশন এক্সপোজার নিয়ন্ত্রণ করুন', 'Convolutions scan for patterns': 'কনভল্যুশন প্যাটার্ন খোঁজে',
+    'Dashboards that cross-filter': 'ড্যাশবোর্ড যা ক্রস-ফিল্টার করে', 'Decide whether a lift is real': 'লিফট সত্যিকারের কিনা নির্ধারণ করুন',
+    'Decode an output sequence': 'একটি আউটপুট সিকোয়েন্স ডিকোড করুন', 'Denoising into an image': 'নয়েজ সরিয়ে একটি ছবিতে',
+    'Design the model’s instructions': 'মডেলের নির্দেশনা ডিজাইন করুন', 'Distributions & uncertainty': 'ডিস্ট্রিবিউশন ও অনিশ্চয়তা',
+    'Dot product & cosine similarity': 'ডট প্রোডাক্ট ও কোসাইন সিমিলারিটি', 'Draw a decision boundary': 'একটি ডিসিশন বাউন্ডারি আঁকুন',
+    'ETL as a DAG': 'DAG হিসেবে ইটিএল', 'Eigenvalues, eigenvectors & PCA': 'আইগেনভ্যালু, আইগেনভেক্টর ও PCA',
+    'Encoder, decoder or both?': 'এনকোডার, ডিকোডার নাকি দুটোই?', 'Estimate generalization honestly': 'জেনারালাইজেশন সৎভাবে নিরূপণ করুন',
+    'Evaluate models on unseen data': 'অদেখা ডেটায় মডেল মূল্যায়ন করুন', 'Find a counterfactual decision': 'একটি কাউন্টারফ্যাকচুয়াল সিদ্ধান্ত খুঁজুন',
+    'Find groups without labels': 'লেবেল ছাড়াই গ্রুপ খুঁজুন', 'Find named entities in context': 'প্রসঙ্গে নেমড এনটিটি খুঁজুন',
+    'Find observations that do not belong': 'বেমানান পর্যবেক্ষণ খুঁজুন', 'Fine-tune & LoRA': 'ফাইন-টিউন ও LoRA',
+    'Fine-tune a pretrained backbone': 'একটি প্রিট্রেইনড ব্যাকবোন ফাইন-টিউন করুন', 'Fit a conversation into context': 'একটি কথোপকথন কনটেক্সটে আঁটান',
+    'Fit a curve to points': 'পয়েন্টে একটি কার্ভ ফিট করুন', 'Fit a simple model nearby': 'কাছাকাছি একটি সরল মডেল ফিট করুন',
+    'Fit it on your GPU': 'আপনার GPU-তে ফিট করুন', 'From text to tokens': 'টেক্সট থেকে টোকেন',
+    'Gate a model release': 'একটি মডেল রিলিজ গেট করুন', 'Gate a model release with evidence': 'প্রমাণসহ একটি মডেল রিলিজ গেট করুন',
+    'Generate sound from a prompt': 'একটি প্রম্পট থেকে শব্দ তৈরি করুন', 'Give attention a sense of position': 'অ্যাটেনশনকে অবস্থানের বোধ দিন',
+    'Gradient descent': 'গ্রেডিয়েন্ট ডিসেন্ট', 'Information, surprise & learning': 'ইনফরমেশন, বিস্ময় ও শেখা',
+    'Inspect predictions through depth': 'গভীরতার মধ্য দিয়ে প্রেডিকশন পরীক্ষা করুন', 'Keep generated frames coherent': 'জেনারেটেড ফ্রেম সামঞ্জস্যপূর্ণ রাখুন',
+    'Keep training and serving aligned': 'ট্রেনিং ও সার্ভিং সঙ্গতিপূর্ণ রাখুন', 'Learn & run': 'শিখুন ও চালান',
+    'Learn the shape of the data': 'ডেটার আকৃতি জানুন', 'Magnitude, normalization & distance': 'ম্যাগনিটিউড, নরমালাইজেশন ও দূরত্ব',
+    'Make features comparable and useful': 'ফিচারকে তুলনাযোগ্য ও উপযোগী করুন', 'Make raw records trustworthy': 'কাঁচা রেকর্ডকে নির্ভরযোগ্য করুন',
+    'Make the experiment reproducible': 'এক্সপেরিমেন্টকে পুনরুৎপাদনযোগ্য করুন', 'Manage what an agent remembers': 'একটি এজেন্ট কী মনে রাখে তা পরিচালনা করুন',
+    'Many weak models, one strong one': 'অনেক দুর্বল মডেল, একটি শক্তিশালী', 'Match claims to evidence': 'দাবিকে প্রমাণের সাথে মেলান',
+    'Match workload to hardware': 'ওয়ার্কলোডকে হার্ডওয়্যারের সাথে মেলান', 'Matrices bend space': 'ম্যাট্রিক্স স্থানকে বাঁকায়',
+    'Matrix operations': 'ম্যাট্রিক্স অপারেশন', 'Meaning becomes geometry': 'অর্থ হয়ে ওঠে জ্যামিতি',
+    'Measure variables moving together': 'একসাথে চলা চলরাশি পরিমাপ করুন', 'Monitor service and model health': 'সার্ভিস ও মডেলের স্বাস্থ্য মনিটর করুন',
+    'Navigate latent space': 'ল্যাটেন্ট স্পেসে চলাচল করুন', 'Networks that create': 'যে নেটওয়ার্ক সৃষ্টি করে',
+    'Networks with memory': 'মেমরিসহ নেটওয়ার্ক', 'Next-token prediction': 'নেক্সট-টোকেন প্রেডিকশন',
+    'Optimizers navigate the loss landscape': 'অপটিমাইজার লস ল্যান্ডস্কেপে পথ চলে', 'Package a repeatable service': 'একটি পুনরাবৃত্তিযোগ্য সার্ভিস প্যাকেজ করুন',
+    'Plan before collecting data': 'ডেটা সংগ্রহের আগে পরিকল্পনা করুন', 'Predict from counted context': 'গণনাকৃত প্রসঙ্গ থেকে প্রেডিক্ট করুন',
+    'Preserve lineage and evidence': 'লিনিয়েজ ও প্রমাণ সংরক্ষণ করুন', 'Probability for machine learning': 'মেশিন লার্নিংয়ের জন্য সম্ভাব্যতা',
+    'Projection': 'প্রজেকশন', 'Promote versioned artifacts': 'ভার্সনকৃত আর্টিফ্যাক্ট প্রমোট করুন', 'Query the data': 'ডেটা কোয়েরি করুন',
+    'RAG & embeddings': 'RAG ও এমবেডিং', 'Rank features across the dataset': 'ডেটাসেট জুড়ে ফিচার র‍্যাঙ্ক করুন',
+    'Reason with distributions': 'ডিস্ট্রিবিউশন দিয়ে যুক্তি করুন', 'Remove components to test claims': 'দাবি যাচাইয়ে উপাদান সরান',
+    'Resample to build an interval': 'ইন্টারভাল গড়তে রিস্যাম্পল করুন', 'SQL vs. NoSQL': 'SQL বনাম NoSQL',
+    'Sampling the next token': 'পরবর্তী টোকেন স্যাম্পলিং', 'Scale beyond one machine': 'একটি মেশিনের বাইরে স্কেল করুন',
+    'Schedule and recover pipelines': 'পাইপলাইন শিডিউল ও পুনরুদ্ধার করুন', 'Schedule signal and noise': 'সিগন্যাল ও নয়েজ শিডিউল করুন',
+    'See where a CNN looked': 'CNN কোথায় তাকিয়েছে দেখুন', 'Self-attention': 'সেলফ-অ্যাটেনশন',
+    'Separate trend from seasonality': 'ট্রেন্ডকে সিজনালিটি থেকে আলাদা করুন', 'Shape a warehouse for questions': 'প্রশ্নের জন্য ওয়্যারহাউস সাজান',
+    'Ship it, then watch it': 'রিলিজ করুন, তারপর নজর রাখুন', 'Stop bad data at the boundary': 'খারাপ ডেটা সীমানায় আটকান',
+    'Tensors — data with shape': 'টেনসর — আকৃতিসহ ডেটা', 'Test a difference against chance': 'একটি পার্থক্যকে দৈবের বিপরীতে যাচাই করুন',
+    'Text becomes token IDs': 'টেক্সট হয়ে ওঠে টোকেন আইডি', 'The AI workflow pipeline': 'এআই ওয়ার্কফ্লো পাইপলাইন',
+    'Trace partial dependence and ICE': 'পার্শিয়াল ডিপেন্ডেন্স ও ICE ট্রেস করুন', 'Track every training run': 'প্রতিটি ট্রেনিং রান ট্র্যাক করুন',
+    'Trigger retraining carefully': 'সাবধানে রিট্রেনিং চালু করুন', 'Vectors throughout AI': 'এআই জুড়ে ভেক্টর',
+    'Vectors — the language of data': 'ভেক্টর — ডেটার ভাষা', 'Walk through a transformer block': 'একটি ট্রান্সফরমার ব্লকের মধ্য দিয়ে চলুন',
+    'Weighing words by signal': 'সিগন্যাল অনুযায়ী শব্দের ওজন', 'What AI is, and how it got here': 'এআই কী, আর কীভাবে এখানে এলো',
+    'Worked example: the playground’s starting vectors': 'সমাধানকৃত উদাহরণ: প্লেগ্রাউন্ডের শুরুর ভেক্টর',
+
+    /* ===== module descriptions ===== */
+    'A vision model turns a grid of pixels into meaning — an edge, an object, a boundary. Slide a kernel across an image and watch a feature map appear, drag a detection box until its IoU snaps into place, then threshold an image into segmentation masks. Three lessons, each a live sandbox.':
+      'একটি ভিশন মডেল পিক্সেলের গ্রিডকে অর্থে রূপান্তর করে — একটি প্রান্ত, একটি বস্তু, একটি সীমানা। একটি ছবির উপর দিয়ে একটি কার্নেল সরান আর ফিচার ম্যাপ তৈরি হতে দেখুন, একটি ডিটেকশন বক্স টানুন যতক্ষণ না এর IoU সঠিক জায়গায় বসে, তারপর একটি ছবিকে সেগমেন্টেশন মাস্কে থ্রেশহোল্ড করুন। তিনটি পাঠ, প্রতিটিই একটি লাইভ স্যান্ডবক্স।',
+    'A real multilayer perceptron, training live in your browser. Pick a dataset, shape the hidden layers, choose an activation, and press play — watch the decision boundary form as gradients reshape every weight.':
+      'একটি বাস্তব মাল্টিলেয়ার পারসেপট্রন, আপনার ব্রাউজারে লাইভ প্রশিক্ষিত হচ্ছে। একটি ডেটাসেট বাছুন, হিডেন লেয়ার সাজান, একটি অ্যাক্টিভেশন বেছে নিন, আর প্লে চাপুন — গ্রেডিয়েন্ট প্রতিটি ওয়েট নতুন করে গড়ার সাথে সাথে ডিসিশন বাউন্ডারি গঠিত হতে দেখুন।',
+    'Trace data through a DAG, compare ingestion modes, clean records, model a warehouse, distribute work, orchestrate retries, enforce quality, and keep features aligned.':
+      'একটি DAG-এর মধ্য দিয়ে ডেটা অনুসরণ করুন, ইনজেশন মোড তুলনা করুন, রেকর্ড পরিষ্কার করুন, একটি ওয়্যারহাউস মডেল করুন, কাজ বণ্টন করুন, রিট্রাই অর্কেস্ট্রেট করুন, গুণমান বজায় রাখুন, আর ফিচার সঙ্গতিপূর্ণ রাখুন।',
+    'Every model in the Atlas rides the same pipeline and answers to the same responsibilities. Step through the AI workflow, then scrub the history of the field.':
+      'অ্যাটলাসের প্রতিটি মডেল একই পাইপলাইনে চলে আর একই দায়িত্বের কাছে জবাবদিহি করে। এআই ওয়ার্কফ্লোর ধাপগুলো দেখুন, তারপর এই ক্ষেত্রের ইতিহাস ঘেঁটে দেখুন।',
+    'Reverse noise into structure, explore latent representations and guidance, design prompts and controls, then see how the same generative principles extend from images to audio and video.':
+      'নয়েজকে উল্টো করে কাঠামোয় আনুন, ল্যাটেন্ট রিপ্রেজেন্টেশন ও গাইডেন্স অন্বেষণ করুন, প্রম্পট ও কন্ট্রোল ডিজাইন করুন, তারপর দেখুন একই জেনারেটিভ নীতি ছবি থেকে অডিও ও ভিডিওতে কীভাবে বিস্তৃত হয়।',
+    'Follow the full LLM lifecycle: train and size a model, design its prompt, connect tools, step through an agent loop, manage memory, fine-tune adapters, and gate releases with evaluation.':
+      'সম্পূর্ণ এলএলএম লাইফসাইকেল অনুসরণ করুন: একটি মডেল প্রশিক্ষণ ও আকার নির্ধারণ করুন, এর প্রম্পট ডিজাইন করুন, টুল যুক্ত করুন, একটি এজেন্ট লুপের ধাপে চলুন, মেমরি পরিচালনা করুন, অ্যাডাপ্টার ফাইন-টিউন করুন, আর মূল্যায়ন দিয়ে রিলিজ গেট করুন।',
+    'Drag the data and watch the model chase it. Fit a regression line, raise the polynomial degree until it overfits, or watch K-Means centroids settle into clusters step by step.':
+      'ডেটা টেনে আনুন আর মডেলকে তা অনুসরণ করতে দেখুন। একটি রিগ্রেশন রেখা ফিট করুন, ওভারফিট না হওয়া পর্যন্ত পলিনোমিয়াল ডিগ্রি বাড়ান, অথবা K-Means সেন্ট্রয়েডকে ধাপে ধাপে ক্লাস্টারে থিতু হতে দেখুন।',
+    'Linear algebra and calculus you can grab. Drag the vectors to feel the dot product change sign; release a ball on a loss surface and watch gradient descent find the valley.':
+      'লিনিয়ার অ্যালজেবরা ও ক্যালকুলাস, যা হাতে ধরা যায়। ভেক্টর টেনে ডট প্রোডাক্টের চিহ্ন বদলানো অনুভব করুন; লস সারফেসে একটি বল ছাড়ুন আর গ্রেডিয়েন্ট ডিসেন্টকে উপত্যকা খুঁজে পেতে দেখুন।',
+    'Track experiments, register versions, release gradually, monitor service and model health, gate delivery, automate retraining, and preserve governance evidence.':
+      'এক্সপেরিমেন্ট ট্র্যাক করুন, ভার্সন রেজিস্টার করুন, ধীরে ধীরে রিলিজ করুন, সার্ভিস ও মডেলের স্বাস্থ্য মনিটর করুন, ডেলিভারি গেট করুন, রিট্রেনিং স্বয়ংক্রিয় করুন, আর গভর্নেন্স প্রমাণ সংরক্ষণ করুন।',
+    'Turn text into tokens, count statistical patterns, map meaning into vectors, classify language, extract entities, and decode generated sequences one decision at a time.':
+      'টেক্সটকে টোকেনে রূপান্তর করুন, পরিসংখ্যানিক প্যাটার্ন গণনা করুন, অর্থকে ভেক্টরে ম্যাপ করুন, ভাষা শ্রেণিবদ্ধ করুন, এনটিটি বের করুন, আর জেনারেটেড সিকোয়েন্স একটি একটি সিদ্ধান্তে ডিকোড করুন।',
+    'Run code, assemble the library stack, choose data stores, practise Git and APIs, package containers, size compute, and test an AI service before release.':
+      'কোড চালান, লাইব্রেরি স্ট্যাক সাজান, ডেটা স্টোর বাছুন, Git ও এপিআই অনুশীলন করুন, কন্টেইনার প্যাকেজ করুন, কম্পিউট আকার নির্ধারণ করুন, আর রিলিজের আগে একটি এআই সার্ভিস পরীক্ষা করুন।',
+    'No dataset of right answers — just an agent, an environment, and a reward signal. It acts, sees what happens, and adjusts. Run value iteration until a policy emerges, pull the arms of a slot machine to feel the explore–exploit tension, then watch Q-learning discover a path from scratch.':
+      'সঠিক উত্তরের কোনো ডেটাসেট নেই — শুধু একটি এজেন্ট, একটি পরিবেশ আর একটি রিওয়ার্ড সিগন্যাল। এটি কাজ করে, কী ঘটে তা দেখে, আর নিজেকে সামঞ্জস্য করে। পলিসি তৈরি না হওয়া পর্যন্ত ভ্যালু ইটারেশন চালান, এক্সপ্লোর–এক্সপ্লয়েট টানাপড়েন অনুভব করতে স্লট মেশিনের হাতল টানুন, তারপর Q-লার্নিংকে শূন্য থেকে একটি পথ আবিষ্কার করতে দেখুন।',
+    'Balance bias and variance, validate honestly, quantify uncertainty, test hypotheses, plan power, isolate contributions, reproduce results, and report claims responsibly.':
+      'বায়াস ও ভ্যারিয়েন্সের ভারসাম্য রাখুন, সৎভাবে ভ্যালিডেট করুন, অনিশ্চয়তা পরিমাপ করুন, হাইপোথিসিস যাচাই করুন, পাওয়ার পরিকল্পনা করুন, অবদান আলাদা করুন, ফলাফল পুনরুৎপাদন করুন, আর দাবি দায়িত্বশীলভাবে উপস্থাপন করুন।',
+    'When time is an axis, order carries meaning: a trend drifts, a season repeats, noise wobbles on top. Pull a series apart into its components, smooth away the jitter, then project the next stretch with a confidence band that honestly widens as you look further ahead.':
+      'সময় যখন একটি অক্ষ, তখন ক্রম অর্থ বহন করে: একটি ট্রেন্ড সরে যায়, একটি ঋতু পুনরাবৃত্তি হয়, উপরে নয়েজ দোলে। একটি সিরিজকে তার উপাদানে ভাগ করুন, ঝাঁকুনি মসৃণ করুন, তারপর পরবর্তী অংশ পূর্বাভাস দিন এমন একটি কনফিডেন্স ব্যান্ডসহ যা সামনে তাকালে সৎভাবে চওড়া হয়।',
+    'Follow text through tokenization, position encoding, attention and transformer blocks; then explore next-token prediction, context limits, retrieval and the masks behind encoder and decoder models.':
+      'টোকেনাইজেশন, পজিশন এনকোডিং, অ্যাটেনশন ও ট্রান্সফরমার ব্লকের মধ্য দিয়ে টেক্সট অনুসরণ করুন; তারপর নেক্সট-টোকেন প্রেডিকশন, কনটেক্সট সীমা, রিট্রিভাল আর এনকোডার ও ডিকোডার মডেলের পেছনের মাস্ক অন্বেষণ করুন।',
+    'Explain individual predictions, audit global behaviour, inspect curves and vision heatmaps, generate counterfactuals, measure group fairness, and trace how language models form answers.':
+      'স্বতন্ত্র প্রেডিকশন ব্যাখ্যা করুন, গ্লোবাল আচরণ অডিট করুন, কার্ভ ও ভিশন হিটম্যাপ পরীক্ষা করুন, কাউন্টারফ্যাকচুয়াল তৈরি করুন, গ্রুপ ফেয়ারনেস পরিমাপ করুন, আর ভাষা মডেল কীভাবে উত্তর গঠন করে তা অনুসরণ করুন।'
   };
 
   /* Whole-element HTML swaps (for text split into animated spans etc.). */
