@@ -15,20 +15,20 @@
   var css = ''
     + '@keyframes atlbob{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-5px);opacity:1}}'
     + '#atlas-chat-fab{position:fixed;bottom:24px;right:24px;z-index:200;width:58px;height:58px;border-radius:50%;border:1px solid var(--stroke-hi,rgba(255,255,255,.16));cursor:pointer;'
-    + 'background:radial-gradient(120% 120% at 30% 20%,#2a2350,#12121f);box-shadow:0 14px 34px -12px rgba(0,0,0,.7),0 0 0 0 rgba(99,102,241,.5);display:grid;place-items:center;transition:transform .25s,box-shadow .3s,opacity .2s}'
-    + '#atlas-chat-fab:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 18px 40px -12px rgba(0,0,0,.75),0 0 0 6px rgba(99,102,241,.12)}'
+    + 'background:#0b0b0d;color:#fff;box-shadow:0 14px 34px -14px rgba(11,11,13,.55);display:grid;place-items:center;transition:transform .25s,box-shadow .3s,opacity .2s}'
+    + '#atlas-chat-fab:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 20px 46px -14px rgba(11,11,13,.6)}'
     + '#atlas-chat-fab.hidden{opacity:0;pointer-events:none;transform:scale(.6)}'
-    + '#atlas-chat-fab .face{width:30px;height:30px;object-fit:contain;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5))}'
+    + '#atlas-chat-fab .face{display:grid;place-items:center;color:#fff}#atlas-chat-fab .face svg{width:28px;height:28px}'
     + '#atlas-chat-fab .kabuto{position:absolute;top:9px;opacity:.95}'
-    + '#atlas-chat-fab .ring{position:absolute;inset:-1px;border-radius:50%;border:1.5px solid transparent;border-top-color:rgba(139,140,246,.8);animation:atlspin 3.4s linear infinite}'
+    + '#atlas-chat-fab .ring{position:absolute;inset:-1px;border-radius:50%;border:1.5px solid transparent;border-top-color:rgba(255,255,255,.7);animation:atlspin 3.4s linear infinite}'
     + '@keyframes atlspin{to{transform:rotate(360deg)}}'
     + '#atlas-panel{position:fixed;bottom:24px;right:24px;z-index:201;width:378px;max-width:calc(100vw - 32px);height:560px;max-height:calc(100vh - 48px);display:flex;flex-direction:column;overflow:hidden;'
-    + 'border-radius:20px;border:1px solid var(--stroke-hi,rgba(255,255,255,.16));background:rgba(12,12,20,.9);backdrop-filter:blur(26px) saturate(1.5);-webkit-backdrop-filter:blur(26px) saturate(1.5);'
+    + 'border-radius:20px;border:1px solid var(--stroke-hi,rgba(255,255,255,.16));background:rgba(255,255,255,.94);backdrop-filter:blur(26px) saturate(1.5);-webkit-backdrop-filter:blur(26px) saturate(1.5);'
     + 'box-shadow:0 30px 80px -30px rgba(0,0,0,.85);opacity:0;transform:translateY(20px) scale(.96);pointer-events:none;transition:opacity .3s,transform .35s cubic-bezier(.2,.7,.3,1)}'
     + '#atlas-panel.open{opacity:1;transform:none;pointer-events:auto}'
     + '#atlas-panel .chat-head{display:flex;align-items:center;gap:11px;padding:15px 16px;border-bottom:1px solid var(--stroke,rgba(255,255,255,.09))}'
-    + '#atlas-panel .samurai-av{width:34px;height:34px;border-radius:10px;flex:0 0 34px;display:grid;place-items:center;position:relative;background:radial-gradient(120% 120% at 30% 20%,#2a2350,#12121f);border:1px solid var(--stroke,rgba(255,255,255,.09))}'
-    + '#atlas-panel .samurai-av img{width:19px;height:19px;object-fit:contain}'
+    + '#atlas-panel .samurai-av{width:34px;height:34px;border-radius:10px;flex:0 0 34px;display:grid;place-items:center;position:relative;background:#0b0b0d;color:#fff;border:1px solid var(--stroke,rgba(255,255,255,.09))}'
+    + '#atlas-panel .samurai-av{color:#fff}#atlas-panel .samurai-av svg{width:20px;height:20px}'
     + '#atlas-panel .samurai-av .kabuto{position:absolute;top:5px}'
     + '#atlas-panel .chat-head .col{display:flex;flex-direction:column;flex:1;min-width:0}'
     + '#atlas-panel .chat-head .nm{font-family:var(--display,sans-serif);font-weight:600;font-size:14.5px;color:var(--ink,#ececf6)}'
@@ -58,24 +58,24 @@
     + '#atlas-chips button{font-family:var(--mono,monospace);font-size:11.5px;padding:6px 11px;border-radius:999px;border:1px solid var(--stroke,rgba(255,255,255,.12));background:var(--glass,rgba(255,255,255,.035));color:var(--ink-soft,#b9b9cc);cursor:pointer;transition:.15s;white-space:nowrap}'
     + '#atlas-chips button:hover{border-color:var(--indigo-lt,#8b8cf6);color:var(--ink,#ececf6)}'
     + '#atlas-form{display:flex;gap:8px;align-items:center}'
-    + '#atlas-input{flex:1;padding:11px 14px;border-radius:12px;border:1px solid var(--stroke,rgba(255,255,255,.12));background:rgba(12,12,20,.6);color:var(--ink,#ececf6);font:inherit;font-size:14px;outline:none;transition:.15s}'
+    + '#atlas-input{flex:1;padding:11px 14px;border-radius:12px;border:1px solid var(--stroke,rgba(255,255,255,.12));background:rgba(0,0,0,.04);color:var(--ink,#ececf6);font:inherit;font-size:14px;outline:none;transition:.15s}'
     + '#atlas-input:focus{border-color:var(--indigo,#6366f1)}'
     + '#atlas-send{flex:0 0 auto;width:40px;height:40px;border-radius:11px;border:0;cursor:pointer;background:linear-gradient(180deg,var(--indigo-lt,#8b8cf6),var(--indigo-dk,#4f46e5));display:grid;place-items:center;transition:.15s}'
     + '#atlas-send:hover{filter:brightness(1.1)}';
   var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
 
-  var KABUTO = '<svg class="kabuto" width="30" height="14" viewBox="0 0 46 22" fill="none"><path d="M3 21 C5 2 41 2 43 21 C35 9 11 9 3 21 Z" fill="url(#kga)"/><defs><linearGradient id="kga" x1="0" y1="0" x2="0" y2="22"><stop stop-color="#FCD34D"/><stop offset="1" stop-color="#C2410C"/></linearGradient></defs></svg>';
+  var GLYPH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4.5L5 19.5M12 4.5L19 19.5M7.7 14.6H16.3"/><circle cx="12" cy="4.5" r="2" fill="currentColor" stroke="none"/><circle cx="5" cy="19.5" r="2" fill="currentColor" stroke="none"/><circle cx="19" cy="19.5" r="2" fill="currentColor" stroke="none"/></svg>';
 
   /* ---------------- markup ---------------- */
   var fab = document.createElement('button');
   fab.id = 'atlas-chat-fab'; fab.setAttribute('aria-label', 'Open Atlas guide');
-  fab.innerHTML = '<span class="ring"></span>' + KABUTO + '<img class="face" src="/assets/atlas-mark.png" alt=""/>';
+  fab.innerHTML = '<span class="ring"></span><span class="face">' + GLYPH + '</span>';
   document.body.appendChild(fab);
 
   var panel = document.createElement('section');
   panel.id = 'atlas-panel';
   panel.innerHTML =
-    '<div class="chat-head"><div class="samurai-av">' + KABUTO + '<img src="/assets/atlas-mark.png" alt=""/></div>'
+    '<div class="chat-head"><div class="samurai-av">' + GLYPH + '</div>'
     + '<div class="col"><span class="nm">Atlas Guide</span><span class="st" id="atlas-status">online</span></div>'
     + '<button id="atlas-close" aria-label="Close">✕</button></div>'
     + '<div id="atlas-log"></div>'

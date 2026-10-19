@@ -16,7 +16,7 @@ import '../styles/landing.css';
 <!-- ============ NAV ============ -->
 <nav class="nav">
   <a class="brand" href="/">
-    <span class="mark"><img class="brand-mark" src="/assets/atlas-mark.png" alt="AI Atlas" /></span>
+    <span class="mark"><svg class="brand-glyph" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4.5L5 19.5M12 4.5L19 19.5M7.7 14.6H16.3"/><circle cx="12" cy="4.5" r="2" fill="currentColor" stroke="none"/><circle cx="5" cy="19.5" r="2" fill="currentColor" stroke="none"/><circle cx="19" cy="19.5" r="2" fill="currentColor" stroke="none"/></svg></span>
     AI&nbsp;Atlas
   </a>
   <div class="nav-links">
@@ -472,7 +472,7 @@ import '../styles/landing.css';
     <div class="foot-grid">
       <div>
         <a class="brand" href="/" style="margin-bottom:16px">
-          <span class="mark"><img class="brand-mark" src="/assets/atlas-mark.png" alt="AI Atlas" style="width:28px;height:28px" /></span>AI Atlas
+          <span class="mark"><svg class="brand-glyph" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4.5L5 19.5M12 4.5L19 19.5M7.7 14.6H16.3"/><circle cx="12" cy="4.5" r="2" fill="currentColor" stroke="none"/><circle cx="5" cy="19.5" r="2" fill="currentColor" stroke="none"/><circle cx="19" cy="19.5" r="2" fill="currentColor" stroke="none"/></svg></span>AI Atlas
         </a>
         <p class="muted" style="max-width:280px;font-size:14px">The interactive universe of artificial intelligence. Built for visual, hands-on learners.</p>
       </div>
@@ -495,15 +495,13 @@ import '../styles/landing.css';
 </footer>
 
 <!-- ============ CHATBOT (Atlas Ronin — samurai agent) ============ -->
-<button id="chat-fab" class="samurai-fab" aria-label="Open Atlas Ronin"><span class="ring"></span>
-  <svg class="kabuto" width="46" height="22" viewBox="0 0 46 22" fill="none"><path d="M3 21 C5 2 41 2 43 21 C35 9 11 9 3 21 Z" fill="url(#kg1)"/><defs><linearGradient id="kg1" x1="0" y1="0" x2="0" y2="22"><stop stop-color="#FCD34D"/><stop offset="1" stop-color="#C2410C"/></linearGradient></defs></svg>
-  <img class="face" src="/assets/atlas-mark.png" alt="" />
-  <span class="visor"></span>
+<button id="chat-fab" class="samurai-fab" aria-label="Open Atlas assistant"><span class="ring"></span>
+  <svg class="face" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4.5L5 19.5M12 4.5L19 19.5M7.7 14.6H16.3"/><circle cx="12" cy="4.5" r="2" fill="currentColor" stroke="none"/><circle cx="5" cy="19.5" r="2" fill="currentColor" stroke="none"/><circle cx="19" cy="19.5" r="2" fill="currentColor" stroke="none"/></svg>
 </button>
-<section id="chat-panel" aria-label="Atlas Ronin assistant">
-  <div class="chat-head"><div class="samurai-av"><svg class="kabuto" width="30" height="15" viewBox="0 0 46 22" fill="none"><path d="M3 21 C5 2 41 2 43 21 C35 9 11 9 3 21 Z" fill="url(#kg2)"/><defs><linearGradient id="kg2" x1="0" y1="0" x2="0" y2="22"><stop stop-color="#FCD34D"/><stop offset="1" stop-color="#C2410C"/></linearGradient></defs></svg><img src="/assets/atlas-mark.png" alt="" /></div><div class="col"><span class="nm">Atlas Ronin</span><span class="st">online · your AI samurai guide</span></div><button id="chat-close" aria-label="Close">✕</button></div>
+<section id="chat-panel" aria-label="Atlas assistant">
+  <div class="chat-head"><div class="samurai-av"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4.5L5 19.5M12 4.5L19 19.5M7.7 14.6H16.3"/><circle cx="12" cy="4.5" r="2" fill="currentColor" stroke="none"/><circle cx="5" cy="19.5" r="2" fill="currentColor" stroke="none"/><circle cx="19" cy="19.5" r="2" fill="currentColor" stroke="none"/></svg></div><div class="col"><span class="nm">Atlas Guide</span><span class="st">online</span></div><button id="chat-close" aria-label="Close">✕</button></div>
   <div id="chat-log">
-    <div class="msg bot"><div class="msg-av">◆</div><div class="msg-bub">⚔️ I am <b>Atlas Ronin</b>, your guide through the Atlas. Name any AI concept and I'll explain it, then cut straight to the live playground. Pick a path below 👇</div></div>
+    <div class="msg bot"><div class="msg-av">◆</div><div class="msg-bub">I am <b>Atlas Guide</b>, your guide through the Atlas. Name any AI concept and I'll explain it, then take you straight to the live playground. Pick a path below 👇</div></div>
   </div>
   <div class="chat-foot">
     <div id="chat-chips">

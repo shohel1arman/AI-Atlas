@@ -63,7 +63,7 @@
     ]},
   ];
 
-  const mark = `<img class="brand-mark" src="/assets/atlas-mark.png" alt="" style="width:26px;height:26px" />`;
+  const mark = `<svg class="brand-glyph" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4.5L5 19.5M12 4.5L19 19.5M7.7 14.6H16.3"/><circle cx="12" cy="4.5" r="2" fill="currentColor" stroke="none"/><circle cx="5" cy="19.5" r="2" fill="currentColor" stroke="none"/><circle cx="19" cy="19.5" r="2" fill="currentColor" stroke="none"/></svg>`;
 
   let html = `<aside class="side" id="side">
     <a class="side-brand" href="/">${mark} AI Atlas</a>

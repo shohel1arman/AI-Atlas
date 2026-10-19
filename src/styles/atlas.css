@@ -238,34 +238,31 @@ a { color: inherit; text-decoration: none; }
 .grid { display: grid; gap: 22px; }
 .kbd { font-family: var(--mono); font-size: 12px; padding: 2px 7px; border-radius: 6px; background: var(--glass-2); border: 1px solid var(--stroke); color: var(--ink-soft); }
 
-/* ---- Brand mark (logo image) ---- */
-.brand-mark { width: 30px; height: 30px; object-fit: contain; filter: drop-shadow(0 0 7px rgba(139,140,246,.5)); display: block; }
+/* ---- Brand mark (monochrome node-graph glyph, inherits currentColor) ---- */
+.brand-mark { width: 30px; height: 30px; object-fit: contain; display: block; }
+.brand-glyph { display: block; }
 
-/* ---- Samurai assistant (kabuto helmet + atlas-mark face) ---- */
+/* ---- Assistant launcher (monochrome) ---- */
 .samurai-fab {
-  position: relative; width: 66px; height: 66px; border-radius: 50%;
-  background: radial-gradient(circle at 50% 32%, #23233e 0%, #0c0c16 72%);
-  border: 1px solid rgba(255,255,255,0.14);
-  box-shadow: 0 18px 44px -12px var(--indigo-glow), inset 0 2px 7px rgba(255,255,255,0.10), inset 0 -6px 12px rgba(0,0,0,0.5);
+  position: relative; width: 60px; height: 60px; border-radius: 50%;
+  background: #0b0b0d; color: #fff;
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 18px 44px -14px rgba(11,11,13,0.55), inset 0 1px 0 rgba(255,255,255,0.12);
   display: grid; place-items: center; cursor: pointer; overflow: visible;
-  transition: transform .3s cubic-bezier(.2,.7,.3,1), opacity .3s;
-  animation: floaty 6s ease-in-out infinite;
+  transition: transform .3s cubic-bezier(.2,.7,.3,1), box-shadow .3s, opacity .3s;
 }
-.samurai-fab:hover { transform: scale(1.08); }
+.samurai-fab:hover { transform: scale(1.08); box-shadow: 0 22px 52px -14px rgba(11,11,13,0.6); }
 .samurai-fab.hidden { opacity: 0; pointer-events: none; transform: scale(.6); }
-.samurai-fab .face { width: 46px; height: 46px; object-fit: contain; filter: drop-shadow(0 0 6px rgba(139,140,246,.7)); position: relative; z-index: 2; }
-.samurai-fab .kabuto { position: absolute; top: -13px; left: 50%; transform: translateX(-50%); z-index: 3; filter: drop-shadow(0 2px 4px rgba(0,0,0,.5)); }
-.samurai-fab .visor { position: absolute; left: 16%; right: 16%; top: 60%; height: 3px; border-radius: 2px; background: linear-gradient(90deg, transparent, #FB7185, transparent); z-index: 2; opacity: .9; }
-.samurai-fab .ring { position: absolute; inset: -6px; border-radius: 50%; border: 1px solid var(--indigo-glow); animation: ping 2.6s ease-out infinite; }
+.samurai-fab .face { position: relative; z-index: 2; color: #fff; }
+.samurai-fab .ring { position: absolute; inset: -6px; border-radius: 50%; border: 1px solid rgba(11,11,13,0.22); animation: ping 2.6s ease-out infinite; }
 
-/* samurai avatar (chat header / message) */
+/* assistant avatar (chat header) */
 .samurai-av {
   position: relative; width: 38px; height: 38px; border-radius: 11px; flex: 0 0 38px;
-  background: radial-gradient(circle at 50% 32%, #23233e, #0c0c16 75%);
+  background: #0b0b0d; color: #fff;
   border: 1px solid rgba(255,255,255,0.12); display: grid; place-items: center; overflow: visible;
 }
-.samurai-av img { width: 28px; height: 28px; object-fit: contain; filter: drop-shadow(0 0 4px rgba(139,140,246,.7)); }
-.samurai-av .kabuto { position: absolute; top: -8px; left: 50%; transform: translateX(-50%) scale(.7); }
+.samurai-av img { width: 28px; height: 28px; object-fit: contain; }
 @keyframes ping { 0%{ transform: scale(.9); opacity: .8 } 100%{ transform: scale(1.5); opacity: 0 } }
 
 /* ---- language switch (EN · বাংলা) ---- */
