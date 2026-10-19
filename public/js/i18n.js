@@ -480,7 +480,29 @@
     'Tune sensitivity and compare global distance with local density. Watch recall and false alarms trade places as the detector flags more points.': 'সেনসিটিভিটি টিউন করুন আর গ্লোবাল দূরত্বকে লোকাল ঘনত্বের সাথে তুলনা করুন। ডিটেক্টর আরও পয়েন্ট ফ্ল্যাগ করার সাথে রিকল ও ফলস অ্যালার্ম স্থান বদল করতে দেখুন।',
     'Turn a natural-language request into a structured function call, then inspect the result returned to the model.': 'একটি স্বাভাবিক-ভাষার অনুরোধকে একটি স্ট্রাকচার্ড ফাংশন কলে পরিণত করুন, তারপর মডেলে ফেরত আসা ফলাফল পরীক্ষা করুন।',
     'Turn queries into a picture. Click a region below and watch every KPI and chart update in real time.': 'কোয়েরিকে একটি ছবিতে পরিণত করুন। নিচে একটি অঞ্চলে ক্লিক করুন আর প্রতিটি KPI ও চার্ট রিয়েল-টাইমে হালনাগাদ হতে দেখুন।',
-    'Weight-sharing filters slide across an image to detect edges, textures and shapes. Watch a kernel convolve across the input below.': 'ওয়েট-শেয়ারিং ফিল্টার এজ, টেক্সচার ও আকৃতি শনাক্ত করতে একটি ছবির উপর দিয়ে সরে। নিচে একটি কার্নেলকে ইনপুটের উপর দিয়ে কনভল্ভ করতে দেখুন।'
+    'Weight-sharing filters slide across an image to detect edges, textures and shapes. Watch a kernel convolve across the input below.': 'ওয়েট-শেয়ারিং ফিল্টার এজ, টেক্সচার ও আকৃতি শনাক্ত করতে একটি ছবির উপর দিয়ে সরে। নিচে একটি কার্নেলকে ইনপুটের উপর দিয়ে কনভল্ভ করতে দেখুন।',
+
+    /* ===== in-playground control labels ===== */
+    'AR order p': 'AR অর্ডার p', 'Activation': 'অ্যাক্টিভেশন', 'Angle': 'কোণ', 'Audio prompt': 'অডিও প্রম্পট',
+    'Axis size': 'অক্ষ আকার', 'Beam width': 'বিম প্রস্থ', 'Bootstrap samples': 'বুটস্ট্র্যাপ স্যাম্পল', 'Brightness': 'উজ্জ্বলতা',
+    'CFG scale': 'CFG স্কেল', 'CNN layer depth': 'CNN লেয়ার গভীরতা', 'Candidate traffic': 'ক্যান্ডিডেট ট্রাফিক',
+    'Cell value': 'সেল মান', 'Commits on branch': 'ব্রাঞ্চে কমিট', 'Concept': 'ধারণা', 'Concurrent jobs': 'সমসাময়িক জব',
+    'Control strength': 'কন্ট্রোল শক্তি', 'Conversation': 'কথোপকথন', 'Conversions': 'কনভার্সন',
+    'Current signal': 'বর্তমান সিগন্যাল', 'Current token': 'বর্তমান টোকেন', 'Current value': 'বর্তমান মান',
+    'Data spread': 'ডেটা বিস্তার', 'Data — sampling skew': 'ডেটা — স্যাম্পলিং স্কিউ', 'Dataset size': 'ডেটাসেট আকার',
+    'Days since deployment': 'ডিপ্লয়মেন্টের পর থেকে দিন', 'Debt ratio': 'ঋণ অনুপাত', 'Decision threshold': 'ডিসিশন থ্রেশহোল্ড',
+    'Delivery window': 'ডেলিভারি উইন্ডো', 'Deploy — feedback loop': 'ডিপ্লয় — ফিডব্যাক লুপ', 'Differencing d': 'ডিফারেন্সিং d',
+    'Dimensions': 'ডাইমেনশন', 'Direction & strength': 'দিক ও শক্তি', 'Discount γ': 'ডিসকাউন্ট γ', 'Dropout': 'ড্রপআউট',
+    'Duration': 'সময়কাল', 'Endpoint': 'এন্ডপয়েন্ট', 'Era': 'যুগ', 'Event volume': 'ইভেন্ট ভলিউম', 'Explore ε': 'এক্সপ্লোর ε',
+    'FFN expansion': 'FFN এক্সপ্যানশন', 'Filter rows': 'সারি ফিল্টার', 'Forecast horizon': 'ফোরকাস্ট হরাইজন',
+    'Frame consistency': 'ফ্রেম কনসিসটেন্সি', 'Frozen backbone layers': 'ফ্রোজেন ব্যাকবোন লেয়ার', 'Guidance scale': 'গাইডেন্স স্কেল',
+    'Heatmap opacity': 'হিটম্যাপ অপাসিটি', 'Height': 'উচ্চতা', 'Hidden layers': 'হিডেন লেয়ার', 'Horizon H': 'হরাইজন H',
+    'Income outlier': 'আয় আউটলায়ার', 'Input x': 'ইনপুট x', 'Inspect timestep': 'টাইমস্টেপ পরীক্ষা', 'Key skew': 'কী স্কিউ',
+    'Labelled examples': 'লেবেলযুক্ত উদাহরণ', 'Labels — annotator bias': 'লেবেল — অ্যানোটেটর বায়াস',
+    'Latent dimensions': 'ল্যাটেন্ট ডাইমেনশন', 'Learning rate': 'লার্নিং রেট', 'Learning rate α': 'লার্নিং রেট α',
+    'Lesson code editor': 'পাঠ কোড এডিটর', 'Polynomial degree': 'পলিনোমিয়াল ডিগ্রি', 'Temperature': 'টেম্পারেচার',
+    'Tree depth': 'ট্রি গভীরতা', 'Number of trees': 'ট্রির সংখ্যা', 'Neighbors k': 'প্রতিবেশী k', 'Model complexity': 'মডেল জটিলতা',
+    'Sensitivity': 'সেনসিটিভিটি', 'Hidden neurons': 'হিডেন নিউরন', 'Strength λ': 'শক্তি λ', 'Penalty': 'পেনাল্টি'
   };
 
   /* Whole-element HTML swaps (for text split into animated spans etc.). */
